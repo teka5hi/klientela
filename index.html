@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="me">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KLIENTELA -Poslovi i tenderi podudarni sa vašom firmom</title>
+<meta name="description" content="KLIENTELA je SaaS platforma koja svakodnevno pronalazi poslove i tendere koji se podudaraju sa kapacitetima, proizvodima i referencama vaše firme. Zatražite demo.">
+<meta property="og:title" content="KLIENTELA -Poslovi i tenderi podudarni sa vašom firmom">
+<meta property="og:type" content="website">
+<meta property="og:description" content="Platforma koja prati tendere i poslove i automatski ih uparuje sa profilom vaše firme.">
+<meta property="og:image" content="logo.png">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ OSNOVA ============ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --dark:#1e2124; --dark-2:#141618; --dark-mid:#2f3234;
+  --light:#f9f9f9; --ink:#1e2124; --gray:#636363;
+  --accent:#2b5945;
+  --error:#ff4136;
+  --header-h:72px;
+  --max-w:1400px;
+  --h-pad:clamp(20px,4.5vw,56px);
+  --head:'Space Grotesk','Inter',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  background:var(--dark);color:#fff;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,h5,.stat-num,.btn{font-family:var(--head)}
+img{max-width:100%;-webkit-user-drag:none}
+a{color:inherit}
+::selection{background:var(--accent);color:#fff}
+.wrap{max-width:var(--max-w);margin:0 auto;padding-left:var(--h-pad);padding-right:var(--h-pad)}
+section[id]{scroll-margin-top:calc(var(--header-h) + 12px)}
+.skip{position:absolute;left:-9999px;top:0;background:#fff;color:var(--ink);padding:.7rem 1.2rem;z-index:2000}
+.skip:focus{left:0}
+
+/* ============ TEMA SEKCIJA ============ */
+.sec{padding:clamp(4.5rem,9vw,8.5rem) 0}
+.sec-dark{background:var(--dark);color:#fff;--acc:#fff;--hair:rgba(255,255,255,.14);--mut:#b9b9b9;--card:#1e2124}
+.sec-light{background:#fff;color:var(--ink);--acc:var(--accent);--hair:rgba(30,33,36,.14);--mut:#636363;--card:#fff}
+.sec-tint{background:var(--light);color:var(--ink);--acc:var(--accent);--hair:rgba(30,33,36,.14);--mut:#636363;--card:#fff}
+
+/* ============ TIPOGRAFIJA ============ */
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--acc);display:inline-flex;align-items:center;gap:.65rem}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--acc)}
+.sec-title{font-size:clamp(1.9rem,3.6vw,2.9rem);line-height:1.12;letter-spacing:-.02em;font-weight:600;margin-top:1.1rem}
+.sec-lede{color:var(--mut);max-width:58ch;font-size:1.02rem;margin-top:1.1rem}
+.sec-head{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:2rem 4rem;align-items:end;margin-bottom:clamp(2.5rem,5vw,4.5rem)}
+.sec-head .eyebrow{grid-column:1/-1}
+@media(max-width:860px){.sec-head{grid-template-columns:1fr}}
+
+/* ============ EFEKAT KUCANJA ============ */
+.ch{opacity:0}
+.ch.on{opacity:1;transition:opacity .05s linear}
+.caret{display:inline-block;width:2px;height:1em;background:currentColor;
+  margin-left:2px;vertical-align:-.14em;animation:caret-blink .9s steps(1) infinite}
+@keyframes caret-blink{0%,55%{opacity:1}56%,100%{opacity:0}}
+
+/* ============ DUGMAD ============ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;padding:1rem 1.7rem;
+  font-weight:600;font-size:.92rem;letter-spacing:.02em;text-decoration:none;border:1px solid transparent;
+  cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.sec-dark .btn-solid{background:#fff;color:var(--dark)}
+.sec-dark .btn-solid:hover{background:transparent;color:#fff;border-color:rgba(255,255,255,.55)}
+.sec-light .btn-solid,.sec-tint .btn-solid{background:var(--ink);color:#fff}
+.sec-light .btn-solid:hover,.sec-tint .btn-solid:hover{background:var(--accent);color:#fff}
+.btn-ghost{border-color:var(--hair);background:transparent;color:inherit}
+.sec-dark .btn-ghost:hover{background:#fff;color:var(--dark);border-color:#fff}
+.sec-light .btn-ghost:hover,.sec-tint .btn-ghost:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* outline dugmad na tamnim pozadinama */
+.site-header .btn-solid,
+.hero .btn-solid,
+.mnav-panel .btn-solid{
+  background:transparent;border:1px solid rgba(255,255,255,.55);color:#fff;
+}
+.site-header .btn-solid:hover,
+.hero .btn-solid:hover,
+.mnav-panel .btn-solid:hover{
+  background:#fff;color:var(--dark);border-color:#fff;
+}
+
+/* ============ HEADER -PRAVO STAKLO ============ */
+.site-header{position:sticky;top:0;z-index:1200;
+  background-color:rgba(30,33,36,.25);
+  -webkit-backdrop-filter:blur(26px) saturate(160%);
+  backdrop-filter:blur(26px) saturate(160%);
+  border-bottom:1px solid rgba(255,255,255,.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.4),
+    inset 0 -1px 0 rgba(255,255,255,.08),
+    0 8px 32px rgba(10,12,14,.18);
+  transition:background-color .3s,border-color .3s}
+.site-header::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(100deg,
+    rgba(255,255,255,.05) 0%,
+    rgba(255,255,255,.02) 30%,
+    rgba(255,255,255,.14) 46%,
+    rgba(255,255,255,.03) 60%,
+    rgba(255,255,255,.06) 100%)}
+.site-header.scrolled{background-color:rgba(24,27,29,.45);
+  border-bottom-color:rgba(255,255,255,.22)}
+.header-in{display:flex;align-items:center;height:var(--header-h);gap:2.5rem;position:relative}
+.brand{display:inline-flex;align-items:center;gap:.7rem;text-decoration:none;color:#fff}
+.brand-logo{height:30px;width:auto;object-fit:contain;display:block}
+.brand-wordmark{display:none;font-family:var(--head);font-weight:700;letter-spacing:.2em;font-size:1.02rem}
+.brand.fallback .brand-wordmark{display:inline-block}
+.brand.fallback .brand-logo{display:none}
+.nav-links{display:flex;gap:2rem;margin-left:auto}
+.nav-links a{color:rgba(255,255,255,.78);text-decoration:none;font-size:.92rem;font-weight:500;
+  position:relative;padding:.35rem 0;transition:color .2s}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1px;background:#fff;
+  transform:scaleX(0);transform-origin:left;transition:transform .25s}
+.nav-links a:hover,.nav-links a.active{color:#fff}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+.header-cta{padding:.62rem 1.2rem;font-size:.85rem}
+.nav-toggle{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:10px;margin-right:-10px}
+.nav-toggle span{width:22px;height:1.6px;background:#fff;transition:transform .3s,opacity .3s}
+body.menu-open .nav-toggle span:nth-child(1){transform:translateY(6.6px) rotate(45deg)}
+body.menu-open .nav-toggle span:nth-child(2){opacity:0}
+body.menu-open .nav-toggle span:nth-child(3){transform:translateY(-6.6px) rotate(-45deg)}
+@media(max-width:960px){
+  .nav-links,.header-cta{display:none}
+  .nav-toggle{display:flex}
+}
+
+/* mobilni meni -staklo */
+.mnav{position:fixed;inset:0;z-index:1100;visibility:hidden;pointer-events:none}
+.mnav.open{visibility:visible;pointer-events:auto}
+.mnav-backdrop{position:absolute;inset:0;background:rgba(20,22,24,.5);opacity:0;transition:opacity .3s}
+.mnav.open .mnav-backdrop{opacity:1}
+.mnav-panel{position:absolute;top:0;right:0;bottom:0;width:min(420px,100%);
+  background-color:rgba(26,29,32,.45);
+  -webkit-backdrop-filter:blur(30px) saturate(170%);
+  backdrop-filter:blur(30px) saturate(170%);
+  border-left:1px solid rgba(255,255,255,.3);
+  box-shadow:inset 1px 0 0 rgba(255,255,255,.3), 0 0 60px rgba(10,12,14,.35);
+  padding:calc(var(--header-h) + 24px) 2rem 2rem;
+  transform:translateX(100%);transition:transform .3s;display:flex;flex-direction:column;gap:.4rem}
+.mnav.open .mnav-panel{transform:none}
+.mnav-panel a{color:#fff;text-decoration:none;font-size:1.25rem;font-weight:600;padding:.8rem 0;
+  border-bottom:1px solid rgba(255,255,255,.1)}
+.mnav-panel .btn{margin-top:1.6rem}
+
+/* ============ HERO ============ */
+.hero{position:relative;background:var(--dark);min-height:calc(100vh - var(--header-h));
+  display:flex;align-items:center;overflow:hidden}
+#net{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at 30% 40%,transparent 30%,rgba(20,22,24,.55) 100%)}
+.hero-inner{position:relative;z-index:2;padding-top:6rem;padding-bottom:7rem;width:100%}
+.hero h1{font-size:clamp(2.5rem,6.4vw,5rem);line-height:1.05;letter-spacing:-.025em;font-weight:600;max-width:18ch;margin-top:1.4rem}
+.hero h1 em{font-style:italic;color:inherit}
+.hero-sub{color:#b9b9b9;font-size:clamp(1rem,1.4vw,1.15rem);max-width:60ch;margin-top:1.6rem}
+.hero-cta{display:flex;flex-wrap:wrap;gap:1rem;margin-top:2.6rem}
+.h-anim{opacity:0;transform:translateY(26px);
+  transition:opacity .8s ease var(--d,0s),transform .8s ease var(--d,0s)}
+body.hero-in .h-anim{opacity:1;transform:none}
+
+/* ============ STATISTIKA ============ */
+.stats{background:var(--dark);border-top:1px solid rgba(255,255,255,.12);padding:clamp(2.5rem,5vw,4rem) 0}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.stat{padding:.4rem clamp(1rem,2.5vw,2.4rem)}
+.stat+.stat{border-left:1px solid rgba(255,255,255,.12)}
+.stat-num{font-size:clamp(1.9rem,3.4vw,3rem);font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat-label{color:#9b9b9b;font-size:.88rem;margin-top:.4rem;max-width:22ch}
+@media(max-width:860px){
+  .stats-grid{grid-template-columns:1fr 1fr;gap:2rem 0}
+  .stat:nth-child(3){border-left:0}
+}
+
+/* ============ KAKO RADI -CAROUSEL ============ */
+.crs{position:relative;margin-top:.5rem}
+.crs-viewport{overflow:hidden;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.crs-viewport.grabbing{cursor:grabbing}
+.crs-track{display:flex;gap:24px;will-change:transform}
+.crs-slide{flex:0 0 auto;width:min(80vw,2050px);height:85vh;min-height:440px;
+  overflow:hidden;position:relative;
+  filter:brightness(.5);opacity:.65;
+  transition:filter .6s ease,opacity .6s ease}
+.crs-slide.is-active{filter:none;opacity:1}
+.crs-media{position:absolute;inset:0;background:#1a1d20}
+.crs-media img{width:100%;height:100%;object-fit:cover;display:block}
+.crs-media.noimg{
+  background:
+    radial-gradient(80% 60% at 70% 20%,rgba(255,255,255,.07),transparent 60%),
+    linear-gradient(135deg,#2b3138 0%,#17191c 70%)}
+.crs-media.noimg::after{
+  content:attr(data-num);position:absolute;right:4%;bottom:-8%;
+  font-family:var(--head);font-weight:700;font-size:34vh;line-height:1;
+  color:rgba(255,255,255,.07);letter-spacing:-.04em;user-select:none}
+.crs-shade{position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(13,15,17,.92) 0%,rgba(13,15,17,.42) 36%,rgba(13,15,17,.05) 62%)}
+.crs-caption{position:absolute;left:clamp(1.3rem,4vw,3.4rem);right:clamp(1.3rem,4vw,3.4rem);
+  bottom:clamp(1.4rem,4vw,3.2rem);color:#fff;max-width:680px}
+.crs-num{font-family:'IBM Plex Mono',monospace;font-size:.82rem;letter-spacing:.22em;
+  border:1px solid rgba(255,255,255,.5);padding:.4rem .75rem;display:inline-block;margin-bottom:1.1rem}
+.crs-caption h3{font-size:clamp(1.5rem,3vw,2.4rem);font-weight:600;letter-spacing:-.02em;line-height:1.12}
+.crs-caption p{color:rgba(255,255,255,.85);font-size:clamp(.95rem,1.4vw,1.1rem);margin-top:.7rem;max-width:56ch}
+.crs-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:6;
+  width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background-color:rgba(30,33,36,.28);
+  -webkit-backdrop-filter:blur(18px) saturate(170%);backdrop-filter:blur(18px) saturate(170%);
+  border:1px solid rgba(255,255,255,.45);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4);
+  color:#fff;cursor:pointer;
+  transition:background-color .2s,color .2s,border-color .2s}
+.crs-arrow:hover{background-color:#fff;color:var(--ink);border-color:#fff}
+.crs-arrow.prev{left:clamp(10px,3vw,44px)}
+.crs-arrow.next{right:clamp(10px,3vw,44px)}
+.crs-arrow svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.crs-dots{display:flex;gap:.55rem;justify-content:center;margin-top:1.6rem}
+.crs-dots button{width:28px;height:3px;border:0;padding:0;cursor:pointer;
+  background:rgba(30,33,36,.22);transition:background .25s}
+.crs-dots button.on{background:var(--ink)}
+@media(max-width:700px){
+  .crs-track{gap:14px}
+  .crs-slide{width:86vw;height:78vh;min-height:420px}
+  .crs-arrow{width:44px;height:44px}
+  .crs-arrow.prev{left:8px}
+  .crs-arrow.next{right:8px}
+}
+
+/* ============ DASHBOARD MOCKUP ============ */
+.dash-wrap{position:relative;max-width:1100px;margin:0 auto}
+.dash{background:var(--dark);color:#fff;border:1px solid rgba(255,255,255,.08);border-radius:6px;
+  box-shadow:0 40px 80px -30px rgba(20,22,24,.35);overflow:hidden;font-size:.85rem}
+.dash-top{display:flex;align-items:center;gap:1.2rem;padding:.75rem 1.1rem;border-bottom:1px solid rgba(255,255,255,.08)}
+.dash-dots{display:flex;gap:6px}
+.dash-dots i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.18)}
+.dash-search{margin-left:auto;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:4px;padding:.35rem .8rem;color:rgba(255,255,255,.4);font-size:.78rem}
+.dash-body{display:grid;grid-template-columns:210px 1fr}
+.dash-side{border-right:1px solid rgba(255,255,255,.08);padding:1rem .6rem}
+.dash-side span{display:block;padding:.55rem .85rem;color:#9b9b9b;border-radius:4px}
+.dash-side span.on{color:#fff;background:rgba(255,255,255,.07);border-left:2px solid #fff}
+.dash-main{padding:1.2rem 1.4rem 1.6rem}
+.dash-head{display:flex;align-items:center;gap:.9rem;margin-bottom:1rem;flex-wrap:wrap}
+.dash-head h4{font-size:1rem;font-weight:600}
+.live{display:inline-flex;align-items:center;gap:.5rem;font-family:'IBM Plex Mono',monospace;
+  font-size:.68rem;letter-spacing:.12em;color:#3dcc4a;border:1px solid rgba(61,204,74,.35);
+  padding:.3rem .6rem;border-radius:3px}
+.dot-live{width:7px;height:7px;border-radius:50%;background:#3dcc4a;position:relative;flex:none}
+.dot-live::after{content:"";position:absolute;inset:0;border-radius:50%;background:inherit;animation:pulse 1.6s infinite}
+@keyframes pulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(2.6);opacity:0}}
+.trow{display:grid;grid-template-columns:64px minmax(0,1fr) auto auto;gap:1.1rem;align-items:center;
+  padding:.95rem .4rem;border-top:1px solid rgba(255,255,255,.08)}
+.trow:first-of-type{border-top:0}
+.match{font-family:'IBM Plex Mono',monospace;font-size:.85rem;color:#fff;
+  border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.08);text-align:center;padding:.4rem 0}
+.t-info h5{font-size:.9rem;font-weight:600;display:flex;align-items:center;gap:.55rem;flex-wrap:wrap}
+.t-info .t-meta{color:#9b9b9b;font-size:.76rem;margin-top:.25rem}
+.chip-novo{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.12em;color:#3dcc4a;
+  border:1px solid rgba(61,204,74,.4);padding:.12rem .4rem}
+.t-tags{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:flex-end}
+.t-tags i{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.08em;
+  color:#9b9b9b;border:1px solid rgba(255,255,255,.16);padding:.22rem .5rem;white-space:nowrap}
+.t-money{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap;text-align:right}
+.t-money small{display:block;font-weight:400;color:#9b9b9b;font-size:.7rem}
+@media(max-width:860px){.t-tags{display:none}}
+@media(max-width:680px){
+  .dash-side{display:none}
+  .dash-body{grid-template-columns:1fr}
+  .t-money{display:none}
+  .trow{grid-template-columns:56px minmax(0,1fr)}
+}
+.float-chip{position:absolute;background:#fff;color:var(--ink);border:1px solid rgba(30,33,36,.1);
+  padding:.7rem 1rem;font-size:.8rem;font-weight:600;box-shadow:0 18px 40px -12px rgba(20,22,24,.3);
+  display:flex;align-items:center;gap:.6rem;z-index:3}
+.float-chip .dot-live{background:var(--accent)} .float-chip .dot-live::after{background:var(--accent)}
+.chip-a{top:-18px;right:34px}
+.chip-b{bottom:-18px;left:38px}
+@media(max-width:760px){.float-chip{display:none}}
+
+/* ============ FUNKCIJE ============ */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair);border:1px solid var(--hair)}
+.feat{background:var(--dark);padding:clamp(1.6rem,2.6vw,2.4rem);transition:background .25s}
+.feat:hover{background:#26292d}
+.feat svg{width:26px;height:26px;stroke:var(--acc);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.feat h3{font-size:1.02rem;font-weight:600;margin:1.2rem 0 .55rem}
+.feat p{color:var(--mut);font-size:.92rem}
+@media(max-width:1024px){.feat-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.feat-grid{grid-template-columns:1fr}}
+
+/* ============ KONTAKT ============ */
+.contact-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.75fr);gap:clamp(2.5rem,6vw,5.5rem)}
+@media(max-width:900px){.contact-grid{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:.4rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+.form-grid .full{grid-column:1/-1}
+@media(max-width:560px){.form-grid{grid-template-columns:1fr}}
+.field label{font-size:.8rem;letter-spacing:.04em;color:var(--mut)}
+.field input,.field textarea{background:transparent;border:1px solid var(--hair);color:#fff;
+  padding:.95rem 1rem;font:inherit;font-size:.95rem;width:100%;transition:border-color .2s}
+.field input:focus,.field textarea:focus{outline:none;border-color:#fff}
+.field input.invalid,.field textarea.invalid{border-color:var(--error)}
+.field textarea{min-height:120px;resize:vertical}
+.field-err{color:var(--error);font-size:.76rem;min-height:1rem}
+.form-success{display:none;flex-direction:column;gap:.8rem;align-items:flex-start;border:1px solid var(--hair);padding:2.4rem}
+.form-success svg{width:40px;height:40px;stroke:#fff;fill:none;stroke-width:2}
+.info-row{border-top:1px solid var(--hair);padding:1.1rem 0}
+.info-row .k{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.info-row .v{font-size:1.05rem;margin-top:.3rem}
+.info-row a{text-decoration:none}
+.info-row a:hover{color:var(--mut)}
+
+/* ============ FOOTER ============ */
+.site-footer{background:var(--dark-2);color:#fff;padding:4.5rem 0 2rem;border-top:1px solid rgba(255,255,255,.08)}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem}
+@media(max-width:860px){.foot-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.foot-grid{grid-template-columns:1fr}}
+.foot-brand p{color:#9b9b9b;font-size:.9rem;margin-top:1.1rem;max-width:32ch}
+.foot-col h4{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:#9b9b9b;margin-bottom:1.1rem}
+.foot-col ul{list-style:none}
+.foot-col a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:.92rem;padding:.32rem 0;transition:color .2s}
+.foot-col a:hover{color:#fff}
+.foot-bottom{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;
+  border-top:1px solid rgba(255,255,255,.1);margin-top:3.5rem;padding-top:1.6rem;font-size:.82rem;color:#9b9b9b}
+
+/* ============ ANIMACIJE ============ */
+[data-reveal]{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;transition-delay:var(--d,0s)}
+[data-reveal].in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  [data-reveal],.h-anim{opacity:1;transform:none;transition:none}
+  .dot-live::after{animation:none}
+  .ch{opacity:1}
+  .caret{display:none}
+}
+</style>
+<noscript><style>.h-anim{opacity:1;transform:none}</style></noscript>
+</head>
+<body id="top">
+<a class="skip" href="#sadrzaj">Preskoči na sadržaj</a>
+
+<!-- ========== HEADER (STAKLO) ========== -->
+<header class="site-header" id="siteHeader">
+  <div class="wrap header-in">
+    <a class="brand" href="#top" aria-label="KLIENTELA -početna">
+      <img src="logo.png" alt="KLIENTELA logo" class="brand-logo" onerror="this.parentElement.classList.add('fallback')">
+      <span class="brand-wordmark">KLIENTELA</span>
+    </a>
+    <nav class="nav-links" aria-label="Glavna navigacija">
+      <a href="#kako-radi">Kako radi</a>
+      <a href="#platforma">Proizvod</a>
+      <a href="#funkcije">Funkcije</a>
+    </nav>
+    <a href="#kontakt" class="btn btn-solid header-cta">Zatražite demo</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Otvori meni" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- mobilni meni -->
+<div class="mnav" id="mnav">
+  <div class="mnav-backdrop" data-close></div>
+  <nav class="mnav-panel" aria-label="Mobilna navigacija">
+    <a href="#kako-radi">Kako radi</a>
+    <a href="#platforma">Proizvod</a>
+    <a href="#funkcije">Funkcije</a>
+    <a href="#kontakt">Kontakt</a>
+    <a href="#kontakt" class="btn btn-solid">Zatražite demo</a>
+  </nav>
+</div>
+
+<main id="sadrzaj">
+
+<!-- ========== HERO ========== -->
+<section class="hero" id="pocetna">
+  <canvas id="net" aria-hidden="true"></canvas>
+  <div class="wrap hero-inner">
+    <p class="eyebrow h-anim">SaaS platforma</p>
+    <h1 data-type="hero">Poslovi i tenderi koji odgovaraju <em>vašoj firmi</em> -pronađeni umjesto vas.</h1>
+    <p class="hero-sub" data-type="hero">KLIENTELA prati hiljade javnih nabavki, tendera i privatnih poziva svaki dan i automatski ih upoređuje sa kapacitetima, proizvodima i referencama vaše firme. Više ne gubite sate pretražujući portale -prave prilike stižu direktno vama.</p>
+    <div class="hero-cta h-anim" style="--d:.24s">
+      <a href="#kontakt" class="btn btn-solid">Zatražite demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- ========== STATISTIKA ========== -->
+<section class="stats">
+  <div class="wrap stats-grid">
+    <div class="stat" data-reveal>
+      <div class="stat-num" data-target="1500" data-suffix="+">0</div>
+      <p class="stat-label">tendera i poslova sedmično u Crnoj Gori i regionu</p>
+    </div>
+    <div class="stat" data-reveal style="--d:.08s">
+      <div class="stat-num" data-target="40" data-suffix="+">0</div>
+      <p class="stat-label">praćenih izvora, portala i e-procurement sistema</p>
+    </div>
+    <div class="stat" data-reveal style="--d:.16s">
+      <div class="stat-num" data-target="24" data-suffix="/7">0</div>
+      <p class="stat-label">nadzor izvora u realnom vremenu</p>
+    </div>
+    <div class="stat" data-reveal style="--d:.24s">
+      <div class="stat-num" data-target="10" data-suffix="×">0</div>
+      <p class="stat-label">brže do relevantne prilike za vaš tim</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== KAKO RADI -VELIKI CAROUSEL ========== -->
+<section class="sec sec-light" id="kako-radi">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow" data-reveal>Kako funkcioniše</p>
+      <h2 class="sec-title" data-type>Od profila firme do prave prilike -u četiri koraka.</h2>
+      <p class="sec-lede" data-reveal style="--d:.1s">Jednom postavite profil, a sistem radi svaki dan. Nema podešavanja filtera svako jutro, nema propuštenih rokova.</p>
+    </div>
+  </div>
+
+  <div class="crs" id="crs" data-reveal>
+    <div class="crs-viewport" id="crsViewport">
+      <div class="crs-track" id="crsTrack">
+
+        <article class="crs-slide">
+          <div class="crs-media" data-num="01">
+            <img src="slika-01.jpg" alt="" draggable="false" onerror="this.closest('.crs-media').classList.add('noimg');this.remove()">
+          </div>
+          <div class="crs-shade"></div>
+          <div class="crs-caption">
+            <span class="crs-num">01</span>
+            <h3>Profilirajte firmu</h3>
+            <p>Definišite djelatnosti, proizvode, usluge, kapacitete, certifikate i regiju poslovanja. Sistem uči šta vaša firma najbolje radi.</p>
+          </div>
+        </article>
+
+        <article class="crs-slide">
+          <div class="crs-media" data-num="02">
+            <img src="slika-02.jpg" alt="" draggable="false" onerror="this.closest('.crs-media').classList.add('noimg');this.remove()">
+          </div>
+          <div class="crs-shade"></div>
+          <div class="crs-caption">
+            <span class="crs-num">02</span>
+            <h3>Mi pratimo sve izvore</h3>
+            <p>Javne nabavke, državni i opštinski portali, e-procurement sistemi, privatni pozivi i investicioni projekti -svaki dan, u realnom vremenu.</p>
+          </div>
+        </article>
+
+        <article class="crs-slide">
+          <div class="crs-media" data-num="03">
+            <img src="slika-03.jpg" alt="" draggable="false" onerror="this.closest('.crs-media').classList.add('noimg');this.remove()">
+          </div>
+          <div class="crs-shade"></div>
+          <div class="crs-caption">
+            <span class="crs-num">03</span>
+            <h3>Dobijate podudaranja</h3>
+            <p>Algoritam rangira prilike prema relevantnosti za vaš profil i šalje ih u vaš inbox -sa procentom podudaranja i objašnjenjem.</p>
+          </div>
+        </article>
+
+        <article class="crs-slide">
+          <div class="crs-media" data-num="04">
+            <img src="slika-04.jpg" alt="" draggable="false" onerror="this.closest('.crs-media').classList.add('noimg');this.remove()">
+          </div>
+          <div class="crs-shade"></div>
+          <div class="crs-caption">
+            <span class="crs-num">04</span>
+            <h3>Reagujete na vrijeme</h3>
+            <p>Rokovi, vrijednost ugovora i dokumentacija na jednom mjestu, sa automatskim podsjetnicima. Nikada više propuštena prilika.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <button class="crs-arrow prev" id="crsPrev" aria-label="Prethodni slajd">
+      <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <button class="crs-arrow next" id="crsNext" aria-label="Sljedeći slajd">
+      <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+    <div class="crs-dots" id="crsDots" aria-label="Slajdovi"></div>
+  </div>
+</section>
+
+<!-- ========== PROIZVOD / DASHBOARD ========== -->
+<section class="sec sec-tint" id="platforma">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow" data-reveal>Proizvod</p>
+      <h2 class="sec-title" data-type>Jedna nadzorna tabla -sve prilike.</h2>
+      <p class="sec-lede" data-reveal style="--d:.1s">Svako podudaranje dolazi sa procentom relevantnosti, vrijednošću ugovora, rokom i izvorom. Sortirajte, filtrirajte i dodijelite prilike timu.</p>
+    </div>
+    <div class="dash-wrap" data-reveal>
+      <div class="float-chip chip-a"><span class="dot-live"></span>3 nova podudaranja danas</div>
+      <div class="float-chip chip-b">⏱ Rok za ponudu: 12 dana -Podsjetnik aktiviran</div>
+      <div class="dash" role="img" aria-label="Prikaz KLIENTELA nadzorne table">
+        <div class="dash-top">
+          <div class="dash-dots"><i></i><i></i><i></i></div>
+          <div class="dash-search">Pretraži tender…</div>
+        </div>
+        <div class="dash-body">
+          <div class="dash-side">
+            <span>Nadzorna tabla</span>
+            <span class="on">Praćene prilike</span>
+            <span>Tenderi</span>
+            <span>Rokovi</span>
+            <span>Analitika</span>
+            <span>Postavke</span>
+          </div>
+          <div class="dash-main">
+            <div class="dash-head">
+              <h4>Praćene prilike</h4>
+              <span class="live"><span class="dot-live"></span>UŽIVO</span>
+            </div>
+            <div class="trow" data-reveal style="--d:.1s">
+              <div class="match">94%</div>
+              <div class="t-info">
+                <h5>Rekonstrukcija i modernizacija vodovodne mreže <span class="chip-novo">NOVO</span></h5>
+                <p class="t-meta">JP Vodovod i kanalizacija · Rok: 12 dana</p>
+              </div>
+              <div class="t-tags"><i>GRAĐEVINARSTVO</i><i>VODOPRIVREDA</i></div>
+              <div class="t-money">480.000 €<small>procijenjena vrijednost</small></div>
+            </div>
+            <div class="trow" data-reveal style="--d:.18s">
+              <div class="match">91%</div>
+              <div class="t-info">
+                <h5>Nabavka laboratorijske opreme i potrošnog materijala</h5>
+                <p class="t-meta">Klinički centar Crne Gore · Rok: 19 dana</p>
+              </div>
+              <div class="t-tags"><i>OPREMA</i><i>ZDRAVSTVO</i></div>
+              <div class="t-money">260.000 €<small>procijenjena vrijednost</small></div>
+            </div>
+            <div class="trow" data-reveal style="--d:.26s">
+              <div class="match">87%</div>
+              <div class="t-info">
+                <h5>Izvođenje radova na rekonstrukciji poslovne zgrade</h5>
+                <p class="t-meta">Ministarstvo finansija · Rok: 25 dana</p>
+              </div>
+              <div class="t-tags"><i>GRAĐEVINARSTVO</i><i>ADAPTACIJA</i></div>
+              <div class="t-money">1.250.000 €<small>procijenjena vrijednost</small></div>
+            </div>
+            <div class="trow" data-reveal style="--d:.34s">
+              <div class="match">82%</div>
+              <div class="t-info">
+                <h5>Dostava IT opreme za potrebe javne uprave</h5>
+                <p class="t-meta">Ministarstvo javne uprave · Rok: 8 dana</p>
+              </div>
+              <div class="t-tags"><i>IT</i><i>OPREMA</i></div>
+              <div class="t-money">150.000 €<small>procijenjena vrijednost</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FUNKCIJE ========== -->
+<section class="sec sec-dark" id="funkcije">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow" data-reveal>Funkcije</p>
+      <h2 class="sec-title" data-type>Sve što vam treba da ne propustite nijedan posao.</h2>
+      <p class="sec-lede" data-reveal style="--d:.1s">Kombinacija praćenja izvora, pametnog podudaranja i pravovremenih podsjetnika -sve u jednoj platformi.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat" data-reveal>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg>
+        <h3>Pametno podudaranje</h3>
+        <p>Algoritam upoređuje svaki tender sa profilom vaše firme: djelatnosti, proizvodi, usluge, kapaciteti, reference i regija poslovanja.</p>
+      </div>
+      <div class="feat" data-reveal style="--d:.06s">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="2"/></svg>
+        <h3>Monitoring 40+ izvora</h3>
+        <p>Javne nabavke, e-procurement portali, državni i opštinski sistemi, privatni pozivi -sve na jednom mjestu, bez osvježavanja deset sajtova.</p>
+      </div>
+      <div class="feat" data-reveal style="--d:.12s">
+        <svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>
+        <h3>Notifikacije u realnom vremenu</h3>
+        <p>Email, SMS ili Viber obavještenje u trenutku objave relevantnog tendera. Prvi saznajete -prije konkurencije.</p>
+      </div>
+      <div class="feat" data-reveal>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg>
+        <h3>Rokovi i podsjetnici</h3>
+        <p>Automatsko praćenje rokova za dostavu ponuda, sa podsjetnicima 7, 3 i 1 dan prije isteka. Vi se fokusirate na ponudu.</p>
+      </div>
+      <div class="feat" data-reveal style="--d:.06s">
+        <svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        <h3>Analitika i izvještaji</h3>
+        <p>Pratite broj podudaranja, poslanih ponuda, osvojenih ugovora i stopu uspješnosti -po mjesecima, djelatnostima i institucijama.</p>
+      </div>
+      <div class="feat" data-reveal style="--d:.12s">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.4 3.4-5 6.5-5s5.7 1.6 6.5 5"/><circle cx="17.5" cy="9.5" r="2.5"/><path d="M16 15.2c2.6.3 4.6 1.7 5.3 4.3"/></svg>
+        <h3>Timski rad</h3>
+        <p>Dodijelite prilike kolegama, komentarišite i dijelite dokumentaciju unutar platforme.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== KONTAKT ========== -->
+<section class="sec sec-dark" id="kontakt">
+  <div class="wrap contact-grid">
+    <div>
+      <p class="eyebrow" data-reveal>Kontakt</p>
+      <h2 class="sec-title" data-type>Zatražite demo ili pitajte sve što vas zanima.</h2>
+      <p class="sec-lede" data-reveal style="--d:.08s">Popunite formu ili nas pozovite -za demo pripremamo prilagođen prikaz platforme na primjerima iz vaše djelatnosti.</p>
+      <form id="demoForm" class="form-grid" style="margin-top:2.4rem" novalidate>
+        <div class="form-body" style="display:contents">
+          <div class="field">
+            <label for="f-name">Ime i prezime *</label>
+            <input id="f-name" name="name" type="text" required autocomplete="name">
+            <span class="field-err"></span>
+          </div>
+          <div class="field">
+            <label for="f-email">Poslovni email *</label>
+            <input id="f-email" name="email" type="email" required autocomplete="email">
+            <span class="field-err"></span>
+          </div>
+          <div class="field">
+            <label for="f-company">Naziv firme *</label>
+            <input id="f-company" name="company" type="text" required autocomplete="organization">
+            <span class="field-err"></span>
+          </div>
+          <div class="field">
+            <label for="f-phone">Telefon (opciono)</label>
+            <input id="f-phone" name="phone" type="tel" autocomplete="tel">
+            <span class="field-err"></span>
+          </div>
+          <div class="field full">
+            <label for="f-msg">Poruka (opciono)</label>
+            <textarea id="f-msg" name="message"></textarea>
+            <span class="field-err"></span>
+          </div>
+          <div class="full">
+            <button type="submit" class="btn btn-solid">Pošaljite upit</button>
+          </div>
+        </div>
+        <div class="form-success full" id="formSuccess">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12.5l2.6 2.6L16 9.5"/></svg>
+          <h3 style="font-size:1.2rem">Hvala! Vaš upit je poslan.</h3>
+          <p style="color:var(--mut)">Javićemo se u najkraćem roku.</p>
+        </div>
+      </form>
+    </div>
+    <div style="padding-top:clamp(1rem,3vw,3.4rem)">
+      <!-- PROMIJENITE KONTAKT PODATKE OVDJE -->
+      <div class="info-row">
+        <p class="k">Email</p>
+        <p class="v"><a href="mailto:kontakt@klientela.com">kontakt@klientela.me</a></p>
+      </div>
+      <div class="info-row">
+        <p class="k">Telefon</p>
+        <p class="v"><a href="tel:+38267681420">+382 67 681 420</a></p>
+      </div>
+      <div class="info-row">
+        <p class="k">Sjedište</p>
+        <p class="v">Podgorica, Crna Gora</p>
+      </div>
+      <div class="info-row">
+        <p class="k">Podrška</p>
+        <p class="v">pon – pet, 09:00 – 17:00</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ========== FOOTER ========== -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="#top" aria-label="KLIENTELA">
+          <img src="logo.png" alt="KLIENTELA logo" class="brand-logo" style="height:26px" onerror="this.parentElement.classList.add('fallback')">
+          <span class="brand-wordmark">KLIENTELA</span>
+        </a>
+        <p>Platforma koja pronalazi poslove i tendere podudarne sa kapacitetima i proizvodima vaše firme.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Platforma</h4>
+        <ul>
+          <li><a href="#kako-radi">Kako radi</a></li>
+          <li><a href="#platforma">Proizvod</a></li>
+          <li><a href="#funkcije">Funkcije</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Firma</h4>
+        <ul>
+          <li><a href="#kontakt">Kontakt</a></li>
+          <li><a href="#">Karijere</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p>© <span id="year"></span> KLIENTELA. Sva prava zadržana.</p>
+      <p>Napravljeno za firme koje ne čekaju prilike -nego ih pronalaze.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ==========================================================
+     EFEKAT KUCANJA
+     typeify() se zove ODMAH pri učitavanju -sva slova postanu
+     nevidljiva (span.ch), pa tekst ne "blinkne" prije animacije.
+     play() zatim otkriva slova jedno po jedno.
+     ========================================================== */
+  var Type = (function(){
+    function typeify(el){
+      if(!el.dataset.typed){
+        var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+        var nodes = [], n;
+        while((n = walker.nextNode())) if(n.nodeValue.length) nodes.push(n);
+        nodes.forEach(function(node){
+          var frag = document.createDocumentFragment();
+          var txt = node.nodeValue;
+          for(var i = 0; i < txt.length; i++){
+            var s = document.createElement("span");
+            s.className = "ch";
+            s.textContent = txt[i];
+            frag.appendChild(s);
+          }
+          node.parentNode.replaceChild(frag, node);
+        });
+        el.dataset.typed = "1";
+      }
+      /* radi i za klonirane slajdove (klonovi nemaju _chars) */
+      el._chars = Array.prototype.slice.call(el.querySelectorAll(".ch"));
+    }
+    function play(el, speed, delay, done){
+      typeify(el);
+      if(reduced){
+        el._chars.forEach(function(s){ s.classList.add("on"); });
+        if(done) done();
+        return;
+      }
+      if(el._rafId){ clearTimeout(el._rafId); }
+      if(el._caret){ el._caret.remove(); el._caret = null; }
+      el._chars.forEach(function(s){ s.classList.remove("on"); });
+      var i = 0;
+      var gen = (el._gen = (el._gen || 0) + 1);
+      var caret = document.createElement("span");
+      caret.className = "caret";
+      function tick(){
+        if(gen !== el._gen){
+          if(el._caret){ el._caret.remove(); el._caret = null; }
+          return;
+        }
+        if(i >= el._chars.length){
+          if(el._caret){ el._caret.remove(); el._caret = null; }
+          if(done) done();
+          return;
+        }
+        var c = el._chars[i];
+        c.classList.add("on");
+        if(el._caret) el._caret.remove();
+        c.parentNode.insertBefore(caret, c.nextSibling);
+        el._caret = caret;
+        i++;
+        var sp = c.textContent === " " ? Math.max(8, speed * .4) : speed;
+        el._rafId = setTimeout(tick, sp);
+      }
+      el._rafId = setTimeout(tick, delay || 0);
+    }
+    return { play: play, typeify: typeify };
+  })();
+
+  /* --- PAKNUI SVA SLOVA ODMAH: hero, naslovi sekcija, slajdovi ---
+     Tako ništa nije vidljivo prije svoje animacije kucanja. */
+  document.querySelectorAll("[data-type]").forEach(Type.typeify);
+  document.querySelectorAll(".crs-caption h3, .crs-caption p").forEach(Type.typeify);
+  if(reduced){
+    document.querySelectorAll(".ch").forEach(function(s){ s.classList.add("on"); });
+  }
+
+  /* ---------- Header: sticky ---------- */
+  var header = document.getElementById("siteHeader");
+  window.addEventListener("scroll", function(){
+    header.classList.toggle("scrolled", window.scrollY > 10);
+  }, {passive:true});
+
+  /* ---------- Mobilni meni ---------- */
+  var mnav = document.getElementById("mnav");
+  var toggle = document.getElementById("navToggle");
+  function setMenu(open){
+    mnav.classList.toggle("open", open);
+    document.body.classList.toggle("menu-open", open);
+    document.body.style.overflow = open ? "hidden" : "";
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+  toggle.addEventListener("click", function(){ setMenu(!mnav.classList.contains("open")); });
+  mnav.querySelectorAll("[data-close], a").forEach(function(el){
+    el.addEventListener("click", function(){ setMenu(false); });
+  });
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape") setMenu(false); });
+
+  /* ---------- Reveal ---------- */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+    });
+  }, {threshold:.12, rootMargin:"0px 0px -40px 0px"});
+  document.querySelectorAll("[data-reveal]").forEach(function(el){ io.observe(el); });
+
+  /* --- Kucanje naslova sekcija TEK kad dođu u vidno polje --- */
+  var tio = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        tio.unobserve(e.target);
+        Type.play(e.target, 18, 120);
+      }
+    });
+  }, {threshold:.3, rootMargin:"0px 0px -60px 0px"});
+  document.querySelectorAll('[data-type]:not([data-type="hero"])').forEach(function(el){ tio.observe(el); });
+
+  /* ---------- Brojači ---------- */
+  function fmt(n){ return n.toLocaleString("de-DE"); }
+  function animateCount(el){
+    var target = parseInt(el.dataset.target, 10);
+    var suffix = el.dataset.suffix || "";
+    if(reduced){ el.textContent = fmt(target) + suffix; return; }
+    var dur = 1400, start = performance.now();
+    function frame(t){
+      var p = Math.min((t - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(Math.round(target * eased)) + suffix;
+      if(p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  var cio = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ animateCount(e.target); cio.unobserve(e.target); }
+    });
+  }, {threshold:.4});
+  document.querySelectorAll(".stat-num").forEach(function(el){ cio.observe(el); });
+
+  /* ---------- Aktivni nav link ---------- */
+  var navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+  var so = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        navLinks.forEach(function(l){
+          l.classList.toggle("active", l.getAttribute("href") === "#" + e.target.id);
+        });
+      }
+    });
+  }, {rootMargin:"-40% 0px -55% 0px"});
+  document.querySelectorAll("main section[id]").forEach(function(s){ so.observe(s); });
+
+  /* ---------- Forma ---------- */
+  var form = document.getElementById("demoForm");
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var ok = true;
+    form.querySelectorAll("[required]").forEach(function(f){
+      var err = f.closest(".field").querySelector(".field-err");
+      var bad = !f.value.trim();
+      if(!bad && f.type === "email") bad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.value);
+      f.classList.toggle("invalid", bad);
+      err.textContent = bad ? (f.type === "email" ? "Unesite ispravnu email adresu." : "Obavezno polje.") : "";
+      if(bad) ok = false;
+    });
+    if(ok){
+      form.querySelector(".form-body").style.display = "none";
+      document.getElementById("formSuccess").style.display = "flex";
+    }
+  });
+  form.querySelectorAll("input, textarea").forEach(function(f){
+    f.addEventListener("input", function(){
+      f.classList.remove("invalid");
+      var err = f.closest(".field").querySelector(".field-err");
+      if(err) err.textContent = "";
+    });
+  });
+
+  /* ---------- Godina ---------- */
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* ==========================================================
+     CAROUSEL "KAKO RADI" (loop, autoplay 4s, drag, strelice)
+     ========================================================== */
+  (function(){
+    var crs = document.getElementById("crs");
+    if(!crs) return;
+    var viewport = document.getElementById("crsViewport");
+    var track = document.getElementById("crsTrack");
+    var dotsBox = document.getElementById("crsDots");
+    var originals = Array.prototype.slice.call(track.children);
+    var N = originals.length;
+    if(N === 0) return;
+
+    if(N > 1){
+      var head = document.createDocumentFragment(), tail = document.createDocumentFragment();
+      originals.forEach(function(s){ head.appendChild(s.cloneNode(true)); tail.appendChild(s.cloneNode(true)); });
+      track.insertBefore(head, track.firstChild);
+      track.appendChild(tail);
+    }
+    var slides = Array.prototype.slice.call(track.children);
+
+    var dots = [];
+    for(var d = 0; d < N; d++){
+      (function(real){
+        var b = document.createElement("button");
+        b.type = "button";
+        b.setAttribute("aria-label", "Slajd " + (real + 1));
+        b.addEventListener("click", function(){ goTo(N + real, true); restart(); });
+        dotsBox.appendChild(b);
+        dots.push(b);
+      })(d);
+    }
+
+    var index = N;
+    var slideW = 0, stepW = 0;
+    var inView = false, hovering = false, timer = null, typedInit = false;
+
+    function measure(){
+      slideW = slides[0].offsetWidth;
+stepW = slides.length > 1 ? (slides[1].offsetLeft - slides[0].offsetLeft) : slideW;
+}
+function xFor(i){
+var vw = viewport.clientWidth;
+return (vw - slideW) / 2 - i * stepW;
+}
+function apply(anim){
+track.style.transition = anim ? "transform .65s cubic-bezier(.22,.61,.36,1)" : "none";
+track.style.transform = "translate3d(" + xFor(index).toFixed(1) + "px,0,0)";
+}
+function paint(){
+var real = ((index % N) + N) % N;
+slides.forEach(function(s, i){ s.classList.toggle("is-active", i === index); });
+dots.forEach(function(btn, i){ btn.classList.toggle("on", i === real); });
+}
+/* kucanje teksta aktivnog slajda (naslov i opis istovremeno) */
+function typeCaption(slide){
+var cap = slide.querySelector(".crs-caption");
+if(!cap) return;
+var h = cap.querySelector("h3"), p = cap.querySelector("p");
+if(h) Type.play(h, 24, 250);
+if(p) Type.play(p, 8, 250);
+}
+function goTo(i, anim){
+index = i;
+apply(anim);
+paint();
+typeCaption(slides[index]);
+}
+function next(){ goTo(index + 1, true); }
+function prev(){ goTo(index - 1, true); }
+function restart(){ stopAuto(); startAuto(); }
+
+track.addEventListener("transitionend", function(e){
+if(e.target !== track || e.propertyName !== "transform") return;
+if(index >= 2 * N){ index -= N; apply(false); }
+else if(index < N){ index += N; apply(false); }
+});
+
+function stopAuto(){ if(timer){ clearInterval(timer); timer = null; } }
+function startAuto(){
+stopAuto();
+if(!reduced && inView && !hovering && N > 1) timer = setInterval(next, 4000);
+}
+crs.addEventListener("mouseenter", function(){ hovering = true; startAuto(); });
+crs.addEventListener("mouseleave", function(){ hovering = false; startAuto(); });
+new IntersectionObserver(function(en){
+inView = en[0].isIntersecting;
+if(inView && !typedInit){ typedInit = true; typeCaption(slides[index]); }
+startAuto();
+}, {threshold:.2}).observe(crs);
+
+document.getElementById("crsPrev").addEventListener("click", function(){ prev(); restart(); });
+document.getElementById("crsNext").addEventListener("click", function(){ next(); restart(); });
+
+var dragging = false, startX = 0, dx = 0, baseX = 0;
+viewport.addEventListener("pointerdown", function(e){
+if(N < 2) return;
+dragging = true; startX = e.clientX; dx = 0;
+baseX = xFor(index);
+track.style.transition = "none";
+viewport.classList.add("grabbing");
+if(viewport.setPointerCapture){ try{ viewport.setPointerCapture(e.pointerId); }catch(_){} }
+});
+viewport.addEventListener("pointermove", function(e){
+if(!dragging) return;
+dx = e.clientX - startX;
+track.style.transform = "translate3d(" + (baseX + dx).toFixed(1) + "px,0,0)";
+});
+function endDrag(){
+if(!dragging) return;
+dragging = false;
+viewport.classList.remove("grabbing");
+var delta = Math.abs(dx) > 50 ? (dx < 0 ? 1 : -1) : 0;
+goTo(index + delta, true);
+restart();
+}
+viewport.addEventListener("pointerup", endDrag);
+viewport.addEventListener("pointercancel", endDrag);
+
+document.addEventListener("keydown", function(e){
+if(!inView) return;
+if(e.key === "ArrowRight"){ next(); restart(); }
+else if(e.key === "ArrowLeft"){ prev(); restart(); }
+});
+
+window.addEventListener("resize", function(){ measure(); apply(false); });
+window.addEventListener("load", function(){ measure(); apply(false); });
+
+measure();
+apply(false);
+paint();
+startAuto();
+})();
+
+/* ==========================================================
+ZVIJEZDE -PROLAZ KROZ SAZVJEŽĐE (1500ms, max 86)
+========================================================== */
+var canvas = document.getElementById("net");
+if(!canvas || reduced){
+document.body.classList.add("hero-in");
+} else {
+var ctx = canvas.getContext("2d"), w, h, nodes = [], raf = null;
+var WARP_DUR = 1500;
+var WARP_MAX = 86;
+var warpStart = null;
+
+function makeNodes(){
+var count = Math.min(180, Math.max(90, Math.floor(w * h / 9000)));
+nodes = [];
+for(var i = 0; i < count; i++){
+nodes.push({
+x: Math.random() * w, y: Math.random() * h,
+vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35,
+r: Math.random() * 1.6 + .8,
+z: .5 + Math.random() * .9
+});
+}
+}
+function resize(){
+var dpr = Math.min(window.devicePixelRatio || 1, 2);
+w = canvas.offsetWidth; h = canvas.offsetHeight;
+canvas.width = w * dpr; canvas.height = h * dpr;
+ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+makeNodes();
+}
+function step(now){
+if(warpStart === null) warpStart = now;
+ctx.clearRect(0, 0, w, h);
+var t = now - warpStart;
+var p = Math.min(t / WARP_DUR, 1);
+var warpSpeed = WARP_MAX * Math.pow(1 - p, 1.8);
+var trail = Math.min(160, warpSpeed * 5);
+var calm = p >= 1 ? 1 : Math.max(0, (p - .78) / .22);
+var i, j, a, b, dx2, dy2, d;
+var m = trail + 14;
+
+for(i = 0; i < nodes.length; i++){
+a = nodes[i];
+a.y += warpSpeed * a.z + a.vy;
+a.x += a.vx;
+if(a.y > h + m){ a.y = -m - Math.random() * 80; a.x = Math.random() * w; }
+else if(a.y < -m - 80){ a.y = h + m; }
+if(a.x < -m) a.x = w + m - 1; else if(a.x > w + m) a.x = -m + 1;
+}
+if(calm > 0){
+var maxD = 140;
+ctx.lineWidth = 1;
+ctx.strokeStyle = "#ffffff";
+for(i = 0; i < nodes.length; i++){
+for(j = i + 1; j < nodes.length; j++){
+a = nodes[i]; b = nodes[j];
+dx2 = a.x - b.x; dy2 = a.y - b.y;
+d = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+if(d < maxD){
+ctx.globalAlpha = (1 - d / maxD) * .28 * calm;
+ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+}
+}
+}
+}
+ctx.lineCap = "round";
+for(i = 0; i < nodes.length; i++){
+a = nodes[i];
+if(trail > 2){
+var tl = trail * a.z;
+var g = ctx.createLinearGradient(a.x, a.y - tl, a.x, a.y);
+g.addColorStop(0, "rgba(255,255,255,0)");
+g.addColorStop(1, "rgba(255,255,255,.85)");
+ctx.globalAlpha = 1;
+ctx.strokeStyle = g;
+ctx.lineWidth = Math.min(a.r * 1.6, 2.4);
+ctx.beginPath();
+ctx.moveTo(a.x, a.y - tl);
+ctx.lineTo(a.x, a.y);
+ctx.stroke();
+}
+ctx.globalAlpha = .85;
+ctx.fillStyle = "#ffffff";
+ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2); ctx.fill();
+}
+ctx.globalAlpha = 1;
+raf = requestAnimationFrame(step);
+}
+
+resize();
+window.addEventListener("resize", resize);
+
+/* kad zvijezde stanu -OBA teksta se kucaju ISTOVREMENO */
+setTimeout(function(){
+document.body.classList.add("hero-in");
+var h1 = document.querySelector('h1[data-type="hero"]');
+var sub = document.querySelector('.hero-sub[data-type="hero"]');
+if(h1) Type.play(h1, 16, 150);
+if(sub) Type.play(sub, 8, 150);
+}, WARP_DUR);
+
+new IntersectionObserver(function(entries){
+if(entries[0].isIntersecting){ cancelAnimationFrame(raf); raf = requestAnimationFrame(step); }
+else cancelAnimationFrame(raf);
+}).observe(document.querySelector(".hero"));
+}
+})();
+</script>
+
+</body>
+</html>
