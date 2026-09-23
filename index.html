@@ -55,13 +55,14 @@ section[id]{scroll-margin-top:calc(var(--header-h) + 12px)}
 @media(max-width:860px){.sec-head{grid-template-columns:1fr}}
 
 /* ============ EFEKAT KUCANJA ============ */
-.ch{opacity:0}
+.ch{opacity:0;position:relative}
 .ch.on{opacity:1;transition:opacity .05s linear}
-/* FIX: kursor je NULTE širine u layoutu — vidljiva crtica je apsolutno
-   pozicionirana, pa ne pomjera prelom redova niti visinu teksta */
-.caret{position:relative;display:inline-block;width:0;height:1em;vertical-align:-.12em}
-.caret::before{content:"";position:absolute;left:2px;top:.06em;width:2px;height:.95em;
-  background:currentColor;animation:caret-blink .9s steps(1) infinite}
+/* KURSOR: apsolutno pozicioniran UNUTAR zadnjeg otkucanog slova.
+   Nula uticaja na layout — ne pomjera tekst, ne mijenja prelom
+   redova, ne može izazvati "skok" ni na jednom ekranu. */
+.caret{position:absolute;left:calc(100% + 1px);top:50%;transform:translateY(-54%);
+  width:2px;height:.95em;background:currentColor;
+  animation:caret-blink .9s steps(1) infinite;pointer-events:none}
 @keyframes caret-blink{0%,55%{opacity:1}56%,100%{opacity:0}}
 
 /* ============ DUGMAD ============ */
@@ -709,9 +710,10 @@ body.hero-in .h-anim{opacity:1;transform:none}
 
   /* ==========================================================
      EFEKAT KUCANJA
-     typeify() odmah pakuje sva slova u nevidljive spanove,
-     pa tekst ne "blinkne" prije animacije. play() otkriva
-     slovo po slovo. Kursor je nulte širine — ne mijenja layout.
+     - typeify() odmah pakuje sva slova u nevidljive spanove,
+       pa je layout finalan PRIJE početka kucanja (nema reflowa).
+     - kursor je apsolutno pozicioniran UNUTAR zadnjeg slova —
+       nula uticaja na layout, nema skokova ni prelamanja.
      ========================================================== */
   var Type = (function(){
     function typeify(el){
@@ -761,8 +763,10 @@ body.hero-in .h-anim{opacity:1;transform:none}
         }
         var c = el._chars[i];
         c.classList.add("on");
+        /* kursor ide UNUTAR slova (apsolutno pozicioniran) —
+           ne postoji u layout toku, ne može pomjeriti ništa */
         if(el._caret) el._caret.remove();
-        c.parentNode.insertBefore(caret, c.nextSibling);
+        c.appendChild(caret);
         el._caret = caret;
         i++;
         var sp = c.textContent === " " ? Math.max(8, speed * .4) : speed;
@@ -885,9 +889,9 @@ body.hero-in .h-anim{opacity:1;transform:none}
   document.getElementById("year").textContent = new Date().getFullYear();
 
   /* ==========================================================
-     CAROUSEL "KAKO RADI"
-     FIX: kucanje se dešava SAMO PRVI PUT po logičkom slajdu;
-     klik na karticu bez pomeraja ne radi ništa (nema re-kucanja).
+     CAROUSEL "KAKO RADI" (loop, autoplay 4s, drag, strelice)
+     Kucanje se dešava SAMO PRVI PUT po logičkom slajdu; klik
+     na karticu bez pomeraja ništa ne mijenja (nema re-kucanja).
      ========================================================== */
   (function(){
     var crs = document.getElementById("crs");
@@ -943,7 +947,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
     }
 
     /* kucanje captiona — samo PRVI PUT po logičkom slajdu;
-       kasnije aktivacije samo odmah prikažu tekst */
+       svaka naredna aktivacija samo odmah prikaže cijeli tekst */
     function typeCaption(slide, logical){
       var cap = slide.querySelector(".crs-caption");
       if(!cap) return;
@@ -992,7 +996,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
     document.getElementById("crsPrev").addEventListener("click", function(){ prev(); restart(); });
     document.getElementById("crsNext").addEventListener("click", function(){ next(); restart(); });
 
-    /* drag — klik bez pomeraja NE mijenja slajd i NE pokreće kucanje */
+    /* drag — klik/tap bez pomeraja NE mijenja slajd */
     var dragging = false, startX = 0, dx = 0, baseX = 0;
     viewport.addEventListener("pointerdown", function(e){
       if(N < 2) return;
@@ -1128,13 +1132,22 @@ body.hero-in .h-anim{opacity:1;transform:none}
     resize();
     window.addEventListener("resize", resize);
 
-    /* kad zvijezde stanu — OBA teksta se kucaju ISTOVREMENO */
+    /* kad zvijezde stanu — OBA teksta se kucaju ISTOVREMENO;
+       kucanje kreće tek kad je font učitan (da zamjena fonta
+       ne može reflow-ovati tekst usred animacije) */
     setTimeout(function(){
       document.body.classList.add("hero-in");
-      var h1 = document.querySelector('h1[data-type="hero"]');
-      var sub = document.querySelector('.hero-sub[data-type="hero"]');
-      if(h1) Type.play(h1, 16, 150);
-      if(sub) Type.play(sub, 8, 150);
+      var startHero = function(){
+        var h1 = document.querySelector('h1[data-type="hero"]');
+        var sub = document.querySelector('.hero-sub[data-type="hero"]');
+        if(h1) Type.play(h1, 16, 150);
+        if(sub) Type.play(sub, 8, 150);
+      };
+      if(document.fonts && document.fonts.ready){
+        document.fonts.ready.then(startHero);
+      } else {
+        startHero();
+      }
     }, WARP_DUR);
 
     new IntersectionObserver(function(entries){
