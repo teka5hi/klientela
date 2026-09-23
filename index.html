@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KLIENTELA -Poslovi i tenderi podudarni sa vašom firmom</title>
+<title>KLIENTELA — Poslovi i tenderi podudarni sa vašom firmom</title>
 <meta name="description" content="KLIENTELA je SaaS platforma koja svakodnevno pronalazi poslove i tendere koji se podudaraju sa kapacitetima, proizvodima i referencama vaše firme. Zatražite demo.">
-<meta property="og:title" content="KLIENTELA -Poslovi i tenderi podudarni sa vašom firmom">
+<meta property="og:title" content="KLIENTELA — Poslovi i tenderi podudarni sa vašom firmom">
 <meta property="og:type" content="website">
 <meta property="og:description" content="Platforma koja prati tendere i poslove i automatski ih uparuje sa profilom vaše firme.">
 <meta property="og:image" content="logo.png">
@@ -57,8 +57,11 @@ section[id]{scroll-margin-top:calc(var(--header-h) + 12px)}
 /* ============ EFEKAT KUCANJA ============ */
 .ch{opacity:0}
 .ch.on{opacity:1;transition:opacity .05s linear}
-.caret{display:inline-block;width:2px;height:1em;background:currentColor;
-  margin-left:2px;vertical-align:-.14em;animation:caret-blink .9s steps(1) infinite}
+/* FIX: kursor je NULTE širine u layoutu — vidljiva crtica je apsolutno
+   pozicionirana, pa ne pomjera prelom redova niti visinu teksta */
+.caret{position:relative;display:inline-block;width:0;height:1em;vertical-align:-.12em}
+.caret::before{content:"";position:absolute;left:2px;top:.06em;width:2px;height:.95em;
+  background:currentColor;animation:caret-blink .9s steps(1) infinite}
 @keyframes caret-blink{0%,55%{opacity:1}56%,100%{opacity:0}}
 
 /* ============ DUGMAD ============ */
@@ -85,7 +88,7 @@ section[id]{scroll-margin-top:calc(var(--header-h) + 12px)}
   background:#fff;color:var(--dark);border-color:#fff;
 }
 
-/* ============ HEADER -PRAVO STAKLO ============ */
+/* ============ HEADER — PRAVO STAKLO ============ */
 .site-header{position:sticky;top:0;z-index:1200;
   background-color:rgba(30,33,36,.25);
   -webkit-backdrop-filter:blur(26px) saturate(160%);
@@ -129,7 +132,7 @@ body.menu-open .nav-toggle span:nth-child(3){transform:translateY(-6.6px) rotate
   .nav-toggle{display:flex}
 }
 
-/* mobilni meni -staklo */
+/* mobilni meni — staklo */
 .mnav{position:fixed;inset:0;z-index:1100;visibility:hidden;pointer-events:none}
 .mnav.open{visibility:visible;pointer-events:auto}
 .mnav-backdrop{position:absolute;inset:0;background:rgba(20,22,24,.5);opacity:0;transition:opacity .3s}
@@ -174,7 +177,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
   .stat:nth-child(3){border-left:0}
 }
 
-/* ============ KAKO RADI -CAROUSEL ============ */
+/* ============ KAKO RADI — CAROUSEL ============ */
 .crs{position:relative;margin-top:.5rem}
 .crs-viewport{overflow:hidden;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
 .crs-viewport.grabbing{cursor:grabbing}
@@ -341,7 +344,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
 <!-- ========== HEADER (STAKLO) ========== -->
 <header class="site-header" id="siteHeader">
   <div class="wrap header-in">
-    <a class="brand" href="#top" aria-label="KLIENTELA -početna">
+    <a class="brand" href="#top" aria-label="KLIENTELA — početna">
       <img src="logo.png" alt="KLIENTELA logo" class="brand-logo" onerror="this.parentElement.classList.add('fallback')">
       <span class="brand-wordmark">KLIENTELA</span>
     </a>
@@ -376,8 +379,8 @@ body.hero-in .h-anim{opacity:1;transform:none}
   <canvas id="net" aria-hidden="true"></canvas>
   <div class="wrap hero-inner">
     <p class="eyebrow h-anim">SaaS platforma</p>
-    <h1 data-type="hero">Poslovi i tenderi koji odgovaraju <em>vašoj firmi</em> -pronađeni umjesto vas.</h1>
-    <p class="hero-sub" data-type="hero">KLIENTELA prati hiljade javnih nabavki, tendera i privatnih poziva svaki dan i automatski ih upoređuje sa kapacitetima, proizvodima i referencama vaše firme. Više ne gubite sate pretražujući portale -prave prilike stižu direktno vama.</p>
+    <h1 data-type="hero">Poslovi i tenderi koji odgovaraju <em>vašoj firmi</em> — pronađeni umjesto vas.</h1>
+    <p class="hero-sub" data-type="hero">KLIENTELA prati hiljade javnih nabavki, tendera i privatnih poziva svaki dan i automatski ih upoređuje sa kapacitetima, proizvodima i referencama vaše firme. Više ne gubite sate pretražujući portale — prave prilike stižu direktno vama.</p>
     <div class="hero-cta h-anim" style="--d:.24s">
       <a href="#kontakt" class="btn btn-solid">Zatražite demo</a>
     </div>
@@ -406,12 +409,12 @@ body.hero-in .h-anim{opacity:1;transform:none}
   </div>
 </section>
 
-<!-- ========== KAKO RADI -VELIKI CAROUSEL ========== -->
+<!-- ========== KAKO RADI — VELIKI CAROUSEL ========== -->
 <section class="sec sec-light" id="kako-radi">
   <div class="wrap">
     <div class="sec-head">
       <p class="eyebrow" data-reveal>Kako funkcioniše</p>
-      <h2 class="sec-title" data-type>Od profila firme do prave prilike -u četiri koraka.</h2>
+      <h2 class="sec-title" data-type>Od profila firme do prave prilike — u četiri koraka.</h2>
       <p class="sec-lede" data-reveal style="--d:.1s">Jednom postavite profil, a sistem radi svaki dan. Nema podešavanja filtera svako jutro, nema propuštenih rokova.</p>
     </div>
   </div>
@@ -440,7 +443,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
           <div class="crs-caption">
             <span class="crs-num">02</span>
             <h3>Mi pratimo sve izvore</h3>
-            <p>Javne nabavke, državni i opštinski portali, e-procurement sistemi, privatni pozivi i investicioni projekti -svaki dan, u realnom vremenu.</p>
+            <p>Javne nabavke, državni i opštinski portali, e-procurement sistemi, privatni pozivi i investicioni projekti — svaki dan, u realnom vremenu.</p>
           </div>
         </article>
 
@@ -452,7 +455,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
           <div class="crs-caption">
             <span class="crs-num">03</span>
             <h3>Dobijate podudaranja</h3>
-            <p>Algoritam rangira prilike prema relevantnosti za vaš profil i šalje ih u vaš inbox -sa procentom podudaranja i objašnjenjem.</p>
+            <p>Algoritam rangira prilike prema relevantnosti za vaš profil i šalje ih u vaš inbox — sa procentom podudaranja i objašnjenjem.</p>
           </div>
         </article>
 
@@ -486,12 +489,12 @@ body.hero-in .h-anim{opacity:1;transform:none}
   <div class="wrap">
     <div class="sec-head">
       <p class="eyebrow" data-reveal>Proizvod</p>
-      <h2 class="sec-title" data-type>Jedna nadzorna tabla -sve prilike.</h2>
+      <h2 class="sec-title" data-type>Jedna nadzorna tabla — sve prilike.</h2>
       <p class="sec-lede" data-reveal style="--d:.1s">Svako podudaranje dolazi sa procentom relevantnosti, vrijednošću ugovora, rokom i izvorom. Sortirajte, filtrirajte i dodijelite prilike timu.</p>
     </div>
     <div class="dash-wrap" data-reveal>
       <div class="float-chip chip-a"><span class="dot-live"></span>3 nova podudaranja danas</div>
-      <div class="float-chip chip-b">⏱ Rok za ponudu: 12 dana -Podsjetnik aktiviran</div>
+      <div class="float-chip chip-b">⏱ Rok za ponudu: 12 dana — Podsjetnik aktiviran</div>
       <div class="dash" role="img" aria-label="Prikaz KLIENTELA nadzorne table">
         <div class="dash-top">
           <div class="dash-dots"><i></i><i></i><i></i></div>
@@ -560,7 +563,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
     <div class="sec-head">
       <p class="eyebrow" data-reveal>Funkcije</p>
       <h2 class="sec-title" data-type>Sve što vam treba da ne propustite nijedan posao.</h2>
-      <p class="sec-lede" data-reveal style="--d:.1s">Kombinacija praćenja izvora, pametnog podudaranja i pravovremenih podsjetnika -sve u jednoj platformi.</p>
+      <p class="sec-lede" data-reveal style="--d:.1s">Kombinacija praćenja izvora, pametnog podudaranja i pravovremenih podsjetnika — sve u jednoj platformi.</p>
     </div>
     <div class="feat-grid">
       <div class="feat" data-reveal>
@@ -571,12 +574,12 @@ body.hero-in .h-anim{opacity:1;transform:none}
       <div class="feat" data-reveal style="--d:.06s">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="2"/></svg>
         <h3>Monitoring 40+ izvora</h3>
-        <p>Javne nabavke, e-procurement portali, državni i opštinski sistemi, privatni pozivi -sve na jednom mjestu, bez osvježavanja deset sajtova.</p>
+        <p>Javne nabavke, e-procurement portali, državni i opštinski sistemi, privatni pozivi — sve na jednom mjestu, bez osvježavanja deset sajtova.</p>
       </div>
       <div class="feat" data-reveal style="--d:.12s">
         <svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>
         <h3>Notifikacije u realnom vremenu</h3>
-        <p>Email, SMS ili Viber obavještenje u trenutku objave relevantnog tendera. Prvi saznajete -prije konkurencije.</p>
+        <p>Email, SMS ili Viber obavještenje u trenutku objave relevantnog tendera. Prvi saznajete — prije konkurencije.</p>
       </div>
       <div class="feat" data-reveal>
         <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg>
@@ -586,7 +589,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
       <div class="feat" data-reveal style="--d:.06s">
         <svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
         <h3>Analitika i izvještaji</h3>
-        <p>Pratite broj podudaranja, poslanih ponuda, osvojenih ugovora i stopu uspješnosti -po mjesecima, djelatnostima i institucijama.</p>
+        <p>Pratite broj podudaranja, poslanih ponuda, osvojenih ugovora i stopu uspješnosti — po mjesecima, djelatnostima i institucijama.</p>
       </div>
       <div class="feat" data-reveal style="--d:.12s">
         <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.4 3.4-5 6.5-5s5.7 1.6 6.5 5"/><circle cx="17.5" cy="9.5" r="2.5"/><path d="M16 15.2c2.6.3 4.6 1.7 5.3 4.3"/></svg>
@@ -603,7 +606,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
     <div>
       <p class="eyebrow" data-reveal>Kontakt</p>
       <h2 class="sec-title" data-type>Zatražite demo ili pitajte sve što vas zanima.</h2>
-      <p class="sec-lede" data-reveal style="--d:.08s">Popunite formu ili nas pozovite -za demo pripremamo prilagođen prikaz platforme na primjerima iz vaše djelatnosti.</p>
+      <p class="sec-lede" data-reveal style="--d:.08s">Popunite formu ili nas pozovite — za demo pripremamo prilagođen prikaz platforme na primjerima iz vaše djelatnosti.</p>
       <form id="demoForm" class="form-grid" style="margin-top:2.4rem" novalidate>
         <div class="form-body" style="display:contents">
           <div class="field">
@@ -646,7 +649,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
       <!-- PROMIJENITE KONTAKT PODATKE OVDJE -->
       <div class="info-row">
         <p class="k">Email</p>
-        <p class="v"><a href="mailto:kontakt@klientela.com">kontakt@klientela.me</a></p>
+        <p class="v"><a href="mailto:kontakt@klientela.me">kontakt@klientela.me</a></p>
       </div>
       <div class="info-row">
         <p class="k">Telefon</p>
@@ -694,7 +697,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
     </div>
     <div class="foot-bottom">
       <p>© <span id="year"></span> KLIENTELA. Sva prava zadržana.</p>
-      <p>Napravljeno za firme koje ne čekaju prilike -nego ih pronalaze.</p>
+      <p>Napravljeno za firme koje ne čekaju prilike — nego ih pronalaze.</p>
     </div>
   </div>
 </footer>
@@ -706,9 +709,9 @@ body.hero-in .h-anim{opacity:1;transform:none}
 
   /* ==========================================================
      EFEKAT KUCANJA
-     typeify() se zove ODMAH pri učitavanju -sva slova postanu
-     nevidljiva (span.ch), pa tekst ne "blinkne" prije animacije.
-     play() zatim otkriva slova jedno po jedno.
+     typeify() odmah pakuje sva slova u nevidljive spanove,
+     pa tekst ne "blinkne" prije animacije. play() otkriva
+     slovo po slovo. Kursor je nulte širine — ne mijenja layout.
      ========================================================== */
   var Type = (function(){
     function typeify(el){
@@ -770,8 +773,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
     return { play: play, typeify: typeify };
   })();
 
-  /* --- PAKNUI SVA SLOVA ODMAH: hero, naslovi sekcija, slajdovi ---
-     Tako ništa nije vidljivo prije svoje animacije kucanja. */
+  /* --- PAKUJ SVA SLOVA ODMAH: hero, naslovi sekcija, slajdovi --- */
   document.querySelectorAll("[data-type]").forEach(Type.typeify);
   document.querySelectorAll(".crs-caption h3, .crs-caption p").forEach(Type.typeify);
   if(reduced){
@@ -883,7 +885,9 @@ body.hero-in .h-anim{opacity:1;transform:none}
   document.getElementById("year").textContent = new Date().getFullYear();
 
   /* ==========================================================
-     CAROUSEL "KAKO RADI" (loop, autoplay 4s, drag, strelice)
+     CAROUSEL "KAKO RADI"
+     FIX: kucanje se dešava SAMO PRVI PUT po logičkom slajdu;
+     klik na karticu bez pomeraja ne radi ništa (nema re-kucanja).
      ========================================================== */
   (function(){
     var crs = document.getElementById("crs");
@@ -918,213 +922,227 @@ body.hero-in .h-anim{opacity:1;transform:none}
     var index = N;
     var slideW = 0, stepW = 0;
     var inView = false, hovering = false, timer = null, typedInit = false;
+    var typedLogical = {};   /* koji logički slajdovi su već ukučani */
 
     function measure(){
       slideW = slides[0].offsetWidth;
-stepW = slides.length > 1 ? (slides[1].offsetLeft - slides[0].offsetLeft) : slideW;
-}
-function xFor(i){
-var vw = viewport.clientWidth;
-return (vw - slideW) / 2 - i * stepW;
-}
-function apply(anim){
-track.style.transition = anim ? "transform .65s cubic-bezier(.22,.61,.36,1)" : "none";
-track.style.transform = "translate3d(" + xFor(index).toFixed(1) + "px,0,0)";
-}
-function paint(){
-var real = ((index % N) + N) % N;
-slides.forEach(function(s, i){ s.classList.toggle("is-active", i === index); });
-dots.forEach(function(btn, i){ btn.classList.toggle("on", i === real); });
-}
-/* kucanje teksta aktivnog slajda (naslov i opis istovremeno) */
-function typeCaption(slide){
-var cap = slide.querySelector(".crs-caption");
-if(!cap) return;
-var h = cap.querySelector("h3"), p = cap.querySelector("p");
-if(h) Type.play(h, 24, 250);
-if(p) Type.play(p, 8, 250);
-}
-function goTo(i, anim){
-index = i;
-apply(anim);
-paint();
-typeCaption(slides[index]);
-}
-function next(){ goTo(index + 1, true); }
-function prev(){ goTo(index - 1, true); }
-function restart(){ stopAuto(); startAuto(); }
+      stepW = slides.length > 1 ? (slides[1].offsetLeft - slides[0].offsetLeft) : slideW;
+    }
+    function xFor(i){
+      var vw = viewport.clientWidth;
+      return (vw - slideW) / 2 - i * stepW;
+    }
+    function apply(anim){
+      track.style.transition = anim ? "transform .65s cubic-bezier(.22,.61,.36,1)" : "none";
+      track.style.transform = "translate3d(" + xFor(index).toFixed(1) + "px,0,0)";
+    }
+    function paint(){
+      var real = ((index % N) + N) % N;
+      slides.forEach(function(s, i){ s.classList.toggle("is-active", i === index); });
+      dots.forEach(function(btn, i){ btn.classList.toggle("on", i === real); });
+    }
 
-track.addEventListener("transitionend", function(e){
-if(e.target !== track || e.propertyName !== "transform") return;
-if(index >= 2 * N){ index -= N; apply(false); }
-else if(index < N){ index += N; apply(false); }
-});
+    /* kucanje captiona — samo PRVI PUT po logičkom slajdu;
+       kasnije aktivacije samo odmah prikažu tekst */
+    function typeCaption(slide, logical){
+      var cap = slide.querySelector(".crs-caption");
+      if(!cap) return;
+      if(typedLogical[logical]){
+        cap.querySelectorAll(".ch").forEach(function(s){ s.classList.add("on"); });
+        return;
+      }
+      typedLogical[logical] = true;
+      var h = cap.querySelector("h3"), p = cap.querySelector("p");
+      if(h) Type.play(h, 24, 250);
+      if(p) Type.play(p, 8, 250);
+    }
 
-function stopAuto(){ if(timer){ clearInterval(timer); timer = null; } }
-function startAuto(){
-stopAuto();
-if(!reduced && inView && !hovering && N > 1) timer = setInterval(next, 4000);
-}
-crs.addEventListener("mouseenter", function(){ hovering = true; startAuto(); });
-crs.addEventListener("mouseleave", function(){ hovering = false; startAuto(); });
-new IntersectionObserver(function(en){
-inView = en[0].isIntersecting;
-if(inView && !typedInit){ typedInit = true; typeCaption(slides[index]); }
-startAuto();
-}, {threshold:.2}).observe(crs);
+    function goTo(i, anim){
+      index = i;
+      apply(anim);
+      paint();
+      typeCaption(slides[index], ((index % N) + N) % N);
+    }
+    function next(){ goTo(index + 1, true); }
+    function prev(){ goTo(index - 1, true); }
+    function restart(){ stopAuto(); startAuto(); }
 
-document.getElementById("crsPrev").addEventListener("click", function(){ prev(); restart(); });
-document.getElementById("crsNext").addEventListener("click", function(){ next(); restart(); });
+    track.addEventListener("transitionend", function(e){
+      if(e.target !== track || e.propertyName !== "transform") return;
+      if(index >= 2 * N){ index -= N; apply(false); }
+      else if(index < N){ index += N; apply(false); }
+    });
 
-var dragging = false, startX = 0, dx = 0, baseX = 0;
-viewport.addEventListener("pointerdown", function(e){
-if(N < 2) return;
-dragging = true; startX = e.clientX; dx = 0;
-baseX = xFor(index);
-track.style.transition = "none";
-viewport.classList.add("grabbing");
-if(viewport.setPointerCapture){ try{ viewport.setPointerCapture(e.pointerId); }catch(_){} }
-});
-viewport.addEventListener("pointermove", function(e){
-if(!dragging) return;
-dx = e.clientX - startX;
-track.style.transform = "translate3d(" + (baseX + dx).toFixed(1) + "px,0,0)";
-});
-function endDrag(){
-if(!dragging) return;
-dragging = false;
-viewport.classList.remove("grabbing");
-var delta = Math.abs(dx) > 50 ? (dx < 0 ? 1 : -1) : 0;
-goTo(index + delta, true);
-restart();
-}
-viewport.addEventListener("pointerup", endDrag);
-viewport.addEventListener("pointercancel", endDrag);
+    function stopAuto(){ if(timer){ clearInterval(timer); timer = null; } }
+    function startAuto(){
+      stopAuto();
+      if(!reduced && inView && !hovering && N > 1) timer = setInterval(next, 4000);
+    }
+    crs.addEventListener("mouseenter", function(){ hovering = true; startAuto(); });
+    crs.addEventListener("mouseleave", function(){ hovering = false; startAuto(); });
+    new IntersectionObserver(function(en){
+      inView = en[0].isIntersecting;
+      if(inView && !typedInit){
+        typedInit = true;
+        typeCaption(slides[index], ((index % N) + N) % N);
+      }
+      startAuto();
+    }, {threshold:.2}).observe(crs);
 
-document.addEventListener("keydown", function(e){
-if(!inView) return;
-if(e.key === "ArrowRight"){ next(); restart(); }
-else if(e.key === "ArrowLeft"){ prev(); restart(); }
-});
+    document.getElementById("crsPrev").addEventListener("click", function(){ prev(); restart(); });
+    document.getElementById("crsNext").addEventListener("click", function(){ next(); restart(); });
 
-window.addEventListener("resize", function(){ measure(); apply(false); });
-window.addEventListener("load", function(){ measure(); apply(false); });
+    /* drag — klik bez pomeraja NE mijenja slajd i NE pokreće kucanje */
+    var dragging = false, startX = 0, dx = 0, baseX = 0;
+    viewport.addEventListener("pointerdown", function(e){
+      if(N < 2) return;
+      dragging = true; startX = e.clientX; dx = 0;
+      baseX = xFor(index);
+      track.style.transition = "none";
+      viewport.classList.add("grabbing");
+      if(viewport.setPointerCapture){ try{ viewport.setPointerCapture(e.pointerId); }catch(_){} }
+    });
+    viewport.addEventListener("pointermove", function(e){
+      if(!dragging) return;
+      dx = e.clientX - startX;
+      track.style.transform = "translate3d(" + (baseX + dx).toFixed(1) + "px,0,0)";
+    });
+    function endDrag(){
+      if(!dragging) return;
+      dragging = false;
+      viewport.classList.remove("grabbing");
+      var delta = Math.abs(dx) > 50 ? (dx < 0 ? 1 : -1) : 0;
+      if(delta !== 0){
+        goTo(index + delta, true);
+        restart();
+      }
+    }
+    viewport.addEventListener("pointerup", endDrag);
+    viewport.addEventListener("pointercancel", endDrag);
 
-measure();
-apply(false);
-paint();
-startAuto();
-})();
+    document.addEventListener("keydown", function(e){
+      if(!inView) return;
+      if(e.key === "ArrowRight"){ next(); restart(); }
+      else if(e.key === "ArrowLeft"){ prev(); restart(); }
+    });
 
-/* ==========================================================
-ZVIJEZDE -PROLAZ KROZ SAZVJEŽĐE (1500ms, max 86)
-========================================================== */
-var canvas = document.getElementById("net");
-if(!canvas || reduced){
-document.body.classList.add("hero-in");
-} else {
-var ctx = canvas.getContext("2d"), w, h, nodes = [], raf = null;
-var WARP_DUR = 1500;
-var WARP_MAX = 86;
-var warpStart = null;
+    window.addEventListener("resize", function(){ measure(); apply(false); });
+    window.addEventListener("load", function(){ measure(); apply(false); });
 
-function makeNodes(){
-var count = Math.min(180, Math.max(90, Math.floor(w * h / 9000)));
-nodes = [];
-for(var i = 0; i < count; i++){
-nodes.push({
-x: Math.random() * w, y: Math.random() * h,
-vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35,
-r: Math.random() * 1.6 + .8,
-z: .5 + Math.random() * .9
-});
-}
-}
-function resize(){
-var dpr = Math.min(window.devicePixelRatio || 1, 2);
-w = canvas.offsetWidth; h = canvas.offsetHeight;
-canvas.width = w * dpr; canvas.height = h * dpr;
-ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-makeNodes();
-}
-function step(now){
-if(warpStart === null) warpStart = now;
-ctx.clearRect(0, 0, w, h);
-var t = now - warpStart;
-var p = Math.min(t / WARP_DUR, 1);
-var warpSpeed = WARP_MAX * Math.pow(1 - p, 1.8);
-var trail = Math.min(160, warpSpeed * 5);
-var calm = p >= 1 ? 1 : Math.max(0, (p - .78) / .22);
-var i, j, a, b, dx2, dy2, d;
-var m = trail + 14;
+    measure();
+    apply(false);
+    paint();
+    startAuto();
+  })();
 
-for(i = 0; i < nodes.length; i++){
-a = nodes[i];
-a.y += warpSpeed * a.z + a.vy;
-a.x += a.vx;
-if(a.y > h + m){ a.y = -m - Math.random() * 80; a.x = Math.random() * w; }
-else if(a.y < -m - 80){ a.y = h + m; }
-if(a.x < -m) a.x = w + m - 1; else if(a.x > w + m) a.x = -m + 1;
-}
-if(calm > 0){
-var maxD = 140;
-ctx.lineWidth = 1;
-ctx.strokeStyle = "#ffffff";
-for(i = 0; i < nodes.length; i++){
-for(j = i + 1; j < nodes.length; j++){
-a = nodes[i]; b = nodes[j];
-dx2 = a.x - b.x; dy2 = a.y - b.y;
-d = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-if(d < maxD){
-ctx.globalAlpha = (1 - d / maxD) * .28 * calm;
-ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-}
-}
-}
-}
-ctx.lineCap = "round";
-for(i = 0; i < nodes.length; i++){
-a = nodes[i];
-if(trail > 2){
-var tl = trail * a.z;
-var g = ctx.createLinearGradient(a.x, a.y - tl, a.x, a.y);
-g.addColorStop(0, "rgba(255,255,255,0)");
-g.addColorStop(1, "rgba(255,255,255,.85)");
-ctx.globalAlpha = 1;
-ctx.strokeStyle = g;
-ctx.lineWidth = Math.min(a.r * 1.6, 2.4);
-ctx.beginPath();
-ctx.moveTo(a.x, a.y - tl);
-ctx.lineTo(a.x, a.y);
-ctx.stroke();
-}
-ctx.globalAlpha = .85;
-ctx.fillStyle = "#ffffff";
-ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2); ctx.fill();
-}
-ctx.globalAlpha = 1;
-raf = requestAnimationFrame(step);
-}
+  /* ==========================================================
+     ZVIJEZDE — PROLAZ KROZ SAZVJEŽĐE (1500ms, max 86)
+     ========================================================== */
+  var canvas = document.getElementById("net");
+  if(!canvas || reduced){
+    document.body.classList.add("hero-in");
+  } else {
+    var ctx = canvas.getContext("2d"), w, h, nodes = [], raf = null;
+    var WARP_DUR = 1500;
+    var WARP_MAX = 86;
+    var warpStart = null;
 
-resize();
-window.addEventListener("resize", resize);
+    function makeNodes(){
+      var count = Math.min(180, Math.max(90, Math.floor(w * h / 9000)));
+      nodes = [];
+      for(var i = 0; i < count; i++){
+        nodes.push({
+          x: Math.random() * w, y: Math.random() * h,
+          vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35,
+          r: Math.random() * 1.6 + .8,
+          z: .5 + Math.random() * .9
+        });
+      }
+    }
+    function resize(){
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = canvas.offsetWidth; h = canvas.offsetHeight;
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      makeNodes();
+    }
+    function step(now){
+      if(warpStart === null) warpStart = now;
+      ctx.clearRect(0, 0, w, h);
+      var t = now - warpStart;
+      var p = Math.min(t / WARP_DUR, 1);
+      var warpSpeed = WARP_MAX * Math.pow(1 - p, 1.8);
+      var trail = Math.min(160, warpSpeed * 5);
+      var calm = p >= 1 ? 1 : Math.max(0, (p - .78) / .22);
+      var i, j, a, b, dx2, dy2, d;
+      var m = trail + 14;
 
-/* kad zvijezde stanu -OBA teksta se kucaju ISTOVREMENO */
-setTimeout(function(){
-document.body.classList.add("hero-in");
-var h1 = document.querySelector('h1[data-type="hero"]');
-var sub = document.querySelector('.hero-sub[data-type="hero"]');
-if(h1) Type.play(h1, 16, 150);
-if(sub) Type.play(sub, 8, 150);
-}, WARP_DUR);
+      for(i = 0; i < nodes.length; i++){
+        a = nodes[i];
+        a.y += warpSpeed * a.z + a.vy;
+        a.x += a.vx;
+        if(a.y > h + m){ a.y = -m - Math.random() * 80; a.x = Math.random() * w; }
+        else if(a.y < -m - 80){ a.y = h + m; }
+        if(a.x < -m) a.x = w + m - 1; else if(a.x > w + m) a.x = -m + 1;
+      }
+      if(calm > 0){
+        var maxD = 140;
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "#ffffff";
+        for(i = 0; i < nodes.length; i++){
+          for(j = i + 1; j < nodes.length; j++){
+            a = nodes[i]; b = nodes[j];
+            dx2 = a.x - b.x; dy2 = a.y - b.y;
+            d = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+            if(d < maxD){
+              ctx.globalAlpha = (1 - d / maxD) * .28 * calm;
+              ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+            }
+          }
+        }
+      }
+      ctx.lineCap = "round";
+      for(i = 0; i < nodes.length; i++){
+        a = nodes[i];
+        if(trail > 2){
+          var tl = trail * a.z;
+          var g = ctx.createLinearGradient(a.x, a.y - tl, a.x, a.y);
+          g.addColorStop(0, "rgba(255,255,255,0)");
+          g.addColorStop(1, "rgba(255,255,255,.85)");
+          ctx.globalAlpha = 1;
+          ctx.strokeStyle = g;
+          ctx.lineWidth = Math.min(a.r * 1.6, 2.4);
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y - tl);
+          ctx.lineTo(a.x, a.y);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = .85;
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      raf = requestAnimationFrame(step);
+    }
 
-new IntersectionObserver(function(entries){
-if(entries[0].isIntersecting){ cancelAnimationFrame(raf); raf = requestAnimationFrame(step); }
-else cancelAnimationFrame(raf);
-}).observe(document.querySelector(".hero"));
-}
+    resize();
+    window.addEventListener("resize", resize);
+
+    /* kad zvijezde stanu — OBA teksta se kucaju ISTOVREMENO */
+    setTimeout(function(){
+      document.body.classList.add("hero-in");
+      var h1 = document.querySelector('h1[data-type="hero"]');
+      var sub = document.querySelector('.hero-sub[data-type="hero"]');
+      if(h1) Type.play(h1, 16, 150);
+      if(sub) Type.play(sub, 8, 150);
+    }, WARP_DUR);
+
+    new IntersectionObserver(function(entries){
+      if(entries[0].isIntersecting){ cancelAnimationFrame(raf); raf = requestAnimationFrame(step); }
+      else cancelAnimationFrame(raf);
+    }).observe(document.querySelector(".hero"));
+  }
 })();
 </script>
-
 </body>
 </html>
