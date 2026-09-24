@@ -26,7 +26,7 @@
   --h-pad:clamp(20px,4.5vw,56px);
   --head:'Space Grotesk','Inter',system-ui,sans-serif;
 }
-html{scroll-behavior:smooth;overflow-y:scroll}
+html{scroll-behavior:smooth;overflow-y:scroll;scrollbar-gutter:stable}
 body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
   background:var(--dark);color:#fff;line-height:1.6;-webkit-font-smoothing:antialiased}
 h1,h2,h3,h4,h5,.stat-num,.btn{font-family:var(--head)}
@@ -39,7 +39,6 @@ section[id]{scroll-margin-top:calc(var(--header-h) + 12px)}
 .skip:focus{left:0}
 
 /* scroll-lock dok traje intro (zvijezde → mreža) */
-html{scrollbar-gutter:stable}
 html.net-lock{overscroll-behavior:none;overflow:hidden}
 
 /* ============ TEMA SEKCIJA ============ */
@@ -175,14 +174,14 @@ body.hero-in .h-anim{opacity:1;transform:none}
   stroke-linecap:round;stroke-linejoin:round;animation:hint-bob 1.7s ease-in-out infinite}
 @keyframes hint-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 
-/* ============ NET FAZA — NOVI TEKST DESNO ============ */
-.net-copy{position:absolute;z-index:3;right:var(--h-pad);top:50%;
-  width:min(520px,30vw);opacity:0;visibility:hidden;pointer-events:none;
+/* ============ NET FAZA — tekst centriran između mreže i desne ivice.
+   left postavlja JS (placeNetCopy) po stvarnoj poziciji mreže ============ */
+.net-copy{position:absolute;z-index:3;top:50%;
+  width:min(520px,34vw);opacity:0;visibility:hidden;pointer-events:none;
   transform:translateY(-50%);
   transition:opacity .7s ease,transform .7s ease,visibility 0s .7s}
-.net-copy.on{opacity:1;visibility:visible;transform:translateY(-50%);transition:opacity .7s ease,transform .7s ease,visibility 0s}
-.net-copy.out{opacity:0;transform:translateY(calc(-50% + 26px));
-  transition:opacity .45s ease,transform .45s ease}
+.net-copy.on{opacity:1;visibility:visible;transform:translateY(-50%);
+  transition:opacity .7s ease,transform .7s ease,visibility 0s}
 .net-copy.gone{display:none}
 .net-copy .eyebrow{color:#9fdcb4}
 .net-copy .eyebrow::before{background:#9fdcb4}
@@ -195,10 +194,10 @@ body.hero-in .h-anim{opacity:1;transform:none}
 .net-hint svg{width:14px;height:14px;stroke:#8f8f8f;fill:none;stroke-width:1.8;
   stroke-linecap:round;stroke-linejoin:round;animation:hint-bob 1.7s ease-in-out infinite}
 @media(max-width:900px){
-  .net-copy{left:var(--h-pad);right:var(--h-pad);top:auto;bottom:5.5vh;width:auto;
+  .net-copy{left:var(--h-pad) !important;right:var(--h-pad) !important;width:auto !important;
+    top:auto;bottom:5.5vh;
     transform:none;transition:opacity .7s ease}
   .net-copy.on{transform:none}
-  .net-copy.out{transform:translateY(26px)}
   .net-title{font-size:clamp(1.15rem,5.4vw,1.5rem)}
   .net-sub{font-size:.9rem}
 }
@@ -423,7 +422,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
 <section class="hero" id="pocetna">
   <canvas id="net" aria-hidden="true"></canvas>
 
-  <!-- novi tekst — pojavljuje se DESNO pored mreže -->
+  <!-- novi tekst — centriran između mreže i desne ivice (left računa JS) -->
   <div class="net-copy" id="netCopy">
     <p class="eyebrow">Mreža podudaranja</p>
     <h2 class="net-title" id="netTitle" data-type="net">Hiljade tendera ulazi. Izlazi samo ono što vam odgovara.</h2>
@@ -1089,13 +1088,15 @@ body.hero-in .h-anim{opacity:1;transform:none}
   })();
 
   /* ==========================================================
-     HERO SEKVENSA — SKROL KONTROLA:
+     HERO SEKVENSA — FINALNI TOK:
 
-     HERO      : zvijezde + linije, prvi tekst. SAJT ZAKLJUČAN.
-     SKROL #1  → TRANSFORM: sajt JOŠ STOJI, mreža se gradi.
-     NET       : mreža + novi tekst stoje i žive.
-     SKROL #2  → EXIT: mreža se gasi, skrol se otključava
-                 ~0.3s nakon toga i sajt ide ka dolje.
+     HERO      : zvijezde + linije; prvo se kuca h1 DO KRAJA,
+                 pa onda podnaslov. Sajt je zaključan.
+     SKROL #1  → TEKST + MREŽA KREĆU ISTOVREMENO; sajt miruje.
+     NET       : mreža i tekst stoje i žive (pulsovi, talasi).
+     SKROL #2  → skrol se otključava i sajt ide ka dolje.
+                 MREŽA OSTAJE živa u pozadini hero sekcije —
+                 prvi se tekst NE vraća, zvijezde se ne vraćaju.
      ========================================================== */
   var canvas = document.getElementById("net");
   var netCopy = document.getElementById("netCopy");
@@ -1110,13 +1111,12 @@ body.hero-in .h-anim{opacity:1;transform:none}
     if(netCopy) netCopy.classList.add("gone");
   } else {
     var ctx = canvas.getContext("2d"), w, h, nodes = [], raf = null;
-    var PH = {HERO:0, TRANSFORM:1, NET:2, EXIT:3, DONE:4};
+    var PH = {HERO:0, TRANSFORM:1, NET:2, DONE:3};
     var phase = PH.HERO;
-    var t0 = null, ft0 = 0, et0 = 0;
-    var WARP_MS = 1300;
-    var warpQueued = false, exitQueued = false;
-    var heroTyped = false, unlocked = false;
-    var net = null;
+    var t0 = null, ft0 = 0, netAt = 0;
+    var WARP_MS = 900;
+    var warpQueued = false, heroTyped = false, unlocked = false;
+    var net = null, touchUsed = false;
 
     /* ---------- paleta linija (kao na slici) ---------- */
     var PAL = [
@@ -1148,33 +1148,43 @@ body.hero-in .h-anim{opacity:1;transform:none}
         });
       }
     }
+
+    /* geometrija mreže — zajednička za build/layout/pozicioniranje teksta */
+    function geo(){
+      var mob = w < 900;
+      return {
+        mob: mob,
+        bw: mob ? Math.min(w * .9, 560) : Math.min(w * (w < 1200 ? .46 : .52), 780),
+        bh: mob ? h * .40 : Math.min(h * .58, 520),
+        cx: mob ? w * .5   : w * (w < 1200 ? .36 : .39),  /* sredina, malo lijevo */
+        cy: mob ? h * .36  : h * .51
+      };
+    }
+
     function resize(){
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
       w = canvas.offsetWidth; h = canvas.offsetHeight;
       canvas.width = w * dpr; canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       makeNodes();
-      if(net && phase !== PH.HERO) layoutGeo();
+      if(net && phase !== PH.HERO){ layoutGeo(); placeNetCopy(); }
     }
 
     /* ---------- izgradnja mreže ---------- */
     function buildNet(){
-      var mob = w < 900;
-      var layers = mob ? [5,6,7,6,5,3] : [7,9,10,8,9,4];
-      var bw = mob ? Math.min(w * .9, 560) : Math.min(w * .52, 780);
-      var bh = mob ? h * .40 : Math.min(h * .58, 520);
-      var cx = mob ? w * .5 : w * .39;      /* sredina, malo lijevo */
-      var cy = mob ? h * .36 : h * .51;
+      var g = geo();
+      var layers = g.mob ? [5,6,7,6,5,3] : [7,9,10,8,9,4];
       var colX = [], i, j;
-      for(i = 0; i < layers.length; i++) colX.push(cx - bw/2 + bw * i / (layers.length - 1));
+      for(i = 0; i < layers.length; i++) colX.push(g.cx - g.bw/2 + g.bw * i / (layers.length - 1));
 
       var used = {}, list = [];
       for(i = 0; i < layers.length; i++){
         var n = layers[i];
         for(j = 0; j < n; j++){
-          var ay = cy - bh/2 + bh * (j + .5) / n + (Math.random() - .5) * (bh / n) * .5;
-          ay = Math.max(cy - bh/2 + 10, Math.min(cy + bh/2 - 10, ay));
-          var ax = colX[i] + (Math.random() - .5) * bw * .012;
+          var ay = g.cy - g.bh/2 + g.bh * (j + .5) / n + (Math.random() - .5) * (g.bh / n) * .5;
+          ay = Math.max(g.cy - g.bh/2 + 10, Math.min(g.cy + g.bh/2 - 10, ay));
+          var ax = colX[i] + (Math.random() - .5) * g.bw * .012;
+          /* najbliža slobodna zvijezda postaje ovaj čvor */
           var best = -1, bd = Infinity;
           for(var k = 0; k < nodes.length; k++){
             if(used[k]) continue;
@@ -1184,7 +1194,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
           var sx = ax, sy = ay;
           if(best >= 0){ used[best] = 1; sx = nodes[best].x; sy = nodes[best].y; }
           list.push({i:i, j:j, lx:ax, ly:ay, sx:sx, sy:sy,
-            size: (mob ? 2 : 2.3) + Math.random() * 1.6,
+            size: (g.mob ? 2 : 2.3) + Math.random() * 1.6,
             col: pickColor(),
             ph: Math.random() * 6.283, sp: .0005 + Math.random() * .0009,
             label: null});
@@ -1197,8 +1207,8 @@ body.hero-in .h-anim{opacity:1;transform:none}
       for(i = 0; i < layers.length - 1; i++){
         for(var a = 0; a < layers[i]; a++){
           for(var b = 0; b < layers[i + 1]; b++){
-            var delay = 60 + i * 90 + Math.random() * 140;
-            var dur = 380 + Math.random() * 180;
+            var delay = 60 + i * 40 + Math.random() * 70;
+            var dur = 170 + Math.random() * 80;
             readyMax = Math.max(readyMax, delay + dur);
             edges.push({
               a: off[i] + a, b: off[i + 1] + b, layer: i,
@@ -1213,7 +1223,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
         }
       }
 
-      if(!mob){
+      if(!g.mob){
         for(var q = 0; q < layers[0] && q < IN_LB.length; q++)
           list[q].label = {t: IN_LB[q], side: -1};
         var lastOff = off[layers.length - 1];
@@ -1222,26 +1232,44 @@ body.hero-in .h-anim{opacity:1;transform:none}
       }
 
       nodes = nodes.filter(function(s, i2){ return !used[i2]; });
-      net = {layers:layers, colX:colX, cx:cx, cy:cy, bw:bw, bh:bh, mob:mob,
-        nodes:list, edges:edges, ready: readyMax + 150,
+      net = {layers:layers, colX:colX, cx:g.cx, cy:g.cy, bw:g.bw, bh:g.bh, mob:g.mob,
+        nodes:list, edges:edges, ready: readyMax + 40,
         wave:0, nextWave:0, parts:[], nextPart:0};
     }
 
     function layoutGeo(){
-      var mob = w < 900;
+      var g = geo();
       var layers = net.layers;
-      var bw = mob ? Math.min(w * .9, 560) : Math.min(w * .52, 780);
-      var bh = mob ? h * .40 : Math.min(h * .58, 520);
-      var cx = mob ? w * .5 : w * .39;
-      var cy = mob ? h * .36 : h * .51;
-      net.bw = bw; net.bh = bh; net.cx = cx; net.cy = cy; net.mob = mob;
+      net.bw = g.bw; net.bh = g.bh; net.cx = g.cx; net.cy = g.cy; net.mob = g.mob;
       net.colX = [];
-      for(var i = 0; i < layers.length; i++) net.colX.push(cx - bw/2 + bw * i / (layers.length - 1));
+      for(var i = 0; i < layers.length; i++) net.colX.push(g.cx - g.bw/2 + g.bw * i / (layers.length - 1));
       net.nodes.forEach(function(nd){
         var n = layers[nd.i];
         nd.lx = net.colX[nd.i];
-        nd.ly = cy - bh/2 + bh * (nd.j + .5) / n;
+        nd.ly = g.cy - g.bh/2 + g.bh * (nd.j + .5) / n;
       });
+    }
+
+    /* tekst centriran između desne ivice mreže i desne ivice ekrana */
+    function placeNetCopy(){
+      if(!netCopy) return;
+      if(w < 900){
+        netCopy.style.left = ""; netCopy.style.right = ""; netCopy.style.width = "";
+        return;
+      }
+      var g = geo();
+      var netRight = g.cx + g.bw / 2;
+      var padR = 56;
+      var gap = w - padR - netRight;
+      var tw = Math.min(520, w * .34);
+      if(gap >= tw + 20){
+        netCopy.style.width = tw + "px";
+        netCopy.style.left = Math.round(netRight + (gap - tw) / 2) + "px";
+      } else {
+        netCopy.style.width = Math.max(200, gap - 24) + "px";
+        netCopy.style.left = Math.round(netRight + 18) + "px";
+      }
+      netCopy.style.right = "auto";
     }
 
     /* ---------- pomoćne za crtanje ---------- */
@@ -1297,7 +1325,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
       ctx.save();
       ctx.translate(0, -rise);
       var t = now - ft0;
-      var eq = 1 - Math.pow(1 - Math.min(t / 900, 1), 3);
+      var eq = 1 - Math.pow(1 - Math.min(t / 320, 1), 3);
       var i, e, pA, pB;
 
       ctx.lineCap = "round";
@@ -1332,7 +1360,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
         ctx.shadowBlur = 0;
       }
 
-      var labA = Math.max(0, Math.min((t - 550) / 350, 1)) * aMul;
+      var labA = Math.max(0, Math.min((t - 320) / 250, 1)) * aMul;
       if(labA > .01){
         ctx.font = (net.mob ? "600 9px " : "500 10px ") + "'IBM Plex Mono',monospace";
         ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
@@ -1352,7 +1380,8 @@ body.hero-in .h-anim{opacity:1;transform:none}
         }
       }
 
-      if(phase === PH.NET){
+      /* pulsovi i čestice — žive dok god je mreža vidljiva (NET i DONE) */
+      if(phase === PH.NET || phase === PH.DONE){
         if(now > net.nextWave){
           net.wave = now;
           net.nextWave = now + 1700 + Math.random() * 1300;
@@ -1379,28 +1408,13 @@ body.hero-in .h-anim{opacity:1;transform:none}
       ctx.restore();
     }
 
-    /* ---------- pretvori čvorove nazad u zvijezde ---------- */
-    function netToStars(){
-      if(!net) return;
-      net.nodes.forEach(function(nd){
-        nodes.push({
-          x: nd.lx, y: nd.ly,
-          vx: (Math.random() - .5) * .34, vy: (Math.random() - .5) * .34,
-          r: Math.min(nd.size, 1.7), z: .5 + Math.random() * .9
-        });
-      });
-      net = null;
-    }
-
     /* ---------- kontrola faza ---------- */
-    function unlockScroll(){
+    function unlockNow(){
       if(unlocked) return;
       unlocked = true;
+      phase = PH.DONE;
       document.documentElement.classList.remove("net-lock");
-    }
-    function showNetCopy(){
-      netCopy.classList.add("on");
-      if(netTitle) Type.play(netTitle, 5, 60);
+      /* mreža ostaje živa; prvi tekst ostaje sakriven; ništa se ne vraća */
     }
     function startTransform(){
       if(phase !== PH.HERO) return;
@@ -1409,22 +1423,33 @@ body.hero-in .h-anim{opacity:1;transform:none}
       Type.finish(heroH1); Type.finish(heroSub);
       heroInner.classList.add("hero-hide");
       buildNet();
+      placeNetCopy();
+      /* TEKST + MREŽA kreću ISTOVREMENO */
+      netCopy.classList.add("on");
+      if(netTitle) Type.play(netTitle, 6, 120);
     }
-    function startExit(){
-      if(phase !== PH.NET) return;
-      phase = PH.EXIT;
-      et0 = performance.now();
-      exitQueued = false;
-      Type.finish(netTitle);
-      netCopy.classList.remove("on");
-      netCopy.classList.add("out");
+    function skipToEnd(){
+      Type.finish(heroH1); Type.finish(heroSub); Type.finish(netTitle);
+      heroTyped = true; warpQueued = false; touchUsed = false;
+      if(!net){
+        buildNet();
+        placeNetCopy();
+        ft0 = performance.now() - 5000;   /* mreža odmah "izgrađena" */
+        net.nextWave = performance.now() + 300;
+        net.nextPart = performance.now() + 500;
+      }
+      netCopy.classList.add("on");
+      heroInner.classList.add("hero-hide");
+      document.body.classList.add("hero-in");
+      unlockNow();
     }
     function userNext(){
       if(phase === PH.HERO){
         if(!heroTyped){ warpQueued = true; return; }
         startTransform();
       } else if(phase === PH.NET){
-        startExit();
+        /* mali guard da isti zamah/točkić odmah ne zatvori mrežu */
+        if(performance.now() - netAt > 350) unlockNow();
       }
     }
 
@@ -1468,50 +1493,33 @@ body.hero-in .h-anim{opacity:1;transform:none}
           if(!heroTyped){
             heroTyped = true;
             document.body.classList.add("hero-in");
-            if(warpQueued){ warpQueued = false; startTransform(); }
-            else {
-              Type.play(heroH1, 16, 100);
-              Type.play(heroSub, 8, 120);
+            if(phase === PH.HERO){
+              if(warpQueued){ warpQueued = false; startTransform(); }
+              else {
+                /* PRVO veliki naslov DO KRAJA, pa onda mali tekst */
+                Type.play(heroH1, 16, 100, function(){
+                  Type.play(heroSub, 8, 80);
+                });
+              }
             }
           }
-          ambient(.26, .8);
+          if(phase === PH.HERO) ambient(.26, .8);
         }
       }
       else if(phase === PH.TRANSFORM){
         var tt = now - ft0;
         ambient(.26 * (1 - Math.min(tt / 500, 1)), .8 * (1 - Math.min(tt / 700, 1) * .5));
         if(net) drawNet(now, 1, 0);
-        if(net && tt >= net.ready + 100){
-          phase = PH.NET;
+        if(net && tt >= net.ready){
+          phase = PH.NET; netAt = now;
           net.nextWave = now + 450;
           net.nextPart = now + 750;
-          if(exitQueued){
-            /* korisnik je već nastavio da skrola — mreža se odmah zatvara */
-            startExit();
-          } else {
-            showNetCopy();
-          }
-        }
-      }
-      else if(phase === PH.NET){
-        ambient(.06, .38);
-        if(net) drawNet(now, 1, 0);
-      }
-      else if(phase === PH.EXIT){
-        var ex = Math.min((now - et0) / 800, 1);
-        ambient(.06 + (.22 - .06) * ex, .38 + (.8 - .38) * ex);
-        if(net) drawNet(now, Math.pow(1 - ex, 1.4), ex * ex * 40);
-        /* otključaj skrol ~1/3 u izlazu — sajt krene ka dolje */
-        if(!unlocked && ex >= .35) unlockScroll();
-        if(ex >= 1){
-          netToStars();
-          netCopy.classList.add("gone");
-          heroInner.classList.remove("hero-hide");
-          phase = PH.DONE;
         }
       }
       else {
-        ambient(.22, .75);
+        /* NET i DONE — ist crtanje: mreža ostaje živa zauvijek */
+        ambient(.06, .38);
+        if(net) drawNet(now, 1, 0);
       }
 
       raf = requestAnimationFrame(step);
@@ -1522,53 +1530,45 @@ body.hero-in .h-anim{opacity:1;transform:none}
     window.scrollTo(0, 0);
     document.documentElement.classList.add("net-lock");
 
-    /* TOČKIĆ — dok je zaključano ništa ne skrola (html ima overflow:hidden) */
+    /* TOČKIĆ — HERO: otvara mrežu; TRANSFORM: ignoriši; NET: otključaj */
     window.addEventListener("wheel", function(){
       if(unlocked) return;
-      if(phase === PH.HERO) userNext();
-      else if(phase === PH.TRANSFORM) exitQueued = true;
-      else if(phase === PH.NET) userNext();
+      userNext();
     }, {passive:true});
 
-    /* TOUCH — blokiramo dok traje sekvensa */
+    /* TOUCH — jedan swipe = jedan korak; gest se prati do touchend */
     window.addEventListener("touchmove", function(e){
       if(document.body.classList.contains("menu-open")) return;
       if(unlocked) return;
       e.preventDefault();
-      if(phase === PH.HERO) userNext();
-      else if(phase === PH.TRANSFORM) exitQueued = true;
-      else if(phase === PH.NET) userNext();
+      if(phase === PH.HERO || phase === PH.NET){
+        if(!touchUsed){ touchUsed = true; userNext(); }
+      }
+      /* TRANSFORM: ignoriši — mreža raste, sajt miruje */
     }, {passive:false});
+    window.addEventListener("touchend", function(){ touchUsed = false; }, {passive:true});
+    window.addEventListener("touchcancel", function(){ touchUsed = false; }, {passive:true});
 
     window.addEventListener("keydown", function(e){
-      var k = e.key;
       if(unlocked) return;
+      if(e.repeat) return;
+      var k = e.key;
       if(k === "ArrowDown" || k === "PageDown" || k === " " || k === "Spacebar"){
         e.preventDefault();
-        if(phase === PH.HERO) userNext();
-        else if(phase === PH.TRANSFORM) exitQueued = true;
-        else if(phase === PH.NET) userNext();
+        userNext();
       }
     });
 
-    /* klik na anchor preskače intro i ide direktno na cilj */
+    /* klik na anchor preskače intro i ide direktno na cilj (mreža ostaje) */
     document.addEventListener("click", function(e){
-      if(phase === PH.DONE) return;
+      if(phase === PH.DONE && unlocked) return;
       var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
       if(!a) return;
       var href = a.getAttribute("href");
       if(!href || href === "#") return;
       e.preventDefault();
       e.stopPropagation();
-      Type.finish(heroH1); Type.finish(heroSub); Type.finish(netTitle);
-      if(net) netToStars();
-      phase = PH.DONE;
-      exitQueued = false;
-      document.body.classList.add("hero-in");
-      heroInner.classList.remove("hero-hide");
-      netCopy.classList.remove("on");
-      netCopy.classList.add("gone");
-      unlockScroll();
+      skipToEnd();
       var target = document.querySelector(href);
       if(target) target.scrollIntoView({behavior: "smooth"});
     }, true);
