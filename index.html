@@ -26,7 +26,7 @@
   --h-pad:clamp(20px,4.5vw,56px);
   --head:'Space Grotesk','Inter',system-ui,sans-serif;
 }
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-y:scroll}
 body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
   background:var(--dark);color:#fff;line-height:1.6;-webkit-font-smoothing:antialiased}
 h1,h2,h3,h4,h5,.stat-num,.btn{font-family:var(--head)}
@@ -37,6 +37,10 @@ a{color:inherit}
 section[id]{scroll-margin-top:calc(var(--header-h) + 12px)}
 .skip{position:absolute;left:-9999px;top:0;background:#fff;color:var(--ink);padding:.7rem 1.2rem;z-index:2000}
 .skip:focus{left:0}
+
+/* scroll-lock dok traje intro (zvijezde → mreža) */
+html{scrollbar-gutter:stable}
+html.net-lock{overscroll-behavior:none;overflow:hidden}
 
 /* ============ TEMA SEKCIJA ============ */
 .sec{padding:clamp(4.5rem,9vw,8.5rem) 0}
@@ -55,14 +59,11 @@ section[id]{scroll-margin-top:calc(var(--header-h) + 12px)}
 @media(max-width:860px){.sec-head{grid-template-columns:1fr}}
 
 /* ============ EFEKAT KUCANJA ============ */
-.ch{opacity:0;position:relative}
+.ch{opacity:0}
 .ch.on{opacity:1;transition:opacity .05s linear}
-/* KURSOR: apsolutno pozicioniran UNUTAR zadnjeg otkucanog slova.
-   Nula uticaja na layout — ne pomjera tekst, ne mijenja prelom
-   redova, ne može izazvati "skok" ni na jednom ekranu. */
-.caret{position:absolute;left:calc(100% + 1px);top:50%;transform:translateY(-54%);
-  width:2px;height:.95em;background:currentColor;
-  animation:caret-blink .9s steps(1) infinite;pointer-events:none}
+.caret{position:relative;display:inline-block;width:0;height:1em;vertical-align:-.12em}
+.caret::before{content:"";position:absolute;left:2px;top:.06em;width:2px;height:.95em;
+  background:currentColor;animation:caret-blink .9s steps(1) infinite}
 @keyframes caret-blink{0%,55%{opacity:1}56%,100%{opacity:0}}
 
 /* ============ DUGMAD ============ */
@@ -156,15 +157,51 @@ body.menu-open .nav-toggle span:nth-child(3){transform:translateY(-6.6px) rotate
   display:flex;align-items:center;overflow:hidden}
 #net{position:absolute;inset:0;width:100%;height:100%;z-index:0}
 .hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(ellipse at 30% 40%,transparent 30%,rgba(20,22,24,.55) 100%)}
-.hero-inner{position:relative;z-index:2;padding-top:6rem;padding-bottom:7rem;width:100%}
+  background:radial-gradient(ellipse at 30% 40%,transparent 30%,rgba(20,22,24,.45) 100%)}
+.hero-inner{position:relative;z-index:2;padding-top:6rem;padding-bottom:7rem;width:100%;visibility:hidden;
+  transition:opacity .55s ease,transform .55s ease}
+body.hero-in .hero-inner{visibility:visible}
+.hero-inner.hero-hide{opacity:0;transform:translateY(-22px);pointer-events:none}
 .hero h1{font-size:clamp(2.5rem,6.4vw,5rem);line-height:1.05;letter-spacing:-.025em;font-weight:600;max-width:18ch;margin-top:1.4rem}
 .hero h1 em{font-style:italic;color:inherit}
 .hero-sub{color:#b9b9b9;font-size:clamp(1rem,1.4vw,1.15rem);max-width:60ch;margin-top:1.6rem}
-.hero-cta{display:flex;flex-wrap:wrap;gap:1rem;margin-top:2.6rem}
+.hero-cta{display:flex;flex-wrap:wrap;align-items:center;gap:1.4rem;margin-top:2.6rem}
 .h-anim{opacity:0;transform:translateY(26px);
   transition:opacity .8s ease var(--d,0s),transform .8s ease var(--d,0s)}
 body.hero-in .h-anim{opacity:1;transform:none}
+.scroll-hint{display:inline-flex;align-items:center;gap:.55rem;color:#8f8f8f;
+  font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase}
+.scroll-hint svg{width:14px;height:14px;stroke:#8f8f8f;fill:none;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;animation:hint-bob 1.7s ease-in-out infinite}
+@keyframes hint-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+/* ============ NET FAZA — NOVI TEKST DESNO ============ */
+.net-copy{position:absolute;z-index:3;right:var(--h-pad);top:50%;
+  width:min(520px,30vw);opacity:0;visibility:hidden;pointer-events:none;
+  transform:translateY(-50%);
+  transition:opacity .7s ease,transform .7s ease,visibility 0s .7s}
+.net-copy.on{opacity:1;visibility:visible;transform:translateY(-50%);transition:opacity .7s ease,transform .7s ease,visibility 0s}
+.net-copy.out{opacity:0;transform:translateY(calc(-50% + 26px));
+  transition:opacity .45s ease,transform .45s ease}
+.net-copy.gone{display:none}
+.net-copy .eyebrow{color:#9fdcb4}
+.net-copy .eyebrow::before{background:#9fdcb4}
+.net-title{font-family:var(--head);font-size:clamp(1.5rem,2.6vw,2.15rem);line-height:1.18;
+  letter-spacing:-.02em;font-weight:600;margin-top:1.1rem;
+  text-shadow:0 2px 30px rgba(10,12,14,.75)}
+.net-sub{color:#a9a9a9;font-size:.98rem;margin-top:1.1rem;max-width:42ch}
+.net-hint{display:inline-flex;align-items:center;gap:.55rem;margin-top:1.9rem;
+  color:#8f8f8f;font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase}
+.net-hint svg{width:14px;height:14px;stroke:#8f8f8f;fill:none;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;animation:hint-bob 1.7s ease-in-out infinite}
+@media(max-width:900px){
+  .net-copy{left:var(--h-pad);right:var(--h-pad);top:auto;bottom:5.5vh;width:auto;
+    transform:none;transition:opacity .7s ease}
+  .net-copy.on{transform:none}
+  .net-copy.out{transform:translateY(26px)}
+  .net-title{font-size:clamp(1.15rem,5.4vw,1.5rem)}
+  .net-sub{font-size:.9rem}
+}
 
 /* ============ STATISTIKA ============ */
 .stats{background:var(--dark);border-top:1px solid rgba(255,255,255,.12);padding:clamp(2.5rem,5vw,4rem) 0}
@@ -335,9 +372,16 @@ body.hero-in .h-anim{opacity:1;transform:none}
   .dot-live::after{animation:none}
   .ch{opacity:1}
   .caret{display:none}
+  .net-copy{display:none}
+  .hero-inner{visibility:visible}
+  .scroll-hint svg,.net-hint svg{animation:none}
 }
 </style>
-<noscript><style>.h-anim{opacity:1;transform:none}</style></noscript>
+<noscript><style>
+.h-anim{opacity:1;transform:none}
+.hero-inner{visibility:visible}
+.net-copy{display:none}
+</style></noscript>
 </head>
 <body id="top">
 <a class="skip" href="#sadrzaj">Preskoči na sadržaj</a>
@@ -378,12 +422,22 @@ body.hero-in .h-anim{opacity:1;transform:none}
 <!-- ========== HERO ========== -->
 <section class="hero" id="pocetna">
   <canvas id="net" aria-hidden="true"></canvas>
-  <div class="wrap hero-inner">
+
+  <!-- novi tekst — pojavljuje se DESNO pored mreže -->
+  <div class="net-copy" id="netCopy">
+    <p class="eyebrow">Mreža podudaranja</p>
+    <h2 class="net-title" id="netTitle" data-type="net">Hiljade tendera ulazi. Izlazi samo ono što vam odgovara.</h2>
+    <p class="net-sub">Svako obavještenje prolazi kroz slojeve analize — djelatnost, kapaciteti, reference, regija. Na izlazu: prilike spremne za vaš tim.</p>
+    <div class="net-hint"><span>Skrolujte za nastavak</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></div>
+  </div>
+
+  <div class="wrap hero-inner" id="heroInner">
     <p class="eyebrow h-anim">SaaS platforma</p>
     <h1 data-type="hero">Poslovi i tenderi koji odgovaraju <em>vašoj firmi</em> — pronađeni umjesto vas.</h1>
     <p class="hero-sub" data-type="hero">KLIENTELA prati hiljade javnih nabavki, tendera i privatnih poziva svaki dan i automatski ih upoređuje sa kapacitetima, proizvodima i referencama vaše firme. Više ne gubite sate pretražujući portale — prave prilike stižu direktno vama.</p>
     <div class="hero-cta h-anim" style="--d:.24s">
       <a href="#kontakt" class="btn btn-solid">Zatražite demo</a>
+      <span class="scroll-hint"><span>skroluj — otvaramo mrežu</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span>
     </div>
   </div>
 </section>
@@ -710,10 +764,6 @@ body.hero-in .h-anim{opacity:1;transform:none}
 
   /* ==========================================================
      EFEKAT KUCANJA
-     - typeify() odmah pakuje sva slova u nevidljive spanove,
-       pa je layout finalan PRIJE početka kucanja (nema reflowa).
-     - kursor je apsolutno pozicioniran UNUTAR zadnjeg slova —
-       nula uticaja na layout, nema skokova ni prelamanja.
      ========================================================== */
   var Type = (function(){
     function typeify(el){
@@ -734,7 +784,6 @@ body.hero-in .h-anim{opacity:1;transform:none}
         });
         el.dataset.typed = "1";
       }
-      /* radi i za klonirane slajdove (klonovi nemaju _chars) */
       el._chars = Array.prototype.slice.call(el.querySelectorAll(".ch"));
     }
     function play(el, speed, delay, done){
@@ -763,10 +812,8 @@ body.hero-in .h-anim{opacity:1;transform:none}
         }
         var c = el._chars[i];
         c.classList.add("on");
-        /* kursor ide UNUTAR slova (apsolutno pozicioniran) —
-           ne postoji u layout toku, ne može pomjeriti ništa */
         if(el._caret) el._caret.remove();
-        c.appendChild(caret);
+        c.parentNode.insertBefore(caret, c.nextSibling);
         el._caret = caret;
         i++;
         var sp = c.textContent === " " ? Math.max(8, speed * .4) : speed;
@@ -774,10 +821,17 @@ body.hero-in .h-anim{opacity:1;transform:none}
       }
       el._rafId = setTimeout(tick, delay || 0);
     }
-    return { play: play, typeify: typeify };
+    function finish(el){
+      if(!el) return;
+      typeify(el);
+      if(el._rafId){ clearTimeout(el._rafId); el._rafId = null; }
+      if(el._caret){ el._caret.remove(); el._caret = null; }
+      el._gen = (el._gen || 0) + 1;
+      el._chars.forEach(function(s){ s.classList.add("on"); });
+    }
+    return { play: play, typeify: typeify, finish: finish };
   })();
 
-  /* --- PAKUJ SVA SLOVA ODMAH: hero, naslovi sekcija, slajdovi --- */
   document.querySelectorAll("[data-type]").forEach(Type.typeify);
   document.querySelectorAll(".crs-caption h3, .crs-caption p").forEach(Type.typeify);
   if(reduced){
@@ -822,7 +876,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
       }
     });
   }, {threshold:.3, rootMargin:"0px 0px -60px 0px"});
-  document.querySelectorAll('[data-type]:not([data-type="hero"])').forEach(function(el){ tio.observe(el); });
+  document.querySelectorAll('[data-type]:not([data-type="hero"]):not([data-type="net"])').forEach(function(el){ tio.observe(el); });
 
   /* ---------- Brojači ---------- */
   function fmt(n){ return n.toLocaleString("de-DE"); }
@@ -889,9 +943,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
   document.getElementById("year").textContent = new Date().getFullYear();
 
   /* ==========================================================
-     CAROUSEL "KAKO RADI" (loop, autoplay 4s, drag, strelice)
-     Kucanje se dešava SAMO PRVI PUT po logičkom slajdu; klik
-     na karticu bez pomeraja ništa ne mijenja (nema re-kucanja).
+     CAROUSEL "KAKO RADI" (nepromijenjeno)
      ========================================================== */
   (function(){
     var crs = document.getElementById("crs");
@@ -926,7 +978,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
     var index = N;
     var slideW = 0, stepW = 0;
     var inView = false, hovering = false, timer = null, typedInit = false;
-    var typedLogical = {};   /* koji logički slajdovi su već ukučani */
+    var typedLogical = {};
 
     function measure(){
       slideW = slides[0].offsetWidth;
@@ -946,8 +998,6 @@ body.hero-in .h-anim{opacity:1;transform:none}
       dots.forEach(function(btn, i){ btn.classList.toggle("on", i === real); });
     }
 
-    /* kucanje captiona — samo PRVI PUT po logičkom slajdu;
-       svaka naredna aktivacija samo odmah prikaže cijeli tekst */
     function typeCaption(slide, logical){
       var cap = slide.querySelector(".crs-caption");
       if(!cap) return;
@@ -996,7 +1046,6 @@ body.hero-in .h-anim{opacity:1;transform:none}
     document.getElementById("crsPrev").addEventListener("click", function(){ prev(); restart(); });
     document.getElementById("crsNext").addEventListener("click", function(){ next(); restart(); });
 
-    /* drag — klik/tap bez pomeraja NE mijenja slajd */
     var dragging = false, startX = 0, dx = 0, baseX = 0;
     viewport.addEventListener("pointerdown", function(e){
       if(N < 2) return;
@@ -1040,19 +1089,55 @@ body.hero-in .h-anim{opacity:1;transform:none}
   })();
 
   /* ==========================================================
-     ZVIJEZDE — PROLAZ KROZ SAZVJEŽĐE (1500ms, max 86)
+     HERO SEKVENSA — SKROL KONTROLA:
+
+     HERO      : zvijezde + linije, prvi tekst. SAJT ZAKLJUČAN.
+     SKROL #1  → TRANSFORM: sajt JOŠ STOJI, mreža se gradi.
+     NET       : mreža + novi tekst stoje i žive.
+     SKROL #2  → EXIT: mreža se gasi, skrol se otključava
+                 ~0.3s nakon toga i sajt ide ka dolje.
      ========================================================== */
   var canvas = document.getElementById("net");
+  var netCopy = document.getElementById("netCopy");
+  var netTitle = document.getElementById("netTitle");
+  var heroInner = document.getElementById("heroInner");
+  var heroH1 = document.querySelector('h1[data-type="hero"]');
+  var heroSub = document.querySelector('.hero-sub[data-type="hero"]');
+
   if(!canvas || reduced){
     document.body.classList.add("hero-in");
+    if(canvas) canvas.style.display = "none";
+    if(netCopy) netCopy.classList.add("gone");
   } else {
     var ctx = canvas.getContext("2d"), w, h, nodes = [], raf = null;
-    var WARP_DUR = 1500;
-    var WARP_MAX = 86;
-    var warpStart = null;
+    var PH = {HERO:0, TRANSFORM:1, NET:2, EXIT:3, DONE:4};
+    var phase = PH.HERO;
+    var t0 = null, ft0 = 0, et0 = 0;
+    var WARP_MS = 1300;
+    var warpQueued = false, exitQueued = false;
+    var heroTyped = false, unlocked = false;
+    var net = null;
 
+    /* ---------- paleta linija (kao na slici) ---------- */
+    var PAL = [
+      ["255,95,176", .36],   /* magenta  */
+      ["134,226,155", .28],  /* zelena   */
+      ["255,255,255", .26],  /* bijela   */
+      ["150,170,255", .10]   /* plava    */
+    ];
+    function pickColor(){
+      var r = Math.random(), acc = 0;
+      for(var i = 0; i < PAL.length; i++){ acc += PAL[i][1]; if(r < acc) return PAL[i][0]; }
+      return "255,255,255";
+    }
+
+    var TOP_LB = ["input","fc1","fc2","fc3","fc4","output"];
+    var IN_LB  = ["građevinski radovi","IT oprema","zdravstvo","vodoprivreda","energetika","usluge","dobavke"];
+    var OUT_LB = ["FIRMA A","FIRMA B","FIRMA C","FIRMA D"];
+
+    /* ---------- zvijezde ---------- */
     function makeNodes(){
-      var count = Math.min(180, Math.max(90, Math.floor(w * h / 9000)));
+      var count = Math.min(170, Math.max(90, Math.floor(w * h / 9500)));
       nodes = [];
       for(var i = 0; i < count; i++){
         nodes.push({
@@ -1069,86 +1154,427 @@ body.hero-in .h-anim{opacity:1;transform:none}
       canvas.width = w * dpr; canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       makeNodes();
+      if(net && phase !== PH.HERO) layoutGeo();
     }
-    function step(now){
-      if(warpStart === null) warpStart = now;
-      ctx.clearRect(0, 0, w, h);
-      var t = now - warpStart;
-      var p = Math.min(t / WARP_DUR, 1);
-      var warpSpeed = WARP_MAX * Math.pow(1 - p, 1.8);
-      var trail = Math.min(160, warpSpeed * 5);
-      var calm = p >= 1 ? 1 : Math.max(0, (p - .78) / .22);
-      var i, j, a, b, dx2, dy2, d;
-      var m = trail + 14;
 
+    /* ---------- izgradnja mreže ---------- */
+    function buildNet(){
+      var mob = w < 900;
+      var layers = mob ? [5,6,7,6,5,3] : [7,9,10,8,9,4];
+      var bw = mob ? Math.min(w * .9, 560) : Math.min(w * .52, 780);
+      var bh = mob ? h * .40 : Math.min(h * .58, 520);
+      var cx = mob ? w * .5 : w * .39;      /* sredina, malo lijevo */
+      var cy = mob ? h * .36 : h * .51;
+      var colX = [], i, j;
+      for(i = 0; i < layers.length; i++) colX.push(cx - bw/2 + bw * i / (layers.length - 1));
+
+      var used = {}, list = [];
+      for(i = 0; i < layers.length; i++){
+        var n = layers[i];
+        for(j = 0; j < n; j++){
+          var ay = cy - bh/2 + bh * (j + .5) / n + (Math.random() - .5) * (bh / n) * .5;
+          ay = Math.max(cy - bh/2 + 10, Math.min(cy + bh/2 - 10, ay));
+          var ax = colX[i] + (Math.random() - .5) * bw * .012;
+          var best = -1, bd = Infinity;
+          for(var k = 0; k < nodes.length; k++){
+            if(used[k]) continue;
+            var ddx = nodes[k].x - ax, ddy = nodes[k].y - ay, dd = ddx*ddx + ddy*ddy;
+            if(dd < bd){ bd = dd; best = k; }
+          }
+          var sx = ax, sy = ay;
+          if(best >= 0){ used[best] = 1; sx = nodes[best].x; sy = nodes[best].y; }
+          list.push({i:i, j:j, lx:ax, ly:ay, sx:sx, sy:sy,
+            size: (mob ? 2 : 2.3) + Math.random() * 1.6,
+            col: pickColor(),
+            ph: Math.random() * 6.283, sp: .0005 + Math.random() * .0009,
+            label: null});
+        }
+      }
+
+      var off = [], acc = 0;
+      for(i = 0; i < layers.length; i++){ off.push(acc); acc += layers[i]; }
+      var edges = [], readyMax = 0;
+      for(i = 0; i < layers.length - 1; i++){
+        for(var a = 0; a < layers[i]; a++){
+          for(var b = 0; b < layers[i + 1]; b++){
+            var delay = 60 + i * 90 + Math.random() * 140;
+            var dur = 380 + Math.random() * 180;
+            readyMax = Math.max(readyMax, delay + dur);
+            edges.push({
+              a: off[i] + a, b: off[i + 1] + b, layer: i,
+              col: pickColor(),
+              alpha: .08 + Math.random() * .24,
+              wgt: .7 + Math.random() * .8,
+              tw: Math.random() < .16,
+              twP: Math.random() * 6.283,
+              delay: delay, dur: dur
+            });
+          }
+        }
+      }
+
+      if(!mob){
+        for(var q = 0; q < layers[0] && q < IN_LB.length; q++)
+          list[q].label = {t: IN_LB[q], side: -1};
+        var lastOff = off[layers.length - 1];
+        for(q = 0; q < layers[layers.length - 1] && q < OUT_LB.length; q++)
+          list[lastOff + q].label = {t: OUT_LB[q], side: 1};
+      }
+
+      nodes = nodes.filter(function(s, i2){ return !used[i2]; });
+      net = {layers:layers, colX:colX, cx:cx, cy:cy, bw:bw, bh:bh, mob:mob,
+        nodes:list, edges:edges, ready: readyMax + 150,
+        wave:0, nextWave:0, parts:[], nextPart:0};
+    }
+
+    function layoutGeo(){
+      var mob = w < 900;
+      var layers = net.layers;
+      var bw = mob ? Math.min(w * .9, 560) : Math.min(w * .52, 780);
+      var bh = mob ? h * .40 : Math.min(h * .58, 520);
+      var cx = mob ? w * .5 : w * .39;
+      var cy = mob ? h * .36 : h * .51;
+      net.bw = bw; net.bh = bh; net.cx = cx; net.cy = cy; net.mob = mob;
+      net.colX = [];
+      for(var i = 0; i < layers.length; i++) net.colX.push(cx - bw/2 + bw * i / (layers.length - 1));
+      net.nodes.forEach(function(nd){
+        var n = layers[nd.i];
+        nd.lx = net.colX[nd.i];
+        nd.ly = cy - bh/2 + bh * (nd.j + .5) / n;
+      });
+    }
+
+    /* ---------- pomoćne za crtanje ---------- */
+    function nodePos(nd, now, eq){
+      var tx = nd.lx + Math.sin(now * nd.sp + nd.ph) * 2.4;
+      var ty = nd.ly + Math.cos(now * nd.sp * .9 + nd.ph * 1.7) * 2.4;
+      if(eq < 1) return {x: nd.sx + (tx - nd.sx) * eq, y: nd.sy + (ty - nd.sy) * eq};
+      return {x: tx, y: ty};
+    }
+    function waveE(layer, now){
+      if(!net || !net.wave) return 0;
+      var p = (now - net.wave - layer * 170) / 360;
+      if(p <= 0 || p >= 1) return 0;
+      return Math.sin(p * Math.PI);
+    }
+
+    function ambient(lineA, dotA){
+      var i, j, a, b, dx2, dy2, d;
       for(i = 0; i < nodes.length; i++){
         a = nodes[i];
-        a.y += warpSpeed * a.z + a.vy;
-        a.x += a.vx;
-        if(a.y > h + m){ a.y = -m - Math.random() * 80; a.x = Math.random() * w; }
-        else if(a.y < -m - 80){ a.y = h + m; }
-        if(a.x < -m) a.x = w + m - 1; else if(a.x > w + m) a.x = -m + 1;
+        a.x += a.vx; a.y += a.vy;
+        if(a.x < -10) a.x = w + 10; else if(a.x > w + 10) a.x = -10;
+        if(a.y < -10) a.y = h + 10; else if(a.y > h + 10) a.y = -10;
       }
-      if(calm > 0){
+      if(lineA > .004 && nodes.length > 1){
         var maxD = 140;
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 1; ctx.strokeStyle = "#fff";
         for(i = 0; i < nodes.length; i++){
           for(j = i + 1; j < nodes.length; j++){
             a = nodes[i]; b = nodes[j];
             dx2 = a.x - b.x; dy2 = a.y - b.y;
             d = Math.sqrt(dx2 * dx2 + dy2 * dy2);
             if(d < maxD){
-              ctx.globalAlpha = (1 - d / maxD) * .28 * calm;
+              ctx.globalAlpha = (1 - d / maxD) * lineA;
               ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
             }
           }
         }
       }
-      ctx.lineCap = "round";
-      for(i = 0; i < nodes.length; i++){
-        a = nodes[i];
-        if(trail > 2){
-          var tl = trail * a.z;
-          var g = ctx.createLinearGradient(a.x, a.y - tl, a.x, a.y);
-          g.addColorStop(0, "rgba(255,255,255,0)");
-          g.addColorStop(1, "rgba(255,255,255,.85)");
-          ctx.globalAlpha = 1;
-          ctx.strokeStyle = g;
-          ctx.lineWidth = Math.min(a.r * 1.6, 2.4);
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y - tl);
-          ctx.lineTo(a.x, a.y);
-          ctx.stroke();
+      if(dotA > .004){
+        ctx.fillStyle = "#fff";
+        for(i = 0; i < nodes.length; i++){
+          a = nodes[i];
+          ctx.globalAlpha = dotA * (.45 + .55 * a.z);
+          ctx.beginPath(); ctx.arc(a.x, a.y, a.r * .9, 0, 6.283); ctx.fill();
         }
-        ctx.globalAlpha = .85;
-        ctx.fillStyle = "#ffffff";
-        ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2); ctx.fill();
       }
       ctx.globalAlpha = 1;
+    }
+
+    /* ---------- crtanje neuralne mreže ---------- */
+    function drawNet(now, aMul, rise){
+      ctx.save();
+      ctx.translate(0, -rise);
+      var t = now - ft0;
+      var eq = 1 - Math.pow(1 - Math.min(t / 900, 1), 3);
+      var i, e, pA, pB;
+
+      ctx.lineCap = "round";
+      for(i = 0; i < net.edges.length; i++){
+        e = net.edges[i];
+        var pr = (t - e.delay) / e.dur;
+        if(pr <= 0) continue;
+        if(pr > 1) pr = 1;
+        var pe = 1 - Math.pow(1 - pr, 2);
+        pA = nodePos(net.nodes[e.a], now, eq);
+        pB = nodePos(net.nodes[e.b], now, eq);
+        var al = e.alpha * aMul;
+        if(e.tw) al *= .6 + .4 * Math.sin(now * .0025 + e.twP);
+        al *= 1 + waveE(e.layer, now) * 1.4;
+        var hx = pA.x + (pB.x - pA.x) * pe, hy = pA.y + (pB.y - pA.y) * pe;
+        ctx.globalAlpha = Math.max(0, Math.min(al, 1));
+        ctx.strokeStyle = "rgb(" + e.col + ")";
+        ctx.lineWidth = e.wgt;
+        ctx.beginPath(); ctx.moveTo(pA.x, pA.y); ctx.lineTo(hx, hy); ctx.stroke();
+      }
+
+      for(i = 0; i < net.nodes.length; i++){
+        var nd = net.nodes[i];
+        var p = nodePos(nd, now, eq);
+        var we = waveE(nd.i, now);
+        var s = nd.size * (1 + we * .55);
+        ctx.globalAlpha = Math.min(1, eq) * aMul;
+        ctx.shadowColor = "rgb(" + nd.col + ")";
+        ctx.shadowBlur = 5 + we * 15;
+        ctx.fillStyle = "rgb(" + nd.col + ")";
+        ctx.fillRect(p.x - s, p.y - s, s * 2, s * 2);
+        ctx.shadowBlur = 0;
+      }
+
+      var labA = Math.max(0, Math.min((t - 550) / 350, 1)) * aMul;
+      if(labA > .01){
+        ctx.font = (net.mob ? "600 9px " : "500 10px ") + "'IBM Plex Mono',monospace";
+        ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+        ctx.fillStyle = "rgba(255,255,255," + (.38 * labA).toFixed(3) + ")";
+        for(i = 0; i < net.layers.length; i++)
+          ctx.fillText(TOP_LB[i] || ("s" + i), net.colX[i], net.cy - net.bh/2 - 16);
+        if(!net.mob){
+          ctx.textBaseline = "middle";
+          for(i = 0; i < net.nodes.length; i++){
+            var nd2 = net.nodes[i];
+            if(!nd2.label) continue;
+            var p2 = nodePos(nd2, now, eq);
+            ctx.textAlign = nd2.label.side < 0 ? "right" : "left";
+            ctx.fillStyle = "rgba(255,255,255," + (.5 * labA).toFixed(3) + ")";
+            ctx.fillText(nd2.label.t, p2.x + nd2.label.side * 10, p2.y);
+          }
+        }
+      }
+
+      if(phase === PH.NET){
+        if(now > net.nextWave){
+          net.wave = now;
+          net.nextWave = now + 1700 + Math.random() * 1300;
+        }
+        if(now > net.nextPart && net.parts.length < 9){
+          net.parts.push({e:(Math.random() * net.edges.length) | 0, t0: now, dur: 520 + Math.random() * 380});
+          net.nextPart = now + 170 + Math.random() * 260;
+        }
+        for(i = net.parts.length - 1; i >= 0; i--){
+          var pt = net.parts[i], pp = (now - pt.t0) / pt.dur;
+          if(pp >= 1){ net.parts.splice(i, 1); continue; }
+          var ee = net.edges[pt.e];
+          var P1 = nodePos(net.nodes[ee.a], now, eq), P2 = nodePos(net.nodes[ee.b], now, eq);
+          var px = P1.x + (P2.x - P1.x) * pp, py = P1.y + (P2.y - P1.y) * pp;
+          ctx.globalAlpha = aMul * (pp < .15 ? pp / .15 : 1);
+          ctx.fillStyle = "rgb(" + ee.col + ")";
+          ctx.shadowColor = "rgb(" + ee.col + ")";
+          ctx.shadowBlur = 8;
+          ctx.beginPath(); ctx.arc(px, py, 1.8, 0, 6.283); ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+      }
+      ctx.globalAlpha = 1;
+      ctx.restore();
+    }
+
+    /* ---------- pretvori čvorove nazad u zvijezde ---------- */
+    function netToStars(){
+      if(!net) return;
+      net.nodes.forEach(function(nd){
+        nodes.push({
+          x: nd.lx, y: nd.ly,
+          vx: (Math.random() - .5) * .34, vy: (Math.random() - .5) * .34,
+          r: Math.min(nd.size, 1.7), z: .5 + Math.random() * .9
+        });
+      });
+      net = null;
+    }
+
+    /* ---------- kontrola faza ---------- */
+    function unlockScroll(){
+      if(unlocked) return;
+      unlocked = true;
+      document.documentElement.classList.remove("net-lock");
+    }
+    function showNetCopy(){
+      netCopy.classList.add("on");
+      if(netTitle) Type.play(netTitle, 5, 60);
+    }
+    function startTransform(){
+      if(phase !== PH.HERO) return;
+      phase = PH.TRANSFORM;
+      ft0 = performance.now();
+      Type.finish(heroH1); Type.finish(heroSub);
+      heroInner.classList.add("hero-hide");
+      buildNet();
+    }
+    function startExit(){
+      if(phase !== PH.NET) return;
+      phase = PH.EXIT;
+      et0 = performance.now();
+      exitQueued = false;
+      Type.finish(netTitle);
+      netCopy.classList.remove("on");
+      netCopy.classList.add("out");
+    }
+    function userNext(){
+      if(phase === PH.HERO){
+        if(!heroTyped){ warpQueued = true; return; }
+        startTransform();
+      } else if(phase === PH.NET){
+        startExit();
+      }
+    }
+
+    /* ---------- glavna petlja ---------- */
+    function step(now){
+      if(t0 === null) t0 = now;
+      ctx.clearRect(0, 0, w, h);
+      var i, a, t;
+
+      if(phase === PH.HERO){
+        t = now - t0;
+        if(t < WARP_MS){
+          var p = Math.min(t / WARP_MS, 1);
+          var ws = 86 * Math.pow(1 - p, 1.8);
+          var trail = Math.min(160, ws * 5), m = trail + 14;
+          for(i = 0; i < nodes.length; i++){
+            a = nodes[i];
+            a.y += ws * a.z + a.vy;
+            a.x += a.vx;
+            if(a.y > h + m){ a.y = -m - Math.random() * 80; a.x = Math.random() * w; }
+            else if(a.y < -m - 80){ a.y = h + m; }
+            if(a.x < -m) a.x = w + m - 1; else if(a.x > w + m) a.x = -m + 1;
+          }
+          ctx.lineCap = "round";
+          for(i = 0; i < nodes.length; i++){
+            a = nodes[i];
+            if(trail > 2){
+              var tl = trail * a.z;
+              var g = ctx.createLinearGradient(a.x, a.y - tl, a.x, a.y);
+              g.addColorStop(0, "rgba(255,255,255,0)");
+              g.addColorStop(1, "rgba(255,255,255,.85)");
+              ctx.globalAlpha = 1; ctx.strokeStyle = g;
+              ctx.lineWidth = Math.min(a.r * 1.6, 2.4);
+              ctx.beginPath(); ctx.moveTo(a.x, a.y - tl); ctx.lineTo(a.x, a.y); ctx.stroke();
+            }
+            ctx.globalAlpha = .85; ctx.fillStyle = "#fff";
+            ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, 6.283); ctx.fill();
+          }
+          ctx.globalAlpha = 1;
+        } else {
+          if(!heroTyped){
+            heroTyped = true;
+            document.body.classList.add("hero-in");
+            if(warpQueued){ warpQueued = false; startTransform(); }
+            else {
+              Type.play(heroH1, 16, 100);
+              Type.play(heroSub, 8, 120);
+            }
+          }
+          ambient(.26, .8);
+        }
+      }
+      else if(phase === PH.TRANSFORM){
+        var tt = now - ft0;
+        ambient(.26 * (1 - Math.min(tt / 500, 1)), .8 * (1 - Math.min(tt / 700, 1) * .5));
+        if(net) drawNet(now, 1, 0);
+        if(net && tt >= net.ready + 100){
+          phase = PH.NET;
+          net.nextWave = now + 450;
+          net.nextPart = now + 750;
+          if(exitQueued){
+            /* korisnik je već nastavio da skrola — mreža se odmah zatvara */
+            startExit();
+          } else {
+            showNetCopy();
+          }
+        }
+      }
+      else if(phase === PH.NET){
+        ambient(.06, .38);
+        if(net) drawNet(now, 1, 0);
+      }
+      else if(phase === PH.EXIT){
+        var ex = Math.min((now - et0) / 800, 1);
+        ambient(.06 + (.22 - .06) * ex, .38 + (.8 - .38) * ex);
+        if(net) drawNet(now, Math.pow(1 - ex, 1.4), ex * ex * 40);
+        /* otključaj skrol ~1/3 u izlazu — sajt krene ka dolje */
+        if(!unlocked && ex >= .35) unlockScroll();
+        if(ex >= 1){
+          netToStars();
+          netCopy.classList.add("gone");
+          heroInner.classList.remove("hero-hide");
+          phase = PH.DONE;
+        }
+      }
+      else {
+        ambient(.22, .75);
+      }
+
       raf = requestAnimationFrame(step);
     }
 
+    /* ---------- scroll-lock + inputi ---------- */
+    if("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+    document.documentElement.classList.add("net-lock");
+
+    /* TOČKIĆ — dok je zaključano ništa ne skrola (html ima overflow:hidden) */
+    window.addEventListener("wheel", function(){
+      if(unlocked) return;
+      if(phase === PH.HERO) userNext();
+      else if(phase === PH.TRANSFORM) exitQueued = true;
+      else if(phase === PH.NET) userNext();
+    }, {passive:true});
+
+    /* TOUCH — blokiramo dok traje sekvensa */
+    window.addEventListener("touchmove", function(e){
+      if(document.body.classList.contains("menu-open")) return;
+      if(unlocked) return;
+      e.preventDefault();
+      if(phase === PH.HERO) userNext();
+      else if(phase === PH.TRANSFORM) exitQueued = true;
+      else if(phase === PH.NET) userNext();
+    }, {passive:false});
+
+    window.addEventListener("keydown", function(e){
+      var k = e.key;
+      if(unlocked) return;
+      if(k === "ArrowDown" || k === "PageDown" || k === " " || k === "Spacebar"){
+        e.preventDefault();
+        if(phase === PH.HERO) userNext();
+        else if(phase === PH.TRANSFORM) exitQueued = true;
+        else if(phase === PH.NET) userNext();
+      }
+    });
+
+    /* klik na anchor preskače intro i ide direktno na cilj */
+    document.addEventListener("click", function(e){
+      if(phase === PH.DONE) return;
+      var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+      if(!a) return;
+      var href = a.getAttribute("href");
+      if(!href || href === "#") return;
+      e.preventDefault();
+      e.stopPropagation();
+      Type.finish(heroH1); Type.finish(heroSub); Type.finish(netTitle);
+      if(net) netToStars();
+      phase = PH.DONE;
+      exitQueued = false;
+      document.body.classList.add("hero-in");
+      heroInner.classList.remove("hero-hide");
+      netCopy.classList.remove("on");
+      netCopy.classList.add("gone");
+      unlockScroll();
+      var target = document.querySelector(href);
+      if(target) target.scrollIntoView({behavior: "smooth"});
+    }, true);
+
     resize();
     window.addEventListener("resize", resize);
-
-    /* kad zvijezde stanu — OBA teksta se kucaju ISTOVREMENO;
-       kucanje kreće tek kad je font učitan (da zamjena fonta
-       ne može reflow-ovati tekst usred animacije) */
-    setTimeout(function(){
-      document.body.classList.add("hero-in");
-      var startHero = function(){
-        var h1 = document.querySelector('h1[data-type="hero"]');
-        var sub = document.querySelector('.hero-sub[data-type="hero"]');
-        if(h1) Type.play(h1, 16, 150);
-        if(sub) Type.play(sub, 8, 150);
-      };
-      if(document.fonts && document.fonts.ready){
-        document.fonts.ready.then(startHero);
-      } else {
-        startHero();
-      }
-    }, WARP_DUR);
 
     new IntersectionObserver(function(entries){
       if(entries[0].isIntersecting){ cancelAnimationFrame(raf); raf = requestAnimationFrame(step); }
