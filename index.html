@@ -194,8 +194,9 @@ body.hero-in .h-anim{opacity:1;transform:none}
 .net-hint svg{width:14px;height:14px;stroke:#8f8f8f;fill:none;stroke-width:1.8;
   stroke-linecap:round;stroke-linejoin:round;animation:hint-bob 1.7s ease-in-out infinite}
 @media(max-width:900px){
-  .net-copy{left:var(--h-pad) !important;right:var(--h-pad) !important;width:auto !important;
-    top:auto;bottom:6vh;bottom:calc(3.5svh + 10px);
+  .net-copy{left:var(--h-pad) !important;right:auto !important;
+    width:calc(100% - 2 * var(--h-pad)) !important;
+    top:50%;bottom:auto;               /* top u px postavlja JS ispod mreže */
     transform:none;transition:opacity .7s ease}
   .net-copy.on{transform:none}
   .net-title{font-size:clamp(1.15rem,5.4vw,1.5rem);margin-top:.7rem}
@@ -1223,7 +1224,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
       var mob = w < 900;
       return {
         mob: mob,
-        bw: mob ? Math.min(w * .9, 560) : Math.min(w * (w < 1200 ? .46 : .52), 780),
+        bw: mob ? Math.min(w * .74, 520) : Math.min(w * (w < 1200 ? .46 : .52), 780),
         bh: mob ? Math.min(h * .34, 360) : Math.min(h * .58, 520),
         cx: mob ? w * .5   : w * (w < 1200 ? .36 : .39),
         cy: mob ? h * .29  : h * .51
@@ -1321,25 +1322,30 @@ body.hero-in .h-anim{opacity:1;transform:none}
 
     /* tekst centriran između desne ivice mreže i desne ivice ekrana */
     function placeNetCopy(){
-      if(!netCopy) return;
-      if(w < 900){
-        netCopy.style.left = ""; netCopy.style.right = ""; netCopy.style.width = "";
-        return;
-      }
-      var g = geo();
-      var netRight = g.cx + g.bw / 2;
-      var padR = 56;
-      var gap = w - padR - netRight;
-      var tw = Math.min(520, w * .34);
-      if(gap >= tw + 20){
-        netCopy.style.width = tw + "px";
-        netCopy.style.left = Math.round(netRight + (gap - tw) / 2) + "px";
-      } else {
-        netCopy.style.width = Math.max(200, gap - 24) + "px";
-        netCopy.style.left = Math.round(netRight + 18) + "px";
-      }
-      netCopy.style.right = "auto";
-    }
+  if(!netCopy) return;
+  if(w < 900){
+    /* telefon: tekst ODMAH ispod mreže, 16px razmaka */
+    var gm = geo();
+    netCopy.style.top = Math.round(gm.cy + gm.bh / 2 + 16) + "px";
+    netCopy.style.left = "";
+    netCopy.style.width = "";
+    netCopy.style.right = "auto";
+    return;
+  }
+  var g = geo();
+  var netRight = g.cx + g.bw / 2;
+  var padR = 56;
+  var gap = w - padR - netRight;
+  var tw = Math.min(520, w * .34);
+  if(gap >= tw + 20){
+    netCopy.style.width = tw + "px";
+    netCopy.style.left = Math.round(netRight + (gap - tw) / 2) + "px";
+  } else {
+    netCopy.style.width = Math.max(200, gap - 24) + "px";
+    netCopy.style.left = Math.round(netRight + 18) + "px";
+  }
+  netCopy.style.right = "auto";
+}
 
     /* ---------- pomoćne za crtanje ---------- */
     function nodePos(nd, now, eq){
@@ -1432,24 +1438,32 @@ body.hero-in .h-anim{opacity:1;transform:none}
       }
 
       var labA = Math.max(0, Math.min((t - 320) / 250, 1)) * aMul;
-      if(labA > .01){
-        ctx.font = (net.mob ? "600 9px " : "500 10px ") + "'IBM Plex Mono',monospace";
-        ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
-        ctx.fillStyle = "rgba(255,255,255," + (.38 * labA).toFixed(3) + ")";
-        for(i = 0; i < net.layers.length; i++)
-          ctx.fillText(TOP_LB[i] || ("s" + i), net.colX[i], net.cy - net.bh/2 - 16);
-        if(!net.mob){
-          ctx.textBaseline = "middle";
-          for(i = 0; i < net.nodes.length; i++){
-            var nd2 = net.nodes[i];
-            if(!nd2.label) continue;
-            var p2 = nodePos(nd2, now, eq);
-            ctx.textAlign = nd2.label.side < 0 ? "right" : "left";
-            ctx.fillStyle = "rgba(255,255,255," + (.5 * labA).toFixed(3) + ")";
-            ctx.fillText(nd2.label.t, p2.x + nd2.label.side * 10, p2.y);
-          }
-        }
-      }
+if(labA > .01){
+  ctx.font = (net.mob ? "600 9px " : "500 10px ") + "'IBM Plex Mono',monospace";
+  ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+  ctx.fillStyle = "rgba(255,255,255," + (.38 * labA).toFixed(3) + ")";
+  /* input/fc…/output — uvijek min 40px od ivice ekrana */
+  for(i = 0; i < net.layers.length; i++){
+    var lbx = Math.max(40, Math.min(w - 40, net.colX[i]));
+    ctx.fillText(TOP_LB[i] || ("s" + i), lbx, net.cy - net.bh/2 - 14);
+  }
+  if(!net.mob){
+    /* bočne labele (tipovi tendera / FIRME) samo ako ima mjesta */
+    var showIn  = net.colX[0] > 165;
+    var showOut = (w - net.colX[net.colX.length - 1]) > 145;
+    ctx.textBaseline = "middle";
+    for(i = 0; i < net.nodes.length; i++){
+      var nd2 = net.nodes[i];
+      if(!nd2.label) continue;
+      if(nd2.label.side < 0 && !showIn) continue;
+      if(nd2.label.side > 0 && !showOut) continue;
+      var p2 = nodePos(nd2, now, eq);
+      ctx.textAlign = nd2.label.side < 0 ? "right" : "left";
+      ctx.fillStyle = "rgba(255,255,255," + (.5 * labA).toFixed(3) + ")";
+      ctx.fillText(nd2.label.t, p2.x + nd2.label.side * 10, p2.y);
+    }
+  }
+}
 
       if(phase === PH.NET || phase === PH.DONE){
         if(now > net.nextWave){
@@ -1603,17 +1617,33 @@ body.hero-in .h-anim{opacity:1;transform:none}
       if(unlocked) return;
       userNext();
     }, {passive:true});
-
+/* ===== dodir NA mreži = interakcija sa mrežom; izvan = skrol ===== */
+var tInNet = false;
+function inNetArea(x, y){
+  if(!net) return false;
+  var r = canvas.getBoundingClientRect();
+  var px = x - r.left, py = y - r.top;
+  return px > net.cx - net.bw/2 - 34 && px < net.cx + net.bw/2 + 34 &&
+         py > net.cy - net.bh/2 - 46 && py < net.cy + net.bh/2 + 46;
+}
+window.addEventListener("touchstart", function(e){
+  tInNet = (e.touches && e.touches.length) ? inNetArea(e.touches[0].clientX, e.touches[0].clientY) : false;
+}, {passive:true});
     window.addEventListener("touchmove", function(e){
-      if(document.body.classList.contains("menu-open")) return;
-      if(unlocked) return;
-      e.preventDefault();
-      if(phase === PH.HERO || phase === PH.NET){
-        if(!touchUsed){ touchUsed = true; userNext(); }
-      }
-    }, {passive:false});
-    window.addEventListener("touchend", function(){ touchUsed = false; }, {passive:true});
-    window.addEventListener("touchcancel", function(){ touchUsed = false; }, {passive:true});
+  if(document.body.classList.contains("menu-open")) return;
+  if(unlocked){
+    /* prst NA mreži — igra se sa mrežom, bez skrola;
+       bilo gdje drugo — normalan skrol */
+    if(tInNet && net) e.preventDefault();
+    return;
+  }
+  e.preventDefault();
+  if(phase === PH.HERO || phase === PH.NET){
+    if(!touchUsed){ touchUsed = true; userNext(); }
+  }
+}, {passive:false});
+window.addEventListener("touchend", function(){ touchUsed = false; tInNet = false; }, {passive:true});
+window.addEventListener("touchcancel", function(){ touchUsed = false; tInNet = false; }, {passive:true});
 
     window.addEventListener("keydown", function(e){
       if(unlocked) return;
