@@ -174,8 +174,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
   stroke-linecap:round;stroke-linejoin:round;animation:hint-bob 1.7s ease-in-out infinite}
 @keyframes hint-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 
-/* ============ NET FAZA — tekst centriran između mreže i desne ivice.
-   left postavlja JS (placeNetCopy) po stvarnoj poziciji mreže ============ */
+/* ============ NET FAZA — tekst centriran između mreže i desne ivice ============ */
 .net-copy{position:absolute;z-index:3;top:50%;
   width:min(520px,34vw);opacity:0;visibility:hidden;pointer-events:none;
   transform:translateY(-50%);
@@ -1088,15 +1087,12 @@ body.hero-in .h-anim{opacity:1;transform:none}
   })();
 
   /* ==========================================================
-     HERO SEKVENSA — FINALNI TOK:
+     HERO SEKVENSA + INTERAKCIJA KURSORA/PRSTA:
 
-     HERO      : zvijezde + linije; prvo se kuca h1 DO KRAJA,
-                 pa onda podnaslov. Sajt je zaključan.
-     SKROL #1  → TEKST + MREŽA KREĆU ISTOVREMENO; sajt miruje.
-     NET       : mreža i tekst stoje i žive (pulsovi, talasi).
-     SKROL #2  → skrol se otključava i sajt ide ka dolje.
-                 MREŽA OSTAJE živa u pozadini hero sekcije —
-                 prvi se tekst NE vraća, zvijezde se ne vraćaju.
+     - Zvijezde i čvorovi mreže BJEŽE od kursora (miš na
+       desktopu, prst na telefonu) unutar radijusa ~120px.
+     - Linije se savijaju jer im krajevi bježe.
+     - Kad kursor ode, sve se glatko vrati na mjesto.
      ========================================================== */
   var canvas = document.getElementById("net");
   var netCopy = document.getElementById("netCopy");
@@ -1135,6 +1131,72 @@ body.hero-in .h-anim{opacity:1;transform:none}
     var IN_LB  = ["građevinski radovi","IT oprema","zdravstvo","vodoprivreda","energetika","usluge","dobavke"];
     var OUT_LB = ["FIRMA A","FIRMA B","FIRMA C","FIRMA D"];
 
+    /* ==========================================================
+       INTERAKCIJA — kursor/prst tjera tačke i linije
+       ========================================================== */
+    var mx = -99999, my = -99999, mActive = false;
+    var REPEL_R  = 120;   /* radius uticaja kursora (px)      */
+    var DISP_N   = 64;    /* max pomjeranje čvora mreže (px)  */
+    var DISP_S   = 90;    /* max pomjeranje zvijezde (px)     */
+
+    function trackPointer(cx, cy){
+      var r = canvas.getBoundingClientRect();
+      mx = cx - r.left; my = cy - r.top;
+      /* aktivan samo dok je kursor/pipka iznad hero područja */
+      mActive = (mx > -40 && my > -40 && mx < w + 40 && my < h + 40);
+    }
+    window.addEventListener("pointermove", function(e){
+      if(e.pointerType === "touch") return; /* touch ide preko touchmove */
+      trackPointer(e.clientX, e.clientY);
+    }, {passive:true});
+    window.addEventListener("touchstart", function(e){
+      if(e.touches && e.touches.length) trackPointer(e.touches[0].clientX, e.touches[0].clientY);
+    }, {passive:true});
+    window.addEventListener("touchmove", function(e){
+      if(e.touches && e.touches.length) trackPointer(e.touches[0].clientX, e.touches[0].clientY);
+    }, {passive:true});
+    window.addEventListener("touchend", function(){ mActive = false; }, {passive:true});
+    window.addEventListener("touchcancel", function(){ mActive = false; }, {passive:true});
+    window.addEventListener("pointerout", function(e){ if(!e.relatedTarget) mActive = false; });
+    window.addEventListener("blur", function(){ mActive = false; });
+
+    /* sila odbijanja za zvijezde — poziva se 1× po frejmu */
+    function updateStarForce(){
+      for(var i = 0; i < nodes.length; i++){
+        var s = nodes[i], tx = 0, ty = 0;
+        if(mActive){
+          var dx = s.x - mx, dy = s.y - my, d = Math.sqrt(dx*dx + dy*dy);
+          if(d < REPEL_R && d > .01){
+            var f = 1 - d / REPEL_R;
+            f = f * f * DISP_S;
+            tx = (dx / d) * f; ty = (dy / d) * f;
+          }
+        }
+        /* bježi brzo (.18), vraćaj se polako (.06) */
+        var sp = (tx !== 0 || ty !== 0) ? .18 : .06;
+        s.ox += (tx - s.ox) * sp;
+        s.oy += (ty - s.oy) * sp;
+      }
+    }
+    /* sila odbijanja za čvorove mreže */
+    function updateNetForce(){
+      if(!net) return;
+      for(var i = 0; i < net.nodes.length; i++){
+        var nd = net.nodes[i], tx = 0, ty = 0;
+        if(mActive){
+          var dx = nd.lx - mx, dy = nd.ly - my, d = Math.sqrt(dx*dx + dy*dy);
+          if(d < REPEL_R && d > .01){
+            var f = 1 - d / REPEL_R;
+            f = f * f * DISP_N;
+            tx = (dx / d) * f; ty = (dy / d) * f;
+          }
+        }
+        var sp = (tx !== 0 || ty !== 0) ? .16 : .05;
+        nd.ox += (tx - nd.ox) * sp;
+        nd.oy += (ty - nd.oy) * sp;
+      }
+    }
+
     /* ---------- zvijezde ---------- */
     function makeNodes(){
       var count = Math.min(170, Math.max(90, Math.floor(w * h / 9500)));
@@ -1144,19 +1206,20 @@ body.hero-in .h-anim{opacity:1;transform:none}
           x: Math.random() * w, y: Math.random() * h,
           vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35,
           r: Math.random() * 1.6 + .8,
-          z: .5 + Math.random() * .9
+          z: .5 + Math.random() * .9,
+          ox: 0, oy: 0            /* ofset od kursora */
         });
       }
     }
 
-    /* geometrija mreže — zajednička za build/layout/pozicioniranje teksta */
+    /* geometrija mreže */
     function geo(){
       var mob = w < 900;
       return {
         mob: mob,
         bw: mob ? Math.min(w * .9, 560) : Math.min(w * (w < 1200 ? .46 : .52), 780),
         bh: mob ? h * .40 : Math.min(h * .58, 520),
-        cx: mob ? w * .5   : w * (w < 1200 ? .36 : .39),  /* sredina, malo lijevo */
+        cx: mob ? w * .5   : w * (w < 1200 ? .36 : .39),
         cy: mob ? h * .36  : h * .51
       };
     }
@@ -1184,7 +1247,6 @@ body.hero-in .h-anim{opacity:1;transform:none}
           var ay = g.cy - g.bh/2 + g.bh * (j + .5) / n + (Math.random() - .5) * (g.bh / n) * .5;
           ay = Math.max(g.cy - g.bh/2 + 10, Math.min(g.cy + g.bh/2 - 10, ay));
           var ax = colX[i] + (Math.random() - .5) * g.bw * .012;
-          /* najbliža slobodna zvijezda postaje ovaj čvor */
           var best = -1, bd = Infinity;
           for(var k = 0; k < nodes.length; k++){
             if(used[k]) continue;
@@ -1197,6 +1259,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
             size: (g.mob ? 2 : 2.3) + Math.random() * 1.6,
             col: pickColor(),
             ph: Math.random() * 6.283, sp: .0005 + Math.random() * .0009,
+            ox: 0, oy: 0,          /* ofset od kursora */
             label: null});
         }
       }
@@ -1274,8 +1337,8 @@ body.hero-in .h-anim{opacity:1;transform:none}
 
     /* ---------- pomoćne za crtanje ---------- */
     function nodePos(nd, now, eq){
-      var tx = nd.lx + Math.sin(now * nd.sp + nd.ph) * 2.4;
-      var ty = nd.ly + Math.cos(now * nd.sp * .9 + nd.ph * 1.7) * 2.4;
+      var tx = nd.lx + Math.sin(now * nd.sp + nd.ph) * 2.4 + nd.ox;
+      var ty = nd.ly + Math.cos(now * nd.sp * .9 + nd.ph * 1.7) * 2.4 + nd.oy;
       if(eq < 1) return {x: nd.sx + (tx - nd.sx) * eq, y: nd.sy + (ty - nd.sy) * eq};
       return {x: tx, y: ty};
     }
@@ -1300,11 +1363,13 @@ body.hero-in .h-anim{opacity:1;transform:none}
         for(i = 0; i < nodes.length; i++){
           for(j = i + 1; j < nodes.length; j++){
             a = nodes[i]; b = nodes[j];
-            dx2 = a.x - b.x; dy2 = a.y - b.y;
+            var ax = a.x + a.ox, ay = a.y + a.oy;
+            var bx = b.x + b.ox, by = b.y + b.oy;
+            dx2 = ax - bx; dy2 = ay - by;
             d = Math.sqrt(dx2 * dx2 + dy2 * dy2);
             if(d < maxD){
               ctx.globalAlpha = (1 - d / maxD) * lineA;
-              ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+              ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
             }
           }
         }
@@ -1314,7 +1379,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
         for(i = 0; i < nodes.length; i++){
           a = nodes[i];
           ctx.globalAlpha = dotA * (.45 + .55 * a.z);
-          ctx.beginPath(); ctx.arc(a.x, a.y, a.r * .9, 0, 6.283); ctx.fill();
+          ctx.beginPath(); ctx.arc(a.x + a.ox, a.y + a.oy, a.r * .9, 0, 6.283); ctx.fill();
         }
       }
       ctx.globalAlpha = 1;
@@ -1380,7 +1445,6 @@ body.hero-in .h-anim{opacity:1;transform:none}
         }
       }
 
-      /* pulsovi i čestice — žive dok god je mreža vidljiva (NET i DONE) */
       if(phase === PH.NET || phase === PH.DONE){
         if(now > net.nextWave){
           net.wave = now;
@@ -1414,7 +1478,6 @@ body.hero-in .h-anim{opacity:1;transform:none}
       unlocked = true;
       phase = PH.DONE;
       document.documentElement.classList.remove("net-lock");
-      /* mreža ostaje živa; prvi tekst ostaje sakriven; ništa se ne vraća */
     }
     function startTransform(){
       if(phase !== PH.HERO) return;
@@ -1424,7 +1487,6 @@ body.hero-in .h-anim{opacity:1;transform:none}
       heroInner.classList.add("hero-hide");
       buildNet();
       placeNetCopy();
-      /* TEKST + MREŽA kreću ISTOVREMENO */
       netCopy.classList.add("on");
       if(netTitle) Type.play(netTitle, 6, 120);
     }
@@ -1434,7 +1496,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
       if(!net){
         buildNet();
         placeNetCopy();
-        ft0 = performance.now() - 5000;   /* mreža odmah "izgrađena" */
+        ft0 = performance.now() - 5000;
         net.nextWave = performance.now() + 300;
         net.nextPart = performance.now() + 500;
       }
@@ -1448,7 +1510,6 @@ body.hero-in .h-anim{opacity:1;transform:none}
         if(!heroTyped){ warpQueued = true; return; }
         startTransform();
       } else if(phase === PH.NET){
-        /* mali guard da isti zamah/točkić odmah ne zatvori mrežu */
         if(performance.now() - netAt > 350) unlockNow();
       }
     }
@@ -1458,6 +1519,10 @@ body.hero-in .h-anim{opacity:1;transform:none}
       if(t0 === null) t0 = now;
       ctx.clearRect(0, 0, w, h);
       var i, a, t;
+
+      /* sile odbijanja — prije crtanja, svaki frejm */
+      updateStarForce();
+      if(net) updateNetForce();
 
       if(phase === PH.HERO){
         t = now - t0;
@@ -1496,7 +1561,6 @@ body.hero-in .h-anim{opacity:1;transform:none}
             if(phase === PH.HERO){
               if(warpQueued){ warpQueued = false; startTransform(); }
               else {
-                /* PRVO veliki naslov DO KRAJA, pa onda mali tekst */
                 Type.play(heroH1, 16, 100, function(){
                   Type.play(heroSub, 8, 80);
                 });
@@ -1517,7 +1581,6 @@ body.hero-in .h-anim{opacity:1;transform:none}
         }
       }
       else {
-        /* NET i DONE — ist crtanje: mreža ostaje živa zauvijek */
         ambient(.06, .38);
         if(net) drawNet(now, 1, 0);
       }
@@ -1530,13 +1593,11 @@ body.hero-in .h-anim{opacity:1;transform:none}
     window.scrollTo(0, 0);
     document.documentElement.classList.add("net-lock");
 
-    /* TOČKIĆ — HERO: otvara mrežu; TRANSFORM: ignoriši; NET: otključaj */
     window.addEventListener("wheel", function(){
       if(unlocked) return;
       userNext();
     }, {passive:true});
 
-    /* TOUCH — jedan swipe = jedan korak; gest se prati do touchend */
     window.addEventListener("touchmove", function(e){
       if(document.body.classList.contains("menu-open")) return;
       if(unlocked) return;
@@ -1544,7 +1605,6 @@ body.hero-in .h-anim{opacity:1;transform:none}
       if(phase === PH.HERO || phase === PH.NET){
         if(!touchUsed){ touchUsed = true; userNext(); }
       }
-      /* TRANSFORM: ignoriši — mreža raste, sajt miruje */
     }, {passive:false});
     window.addEventListener("touchend", function(){ touchUsed = false; }, {passive:true});
     window.addEventListener("touchcancel", function(){ touchUsed = false; }, {passive:true});
@@ -1559,7 +1619,6 @@ body.hero-in .h-anim{opacity:1;transform:none}
       }
     });
 
-    /* klik na anchor preskače intro i ide direktno na cilj (mreža ostaje) */
     document.addEventListener("click", function(e){
       if(phase === PH.DONE && unlocked) return;
       var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
