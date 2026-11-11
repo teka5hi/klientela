@@ -16,9 +16,9 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --dark:#1e2124; --dark-2:#141618; --dark-mid:#2f3234;
-  --light:#f9f9f9; --ink:#1e2124; --gray:#636363;
-  --accent:#2b5945;
+  --dark:#101d35; --dark-2:#0b1527; --dark-mid:#1b2e52;
+  --light:#eef4ff; --ink:#15223a; --gray:#52617a;
+  --accent:#1d4ed8; --accent-hover:#2b58db; --accent-light:#b7d1ff;
   --error:#ff4136;
   --header-h:72px;
   --max-w:1400px;
@@ -40,9 +40,9 @@ html.net-lock{overscroll-behavior:none;overflow:hidden}
 .stats,.sec,.site-footer{position:relative;z-index:1}
 
 .sec{padding:clamp(4.5rem,9vw,8.5rem) 0}
-.sec-dark{background:var(--dark);color:#fff;--acc:#fff;--hair:rgba(255,255,255,.14);--mut:#b9b9b9;--card:#1e2124}
-.sec-light{background:#fff;color:var(--ink);--acc:var(--accent);--hair:rgba(30,33,36,.14);--mut:#636363;--card:#fff}
-.sec-tint{background:var(--light);color:var(--ink);--acc:var(--accent);--hair:rgba(30,33,36,.14);--mut:#636363;--card:#fff}
+.sec-dark{background:var(--dark);color:#fff;--acc:var(--accent-light);--hair:rgba(183,209,255,.2);--mut:#bdcbe1;--card:var(--dark)}
+.sec-light{background:#f9fbff;color:var(--ink);--acc:var(--accent);--hair:rgba(21,34,58,.14);--mut:var(--gray);--card:#fff}
+.sec-tint{background:var(--light);color:var(--ink);--acc:var(--accent);--hair:rgba(21,34,58,.14);--mut:var(--gray);--card:#fff}
 
 .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:500;letter-spacing:.16em;
   text-transform:uppercase;color:var(--acc);display:inline-flex;align-items:center;gap:.65rem}
@@ -61,29 +61,23 @@ html.net-lock{overscroll-behavior:none;overflow:hidden}
 @keyframes caret-blink{0%,55%{opacity:1}56%,100%{opacity:0}}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;padding:1rem 1.7rem;
-  font-weight:600;font-size:.92rem;letter-spacing:.02em;text-decoration:none;border:1px solid transparent;
+  font-weight:600;font-size:.92rem;letter-spacing:.02em;text-decoration:none;border:1px solid transparent;border-radius:0;
   cursor:pointer;transition:background .2s,color .2s,border-color .2s}
-.sec-dark .btn-solid{background:#fff;color:var(--dark)}
-.sec-dark .btn-solid:hover{background:transparent;color:#fff;border-color:rgba(255,255,255,.55)}
+.sec-dark .btn-solid,.hero .btn-solid,.mnav-panel .btn-solid{background:var(--accent);border-color:#739bff;color:#fff}
+.sec-dark .btn-solid:hover,.hero .btn-solid:hover,.mnav-panel .btn-solid:hover{background:var(--accent-hover);border-color:var(--accent-light)}
 .sec-light .btn-solid,.sec-tint .btn-solid{background:var(--ink);color:#fff}
 .sec-light .btn-solid:hover,.sec-tint .btn-solid:hover{background:var(--accent);color:#fff}
 .btn-ghost{border-color:var(--hair);background:transparent;color:inherit}
 .sec-dark .btn-ghost:hover{background:#fff;color:var(--dark);border-color:#fff}
 .sec-light .btn-ghost:hover,.sec-tint .btn-ghost:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
-.site-header .btn-solid,.hero .btn-solid,.mnav-panel .btn-solid{
-  background:transparent;border:1px solid rgba(255,255,255,.55);color:#fff}
-.site-header .btn-solid:hover,.hero .btn-solid:hover,.mnav-panel .btn-solid:hover{
-  background:#fff;color:var(--dark);border-color:#fff}
+.site-header .btn-solid{background:rgba(183,209,255,.07);border-color:rgba(183,209,255,.48);color:var(--accent-light)}
+.site-header .btn-solid:hover{background:var(--accent);border-color:#739bff;color:#fff}
 
 .site-header{position:sticky;top:0;z-index:1200;
-  background-color:rgba(30,33,36,.25);
-  -webkit-backdrop-filter:blur(26px) saturate(160%);backdrop-filter:blur(26px) saturate(160%);
-  border-bottom:1px solid rgba(255,255,255,.28);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),inset 0 -1px 0 rgba(255,255,255,.08),0 8px 32px rgba(10,12,14,.18);
-  transition:background-color .3s,border-color .3s}
-.site-header::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(100deg,rgba(255,255,255,.05) 0%,rgba(255,255,255,.02) 30%,rgba(255,255,255,.14) 46%,rgba(255,255,255,.03) 60%,rgba(255,255,255,.06) 100%)}
-.site-header.scrolled{background-color:rgba(24,27,29,.45);border-bottom-color:rgba(255,255,255,.22)}
+  background-color:var(--dark-2);
+  border-bottom:1px solid rgba(183,209,255,.18);
+  transition:border-color .3s}
+.site-header.scrolled{border-bottom-color:rgba(183,209,255,.24)}
 .header-in{display:flex;align-items:center;height:var(--header-h);gap:2.5rem;position:relative}
 .brand{display:inline-flex;align-items:center;gap:.7rem;text-decoration:none;color:#fff}
 .brand-logo{height:30px;width:auto;object-fit:contain;display:block}
@@ -93,12 +87,12 @@ html.net-lock{overscroll-behavior:none;overflow:hidden}
 .nav-links{display:flex;gap:2rem;margin-left:auto}
 .nav-links a{color:rgba(255,255,255,.78);text-decoration:none;font-size:.92rem;font-weight:500;
   position:relative;padding:.35rem 0;transition:color .2s}
-.nav-links a::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1px;background:#fff;
+.nav-links a::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1px;background:var(--accent-light);
   transform:scaleX(0);transform-origin:left;transition:transform .25s}
 .nav-links a:hover,.nav-links a.active{color:#fff}
 .nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
 .header-cta{padding:.62rem 1.2rem;font-size:.85rem}
-.nav-toggle{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:10px;margin-right:-10px}
+.nav-toggle{display:none;flex-direction:column;gap:5px;background:none;border:0;border-radius:0;cursor:pointer;padding:10px;margin-right:-10px}
 .nav-toggle span{width:22px;height:1.6px;background:#fff;transition:transform .3s,opacity .3s}
 body.menu-open .nav-toggle span:nth-child(1){transform:translateY(6.6px) rotate(45deg)}
 body.menu-open .nav-toggle span:nth-child(2){opacity:0}
@@ -107,10 +101,10 @@ body.menu-open .nav-toggle span:nth-child(3){transform:translateY(-6.6px) rotate
 
 .mnav{position:fixed;inset:0;z-index:1100;visibility:hidden;pointer-events:none}
 .mnav.open{visibility:visible;pointer-events:auto}
-.mnav-backdrop{position:absolute;inset:0;background:rgba(20,22,24,.5);opacity:0;transition:opacity .3s}
+.mnav-backdrop{position:absolute;inset:0;background:rgba(11,21,39,.5);opacity:0;transition:opacity .3s}
 .mnav.open .mnav-backdrop{opacity:1}
 .mnav-panel{position:absolute;top:0;right:0;bottom:0;width:min(420px,100%);
-  background-color:rgba(26,29,32,.45);
+  background-color:rgba(13,24,45,.96);
   -webkit-backdrop-filter:blur(30px) saturate(170%);backdrop-filter:blur(30px) saturate(170%);
   border-left:1px solid rgba(255,255,255,.3);
   box-shadow:inset 1px 0 0 rgba(255,255,255,.3),0 0 60px rgba(10,12,14,.35);
@@ -121,26 +115,24 @@ body.menu-open .nav-toggle span:nth-child(3){transform:translateY(-6.6px) rotate
   border-bottom:1px solid rgba(255,255,255,.1)}
 .mnav-panel .btn{margin-top:1.6rem}
 
-.hero{position:relative;background:var(--dark);min-height:calc(100vh - var(--header-h));
+.hero{position:relative;background:var(--dark);--acc:var(--accent-light);min-height:calc(100vh - var(--header-h));
   min-height:calc(100svh - var(--header-h));
   display:flex;align-items:center;overflow:hidden}
 #net{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:1}
-.hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(ellipse at 30% 40%,transparent 30%,rgba(20,22,24,.45) 100%)}
 .hero-inner{position:relative;z-index:2;padding-top:6rem;padding-bottom:7rem;width:100%;visibility:hidden;
   transition:opacity .55s ease,transform .55s ease}
 body.hero-in .hero-inner{visibility:visible}
 .hero-inner.hero-hide{opacity:0;transform:translateY(-22px);pointer-events:none}
 .hero h1{font-size:clamp(2.5rem,6.4vw,5rem);line-height:1.05;letter-spacing:-.025em;font-weight:600;max-width:18ch;margin-top:1.4rem}
-.hero h1 em{font-style:italic;color:inherit}
-.hero-sub{color:#b9b9b9;font-size:clamp(1rem,1.4vw,1.15rem);max-width:60ch;margin-top:1.6rem}
+.hero h1 em{font-style:italic;color:var(--accent-light)}
+.hero-sub{color:#d5e1f6;font-size:clamp(1rem,1.4vw,1.15rem);max-width:60ch;margin-top:1.6rem}
 .hero-cta{display:flex;flex-wrap:wrap;align-items:center;gap:1.4rem;margin-top:2.6rem}
 .h-anim{opacity:0;transform:translateY(26px);
   transition:opacity .8s ease var(--d,0s),transform .8s ease var(--d,0s)}
 body.hero-in .h-anim{opacity:1;transform:none}
-.scroll-hint{display:inline-flex;align-items:center;gap:.55rem;color:#8f8f8f;
+.scroll-hint{display:inline-flex;align-items:center;gap:.55rem;color:#b6c9e9;
   font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase}
-.scroll-hint svg{width:14px;height:14px;stroke:#8f8f8f;fill:none;stroke-width:1.8;
+.scroll-hint svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;
   stroke-linecap:round;stroke-linejoin:round;animation:hint-bob 1.7s ease-in-out infinite}
 @keyframes hint-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 @media(max-width:700px){.hero-inner{padding-top:3.5rem;padding-bottom:4.5rem}}
@@ -153,15 +145,15 @@ body.hero-in .h-anim{opacity:1;transform:none}
   transition:opacity .7s ease,transform .7s ease,visibility 0s}
 .net-copy.out{opacity:0;visibility:hidden;transition:opacity .4s ease,visibility 0s .4s}
 .net-copy.gone{display:none}
-.net-copy .eyebrow{color:#9fdcb4}
-.net-copy .eyebrow::before{background:#9fdcb4}
+.net-copy .eyebrow{color:var(--accent-light)}
+.net-copy .eyebrow::before{background:var(--accent-light)}
 .net-title{font-family:var(--head);font-size:clamp(1.5rem,2.6vw,2.15rem);line-height:1.18;
   letter-spacing:-.02em;font-weight:600;margin-top:1.1rem;
   text-shadow:0 2px 30px rgba(10,12,14,.75)}
-.net-sub{color:#a9a9a9;font-size:.98rem;margin-top:1.1rem;max-width:42ch}
+.net-sub{color:#d5e1f6;font-size:.98rem;margin-top:1.1rem;max-width:42ch}
 .net-hint{display:inline-flex;align-items:center;gap:.55rem;margin-top:1.9rem;
-  color:#8f8f8f;font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase}
-.net-hint svg{width:14px;height:14px;stroke:#8f8f8f;fill:none;stroke-width:1.8;
+  color:#b6c9e9;font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase}
+.net-hint svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;
   stroke-linecap:round;stroke-linejoin:round;animation:hint-bob 1.7s ease-in-out infinite}
 @media(max-width:900px){
   .net-copy{left:var(--h-pad) !important;right:auto !important;
@@ -178,8 +170,8 @@ body.hero-in .h-anim{opacity:1;transform:none}
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr)}
 .stat{padding:.4rem clamp(1rem,2.5vw,2.4rem)}
 .stat+.stat{border-left:1px solid rgba(255,255,255,.12)}
-.stat-num{font-size:clamp(1.9rem,3.4vw,3rem);font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.stat-label{color:#9b9b9b;font-size:.88rem;margin-top:.4rem;max-width:22ch}
+.stat-num{color:var(--accent-light);font-size:clamp(1.9rem,3.4vw,3rem);font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat-label{color:#bdcbe1;font-size:.88rem;margin-top:.4rem;max-width:22ch}
 @media(max-width:860px){.stats-grid{grid-template-columns:1fr 1fr;gap:2rem 0}.stat:nth-child(3){border-left:0}}
 
 .crs{position:relative;margin-top:.5rem}
@@ -190,11 +182,11 @@ body.hero-in .h-anim{opacity:1;transform:none}
   overflow:hidden;position:relative;filter:brightness(.5);opacity:.65;
   transition:filter .6s ease,opacity .6s ease}
 .crs-slide.is-active{filter:none;opacity:1}
-.crs-media{position:absolute;inset:0;background:#1a1d20}
+.crs-media{position:absolute;inset:0;background:var(--dark)}
 .crs-media img{width:100%;height:100%;object-fit:cover;display:block}
 .crs-media.noimg{background:
   radial-gradient(80% 60% at 70% 20%,rgba(255,255,255,.07),transparent 60%),
-  linear-gradient(135deg,#2b3138 0%,#17191c 70%)}
+  linear-gradient(135deg,var(--dark-mid) 0%,var(--dark-2) 70%)}
 .crs-media.noimg::after{content:attr(data-num);position:absolute;right:4%;bottom:-8%;
   font-family:var(--head);font-weight:700;font-size:34vh;line-height:1;
   color:rgba(255,255,255,.07);letter-spacing:-.04em;user-select:none}
@@ -207,8 +199,8 @@ body.hero-in .h-anim{opacity:1;transform:none}
 .crs-caption h3{font-size:clamp(1.5rem,3vw,2.4rem);font-weight:600;letter-spacing:-.02em;line-height:1.12}
 .crs-caption p{color:rgba(255,255,255,.85);font-size:clamp(.95rem,1.4vw,1.1rem);margin-top:.7rem;max-width:56ch}
 .crs-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:6;
-  width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  background-color:rgba(30,33,36,.28);
+  width:56px;height:56px;border-radius:0;display:flex;align-items:center;justify-content:center;
+  background-color:rgba(16,29,53,.28);
   -webkit-backdrop-filter:blur(18px) saturate(170%);backdrop-filter:blur(18px) saturate(170%);
   border:1px solid rgba(255,255,255,.45);box-shadow:inset 0 1px 0 rgba(255,255,255,.4);
   color:#fff;cursor:pointer;
@@ -219,8 +211,8 @@ body.hero-in .h-anim{opacity:1;transform:none}
 .crs-arrow svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .crs-dots{display:flex;gap:.55rem;justify-content:center;margin-top:1.6rem}
 .crs-dots button{width:28px;height:3px;border:0;padding:0;cursor:pointer;
-  background:rgba(30,33,36,.22);transition:background .25s}
-.crs-dots button.on{background:var(--ink)}
+  background:rgba(21,34,58,.22);border-radius:0;transition:background .25s}
+.crs-dots button.on{background:var(--accent)}
 @media(max-width:700px){
   .crs-track{gap:14px}
   .crs-slide{width:86vw;height:78vh;min-height:420px}
@@ -228,59 +220,190 @@ body.hero-in .h-anim{opacity:1;transform:none}
   .crs-arrow.prev{left:8px}.crs-arrow.next{right:8px}
 }
 
-.dash-wrap{position:relative;max-width:1100px;margin:0 auto}
-.dash{background:var(--dark);color:#fff;border:1px solid rgba(255,255,255,.08);border-radius:6px;
-  box-shadow:0 40px 80px -30px rgba(20,22,24,.35);overflow:hidden;font-size:.85rem}
-.dash-top{display:flex;align-items:center;gap:1.2rem;padding:.75rem 1.1rem;border-bottom:1px solid rgba(255,255,255,.08)}
-.dash-dots{display:flex;gap:6px}
-.dash-dots i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.18)}
-.dash-search{margin-left:auto;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-  border-radius:4px;padding:.35rem .8rem;color:rgba(255,255,255,.4);font-size:.78rem}
-.dash-body{display:grid;grid-template-columns:210px 1fr}
-.dash-side{border-right:1px solid rgba(255,255,255,.08);padding:1rem .6rem}
-.dash-side span{display:block;padding:.55rem .85rem;color:#9b9b9b;border-radius:4px}
-.dash-side span.on{color:#fff;background:rgba(255,255,255,.07);border-left:2px solid #fff}
-.dash-main{padding:1.2rem 1.4rem 1.6rem}
-.dash-head{display:flex;align-items:center;gap:.9rem;margin-bottom:1rem;flex-wrap:wrap}
-.dash-head h4{font-size:1rem;font-weight:600}
-.live{display:inline-flex;align-items:center;gap:.5rem;font-family:'IBM Plex Mono',monospace;
-  font-size:.68rem;letter-spacing:.12em;color:#3dcc4a;border:1px solid rgba(61,204,74,.35);
-  padding:.3rem .6rem;border-radius:3px}
-.dot-live{width:7px;height:7px;border-radius:50%;background:#3dcc4a;position:relative;flex:none}
-.dot-live::after{content:"";position:absolute;inset:0;border-radius:50%;background:inherit;animation:pulse 1.6s infinite}
-@keyframes pulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(2.6);opacity:0}}
-.trow{display:grid;grid-template-columns:64px minmax(0,1fr) auto auto;gap:1.1rem;align-items:center;
-  padding:.95rem .4rem;border-top:1px solid rgba(255,255,255,.08)}
-.trow:first-of-type{border-top:0}
-.match{font-family:'IBM Plex Mono',monospace;font-size:.85rem;color:#fff;
-  border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.08);text-align:center;padding:.4rem 0}
-.t-info h5{font-size:.9rem;font-weight:600;display:flex;align-items:center;gap:.55rem;flex-wrap:wrap}
-.t-info .t-meta{color:#9b9b9b;font-size:.76rem;margin-top:.25rem}
-.chip-novo{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.12em;color:#3dcc4a;
-  border:1px solid rgba(61,204,74,.4);padding:.12rem .4rem}
-.t-tags{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:flex-end}
-.t-tags i{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.08em;
-  color:#9b9b9b;border:1px solid rgba(255,255,255,.16);padding:.22rem .5rem;white-space:nowrap}
-.t-money{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap;text-align:right}
-.t-money small{display:block;font-weight:400;color:#9b9b9b;font-size:.7rem}
-@media(max-width:860px){.t-tags{display:none}}
-@media(max-width:680px){
-  .dash-side{display:none}
-  .dash-body{grid-template-columns:1fr}
-  .t-money{display:none}
-  .trow{grid-template-columns:56px minmax(0,1fr)}
+/* ============ DEMO KLIJENTSKOG PORTALA ============ */
+.portal-demo{
+  --pd-ink:#18212f;--pd-muted:#526072;--pd-line:#e2e6ec;--pd-bg:#f8f9fb;--pd-paper:#fff;
+  --pd-side:#0f1b2d;--pd-blue:var(--accent);--pd-blue-tint:#eaf0fe;--pd-green:#0e7045;--pd-green-tint:#e5f4ec;
+  max-width:1180px;margin:0 auto;background:var(--pd-paper);color:var(--pd-ink);border:1px solid #d9e0e8;
+  border-radius:16px;overflow:hidden;box-shadow:0 28px 64px -36px rgba(15,27,45,.42);
+  font:clamp(.73rem,1.05vw,.86rem)/1.5 'Inter',system-ui,sans-serif;
 }
-.float-chip{position:absolute;background:#fff;color:var(--ink);border:1px solid rgba(30,33,36,.1);
-  padding:.7rem 1rem;font-size:.8rem;font-weight:600;box-shadow:0 18px 40px -12px rgba(20,22,24,.3);
-  display:flex;align-items:center;gap:.6rem;z-index:3}
-.float-chip .dot-live{background:var(--accent)} .float-chip .dot-live::after{background:var(--accent)}
-.chip-a{top:-18px;right:34px}
-.chip-b{bottom:-18px;left:38px}
-@media(max-width:760px){.float-chip{display:none}}
+.portal-demo [hidden]{display:none}
+.pd-topline{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.48rem clamp(.75rem,2vw,1.25rem);
+  background:var(--dark-2);color:#d5e1f6;border-bottom:1px solid rgba(183,209,255,.16)}
+.pd-topline>strong{font-size:.76rem;font-weight:600}
+.pd-clock{display:flex;align-items:center;gap:.48rem;color:#b7c7e1;font-size:.71rem;white-space:nowrap}
+.pd-clock i{position:relative;display:block;width:13px;height:13px;border:1px solid currentColor;border-radius:50%;flex:none}
+.pd-clock i::before,.pd-clock i::after{content:"";position:absolute}
+.pd-clock i::before{top:-4px;left:4px;width:3px;height:2px;border-radius:1px;background:currentColor}
+.pd-clock i::after{top:2px;left:5px;width:3px;height:4px;border-left:1px solid currentColor;border-bottom:1px solid currentColor}
+.pd-clock time{min-width:3.75rem;padding:.15rem .36rem;border:1px solid rgba(183,209,255,.22);border-radius:5px;
+  background:rgba(183,209,255,.07);color:#f4f7ff;font:500 .81rem/1.4 'IBM Plex Mono',monospace;text-align:center;font-variant-numeric:tabular-nums}
+.pd-stage{height:clamp(510px,49vw,580px);display:grid;grid-template-columns:clamp(138px,15%,178px) minmax(0,1fr);position:relative;overflow:hidden;isolation:isolate}
+.pd-title-card{position:absolute;inset:0;z-index:4;display:grid;place-items:center;padding:clamp(1rem,6vw,4.75rem);
+  background:radial-gradient(ellipse at 50% 32%,var(--dark-mid),var(--dark) 66%,var(--dark-2));color:#f4f7ff;text-align:center}
+.pd-title-card h3{max-width:27ch;font-size:clamp(1.3rem,3vw,2.7rem);line-height:1.18;letter-spacing:-.024em;font-weight:600;text-wrap:balance}
+.pd-opening strong{display:block;margin-top:.18em;color:var(--accent-light);font-size:1.06em;font-weight:inherit;white-space:nowrap}
+.pd-sidebar{display:flex;flex-direction:column;background:var(--pd-side);color:#c3cedf}
+.pd-brand{display:flex;align-items:center;gap:.45rem;padding:1.1rem .95rem;color:#fff;font-size:1.1rem;font-weight:650}
+.pd-brand img{object-fit:contain}
+.pd-nav,.pd-account{padding:.85rem .65rem}
+.pd-account{margin-top:auto;border-top:1px solid #223551}
+.pd-nav small,.pd-account small{display:block;color:#a2b2ca;padding:0 .5rem;text-transform:uppercase;letter-spacing:.08em;font-size:.62rem}
+.pd-account strong{display:block;color:#fff;margin:.25rem .5rem .6rem}
+.pd-nav-item{display:block;padding:.5rem .55rem;border-radius:7px;margin-top:.35rem}
+.pd-nav-item.is-active{background:#20314d;color:#fff;font-weight:650}
+.pd-main{display:grid;grid-template-rows:auto minmax(0,1fr);min-width:0}
+.pd-header{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.95rem clamp(.75rem,2.1vw,1.6rem);border-bottom:1px solid var(--pd-line)}
+.pd-header strong{font-size:1.14rem;font-weight:650;letter-spacing:-.03em}
+.pd-header p{color:var(--pd-muted);font-size:.75rem}
+.pd-mobile-offers.pd-button{display:none}
+.pd-split{display:grid;grid-template-columns:minmax(170px,29%) minmax(0,1fr);min-height:0}
+.pd-list{border-right:1px solid var(--pd-line);min-width:0;overflow:hidden}
+.pd-list-top{padding:.85rem;border-bottom:1px solid var(--pd-line)}
+.pd-list-heading,.pd-row>div{display:flex;justify-content:space-between;align-items:center;gap:.4rem}
+.pd-list-heading small,.pd-row small,.pd-row>span{color:var(--pd-muted);font-size:.67rem}
+.pd-search{display:flex;align-items:center;gap:.5rem;margin-top:.65rem;padding:.46rem .5rem;border:1px solid var(--pd-line);border-radius:7px;color:var(--pd-muted);white-space:nowrap;overflow:hidden}
+.pd-search i{width:.65rem;height:.65rem;border:1.5px solid;border-radius:50%;position:relative;flex:none}
+.pd-search i::after{content:"";width:.3rem;height:1px;background:currentColor;position:absolute;top:100%;left:80%;transform:rotate(45deg);transform-origin:left}
+.pd-filters,.pd-seen{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.45rem;font-size:.63rem}
+.pd-filters span,.pd-seen>*{padding:.2rem .35rem;border:1px solid var(--pd-line);border-radius:5px;white-space:nowrap}
+.pd-seen b{color:var(--pd-blue);background:var(--pd-blue-tint);border-color:transparent}
+.pd-row{position:relative;display:grid;gap:.2rem;padding:.7rem .8rem;border-bottom:1px solid var(--pd-line);border-left:2px solid transparent}
+.pd-row.is-active{background:var(--pd-blue-tint);border-left-color:var(--pd-blue)}
+.pd-row>div b,.pd-tag-success{color:var(--pd-green)}
+.pd-detail{padding:clamp(.75rem,2vw,1.45rem);min-width:0;overflow:hidden}
+.pd-kicker{color:var(--pd-muted);font-size:.69rem}
+.pd-detail h3,.pd-submitted h3{font-size:clamp(1.3rem,2.4vw,1.7rem);font-weight:650;letter-spacing:-.035em;margin:.18rem 0 .55rem;line-height:1.22}
+.pd-tags{display:flex;flex-wrap:wrap;gap:.3rem .45rem;font-size:.68rem}
+.pd-tags>*{background:#f0f2f6;color:var(--pd-muted);padding:.24rem .46rem;border-radius:5px}
+.pd-tags b{background:var(--pd-green-tint);color:var(--pd-green)}
+.pd-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;margin:.8rem 0 .9rem}
+.pd-facts dt{color:var(--pd-muted);font-size:.65rem;line-height:1.3}
+.pd-facts dd{margin:.12rem 0 0;font-weight:650}
+.pd-tabs{display:flex;flex-wrap:wrap;column-gap:clamp(.65rem,1.75vw,1.35rem);border-bottom:1px solid var(--pd-line)}
+.pd-tabs span{padding:.43rem 0;border-bottom:2px solid transparent;color:var(--pd-muted);font-size:.76rem;font-weight:550}
+.pd-tabs .is-active{border-color:var(--pd-blue);color:var(--pd-blue)}
+.pd-panel{padding-top:.95rem}
+.pd-panel h4,.pd-wizard-body h4{font-size:1rem;font-weight:650;line-height:1.3;margin-bottom:.28rem}
+.pd-panel p,.pd-wizard-body p,.pd-submitted p{color:var(--pd-muted)}
+.pd-note{display:grid;gap:.15rem;padding:.55rem .7rem;background:var(--pd-bg);border:1px solid var(--pd-line);border-radius:8px;margin-top:.55rem}
+.pd-note span{color:var(--pd-muted)}
+.pd-next-step{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.55rem;margin-top:.6rem;padding:.6rem .7rem;background:#eef4ff;border-radius:8px}
+.pd-next-step p{font-size:.72rem;margin-top:.12rem}
+.pd-button{display:inline-flex;align-items:center;justify-content:center;gap:.32rem;padding:.36rem .65rem;white-space:nowrap;border-radius:6px;background:var(--pd-paper);border:1px solid #cfd5de;color:var(--pd-ink);font-size:.73rem;font-weight:650}
+.pd-primary{background:var(--pd-blue);color:#fff;border-color:var(--pd-blue)}
+.pd-button[data-disabled]{opacity:.56}
+.pd-detail-row{display:flex;justify-content:space-between;gap:.3rem;padding:.48rem .55rem;margin-top:.38rem;border:1px solid var(--pd-line);border-radius:7px;font-size:.75rem}
+.pd-detail-row span{color:var(--pd-muted);text-align:right}
+.pd-detail-row .pd-tag-success{color:var(--pd-green)}
+.pd-submitted{padding:clamp(.8rem,3vw,2rem);background:var(--pd-bg)}
+.pd-submitted-card{border:1px solid var(--pd-line);border-radius:10px;background:#fff;padding:1rem;margin-top:1rem}
+.pd-submitted-card h4{font-size:1.05rem;margin:.4rem 0 .1rem}
+.pd-submitted-card strong{display:block;margin-top:.65rem}
+
+.pd-overlay{position:absolute;inset:0;z-index:2;display:grid;place-items:center;background:rgba(15,27,45,.51);padding:1.15rem}
+.pd-wizard{background:var(--pd-paper);width:min(100%,760px);max-height:100%;min-height:min(388px,100%);border-radius:13px;overflow:hidden;
+  display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;box-shadow:0 16px 46px rgba(15,27,45,.29)}
+.pd-wizard-header{padding:.8rem 1.15rem .55rem;border-bottom:1px solid var(--pd-line)}
+.pd-demo-label{display:inline-block;border-radius:4px;background:#fdf3da;color:#805200;padding:.17rem .4rem;font-size:.65rem;font-weight:650}
+.pd-wizard-header h3{margin:.26rem 0 0;font-size:1.22rem;letter-spacing:-.025em}
+.pd-wizard-header p{color:var(--pd-muted)}
+.pd-steps{display:flex;flex-wrap:wrap;gap:.35rem;padding:.58rem 1.15rem;background:var(--pd-bg);border-bottom:1px solid var(--pd-line)}
+.pd-steps span{display:flex;align-items:center;gap:.27rem;padding:.26rem .42rem;border-radius:6px;color:var(--pd-muted);font-size:.67rem;font-weight:550}
+.pd-steps b{font-weight:inherit}
+.pd-steps i{display:grid;place-items:center;font-style:normal;width:1.08rem;height:1.08rem;border-radius:50%;background:#e8edf3;font-size:.62rem;flex:none}
+.pd-steps .is-active{background:var(--pd-blue-tint);color:var(--pd-blue)}
+.pd-steps .is-active i{background:var(--pd-blue);color:#fff}
+.pd-steps .is-complete i{background:var(--pd-green-tint);color:var(--pd-green)}
+.pd-wizard-body{padding:.8rem 1.15rem;overflow:hidden}
+.pd-wizard-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:.3rem .65rem;flex-wrap:wrap;margin-bottom:.3rem}
+.pd-check-tools{display:flex;align-items:center;gap:.4rem;color:var(--pd-muted);font-size:.73rem}
+.pd-checklist{display:grid;gap:.34rem;margin-top:.48rem}
+.pd-check{display:flex;align-items:flex-start;gap:.45rem;padding:.45rem .5rem;border:1px solid var(--pd-line);border-radius:7px;background:var(--pd-paper);line-height:1.35}
+.pd-check.is-checked{border-color:#a8bffc;background:#f3f7ff}
+.pd-check i{display:grid;place-items:center;width:.9rem;height:.9rem;flex:none;margin-top:.05rem;border:1px solid #8997ab;border-radius:3px;font-size:.68rem;font-style:normal}
+.pd-check.is-checked i{background:var(--pd-blue);border-color:var(--pd-blue);color:#fff}
+.pd-check.is-checked i::after{content:"✓"}
+.pd-check small{display:block;color:var(--pd-muted);font-size:.67rem;margin-top:.12rem}
+.pd-doc-tabs{display:flex;gap:.35rem;margin:.48rem 0 .38rem}
+.pd-doc-tabs span{padding:.25rem .42rem;border:1px solid var(--pd-line);border-radius:5px;font-weight:600}
+.pd-doc-tabs .is-active{background:var(--pd-blue-tint);color:var(--pd-blue);border-color:#a8bffc}
+.pd-document{background:var(--pd-bg);border:1px solid var(--pd-line);border-radius:7px;padding:.45rem;margin-bottom:.36rem}
+.pd-paper{padding:.42rem .55rem;max-width:30rem;margin:auto;background:var(--pd-paper);border:1px solid var(--pd-line);border-radius:4px}
+.pd-paper strong,.pd-paper p{font-size:.72rem}
+.pd-summary{display:grid;gap:.16rem;margin:.45rem 0;color:var(--pd-green);font-size:.73rem}
+.pd-summary span{display:block}
+.pd-success{text-align:center;max-width:27rem;margin:0 auto;padding:.6rem 0}
+.pd-success-mark{display:grid;place-items:center;width:2.6rem;height:2.6rem;margin:0 auto .55rem;border-radius:50%;font-size:1.4rem;background:var(--pd-green-tint);color:var(--pd-green)}
+.pd-success h4{color:var(--pd-green);font-size:1.2rem}
+.pd-receipt{display:grid;gap:.15rem;margin:.65rem auto 0;padding:.45rem .75rem;max-width:16rem;border:1px solid var(--pd-line);border-radius:8px;background:var(--pd-bg)}
+.pd-wizard-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.32rem .6rem;padding:.6rem 1.15rem;border-top:1px solid var(--pd-line);color:var(--pd-muted);font-size:.71rem}
+.pd-wizard:has(.pd-steps[hidden]){grid-template-rows:auto minmax(0,1fr) auto}
+
+.pd-cursor{position:absolute;top:0;left:0;z-index:3;width:23px;height:28px;pointer-events:none;filter:drop-shadow(0 2px 3px rgba(15,27,45,.35))}
+.pd-cursor i,.pd-cursor i::after{position:absolute;inset:0;display:block;content:"";background:#13243a;clip-path:polygon(0 0,94% 66%,61% 69%,78% 92%,59% 100%,44% 75%,22% 96%)}
+.pd-cursor i::after{inset:2px 3px 4px 2px;background:#fff}
+.pd-cursor::after{content:"";position:absolute;top:-12px;left:-12px;width:24px;height:24px;border:2px solid #3f7af4;border-radius:50%;opacity:var(--pd-click,0);transform:scale(var(--pd-ring,.8))}
+.pd-caption{display:flex;align-items:center;justify-content:space-between;gap:.65rem 1rem;flex-wrap:wrap;border-top:1px solid var(--pd-line);background:var(--pd-bg);padding:.65rem clamp(.75rem,2vw,1.25rem)}
+.pd-caption p{color:var(--pd-muted);font-size:.75rem}
+.pd-playback{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+.pd-playback progress{width:clamp(48px,7vw,110px);height:.4rem;accent-color:var(--pd-blue);margin-right:.2rem}
+.pd-playback button{font:inherit;font-weight:600;padding:.25rem .55rem;background:#fff;color:var(--pd-ink);border:1px solid #cfd5de;border-radius:6px;cursor:pointer}
+.pd-playback button:hover{background:var(--pd-blue-tint);border-color:#b8c9f2}
+.pd-playback button:focus-visible{outline:2px solid var(--pd-blue);outline-offset:2px}
+.pd-sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+@media(max-width:900px){.pd-stage{grid-template-columns:125px minmax(0,1fr)}.pd-split{grid-template-columns:minmax(145px,29%) minmax(0,1fr)}.pd-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){
+  .pd-stage{grid-template-columns:minmax(0,1fr);height:520px}
+  .pd-sidebar{display:none}
+  .pd-mobile-offers.pd-button{display:inline-flex;padding:.27rem .44rem;font-size:.67rem}
+  .pd-split{grid-template-columns:minmax(76px,27%) minmax(0,1fr)}
+}
+@media(max-width:520px){
+  .pd-stage{height:548px}.pd-header p{font-size:.66rem}
+  .pd-list-top,.pd-row{padding:.55rem .38rem}
+  .pd-list-heading{display:block}.pd-list-heading small{display:block}
+  .pd-search,.pd-filters,.pd-seen,.pd-row small,.pd-row>span{display:none}
+  .pd-detail{padding:.65rem .55rem}.pd-kicker{font-size:.61rem}
+  .pd-facts{gap:.38rem;margin:.55rem 0}.pd-facts dt{font-size:.61rem}
+  .pd-tabs{column-gap:.55rem}.pd-tabs span{font-size:.67rem;padding:.32rem 0}
+  .pd-panel{padding-top:.6rem}.pd-panel h4{font-size:.88rem}
+  .pd-next-step,.pd-note{padding:.42rem .45rem}
+  .pd-overlay{padding:.55rem}
+  .pd-wizard-header,.pd-wizard-body,.pd-wizard-footer{padding-left:.65rem;padding-right:.65rem}
+  .pd-steps{padding:.35rem .55rem;gap:.13rem}.pd-steps span{padding:.15rem .2rem;font-size:.6rem}
+  .pd-wizard-body h4{font-size:.91rem}
+}
+@media(max-width:360px){
+  .pd-clock>span{display:none}
+  .pd-stage{height:480px}
+  .pd-header{padding:.62rem .65rem}
+  .pd-header p{font-size:.63rem}
+  .pd-tags{font-size:.62rem;gap:.25rem}
+  .pd-tags>*{padding:.18rem .28rem}
+  .pd-facts>div:last-child{display:none}
+  .pd-tabs{column-gap:.42rem}
+  .pd-tabs span{font-size:.63rem}
+  .pd-panel[data-pd-panel="overview"] .pd-note{display:none}
+  .pd-wizard{min-height:min(435px,100%)}
+  .pd-wizard-header{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.15rem .3rem;padding-block:.55rem}
+  .pd-wizard-header .pd-demo-label{grid-column:2;grid-row:1;white-space:nowrap;font-size:.58rem}
+  .pd-wizard-header h3{grid-column:1;grid-row:1;font-size:1.04rem;margin:0}
+  .pd-wizard-header p{grid-column:1/-1}
+  .pd-steps b{display:none}
+  .pd-steps .is-active b{display:inline}
+  .pd-wizard-body{padding-block:.65rem}
+  .pd-wizard-footer{flex-wrap:nowrap;gap:.3rem}
+  .pd-wizard-footer [data-pd-save]{font-size:.63rem;line-height:1.25}
+  .pd-document{padding:.3rem}
+  .pd-paper{padding:.35rem .45rem}
+}
 
 .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair);border:1px solid var(--hair)}
 .feat{background:var(--dark);padding:clamp(1.6rem,2.6vw,2.4rem);transition:background .25s}
-.feat:hover{background:#26292d}
+.feat:hover{background:var(--dark-mid)}
 .feat svg{width:26px;height:26px;stroke:var(--acc);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .feat h3{font-size:1.02rem;font-weight:600;margin:1.2rem 0 .55rem}
 .feat p{color:var(--mut);font-size:.92rem}
@@ -294,7 +417,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
 .form-grid .full{grid-column:1/-1}
 @media(max-width:560px){.form-grid{grid-template-columns:1fr}}
 .field label{font-size:.8rem;letter-spacing:.04em;color:var(--mut)}
-.field input,.field textarea{background:transparent;border:1px solid var(--hair);color:#fff;
+.field input,.field textarea{background:transparent;border:1px solid var(--hair);border-radius:0;color:#fff;
   padding:.95rem 1rem;font:inherit;font-size:.95rem;width:100%;transition:border-color .2s}
 .field input:focus,.field textarea:focus{outline:none;border-color:#fff}
 .field input.invalid,.field textarea.invalid{border-color:var(--error)}
@@ -312,20 +435,19 @@ body.hero-in .h-anim{opacity:1;transform:none}
 .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem}
 @media(max-width:860px){.foot-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.foot-grid{grid-template-columns:1fr}}
-.foot-brand p{color:#9b9b9b;font-size:.9rem;margin-top:1.1rem;max-width:32ch}
-.foot-col h4{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:#9b9b9b;margin-bottom:1.1rem}
+.foot-brand p{color:#adbedb;font-size:.9rem;margin-top:1.1rem;max-width:32ch}
+.foot-col h4{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:#adbedb;margin-bottom:1.1rem}
 .foot-col ul{list-style:none}
 .foot-col a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:.92rem;padding:.32rem 0;transition:color .2s}
 .foot-col a:hover{color:#fff}
 .foot-bottom{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;
-  border-top:1px solid rgba(255,255,255,.1);margin-top:3.5rem;padding-top:1.6rem;font-size:.82rem;color:#9b9b9b}
+  border-top:1px solid rgba(255,255,255,.1);margin-top:3.5rem;padding-top:1.6rem;font-size:.82rem;color:#adbedb}
 
 [data-reveal]{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;transition-delay:var(--d,0s)}
 [data-reveal].in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   [data-reveal],.h-anim{opacity:1;transform:none;transition:none}
-  .dot-live::after{animation:none}
   .ch{opacity:1}
   .ch.cur::after{display:none}
   .net-copy{display:none}
@@ -485,68 +607,147 @@ body.hero-in .h-anim{opacity:1;transform:none}
       <h2 class="sec-title" data-type>Jedna nadzorna tabla — sve prilike.</h2>
       <p class="sec-lede" data-reveal style="--d:.1s">Svako podudaranje dolazi sa procentom relevantnosti, vrijednošću ugovora, rokom i izvorom. Sortirajte, filtrirajte i dodijelite prilike timu.</p>
     </div>
-    <div class="dash-wrap" data-reveal>
-      <div class="float-chip chip-a"><span class="dot-live"></span>3 nova podudaranja danas</div>
-      <div class="float-chip chip-b">⏱ Rok za ponudu: 12 dana — Podsjetnik aktiviran</div>
-      <div class="dash" role="img" aria-label="Prikaz KLIENTELA nadzorne table">
-        <div class="dash-top">
-          <div class="dash-dots"><i></i><i></i><i></i></div>
-          <div class="dash-search">Pretraži tender…</div>
-        </div>
-        <div class="dash-body">
-          <div class="dash-side">
-            <span>Nadzorna tabla</span>
-            <span class="on">Praćene prilike</span>
-            <span>Tenderi</span>
-            <span>Rokovi</span>
-            <span>Analitika</span>
-            <span>Postavke</span>
-          </div>
-          <div class="dash-main">
-            <div class="dash-head">
-              <h4>Praćene prilike</h4>
-              <span class="live"><span class="dot-live"></span>UŽIVO</span>
-            </div>
-            <div class="trow" data-reveal style="--d:.1s">
-              <div class="match">94%</div>
-              <div class="t-info">
-                <h5>Rekonstrukcija i modernizacija vodovodne mreže <span class="chip-novo">NOVO</span></h5>
-                <p class="t-meta">JP Vodovod i kanalizacija · Rok: 12 dana</p>
-              </div>
-              <div class="t-tags"><i>GRAĐEVINARSTVO</i><i>VODOPRIVREDA</i></div>
-              <div class="t-money">480.000 €<small>procijenjena vrijednost</small></div>
-            </div>
-            <div class="trow" data-reveal style="--d:.18s">
-              <div class="match">91%</div>
-              <div class="t-info">
-                <h5>Nabavka laboratorijske opreme i potrošnog materijala</h5>
-                <p class="t-meta">Klinički centar Crne Gore · Rok: 19 dana</p>
-              </div>
-              <div class="t-tags"><i>OPREMA</i><i>ZDRAVSTVO</i></div>
-              <div class="t-money">260.000 €<small>procijenjena vrijednost</small></div>
-            </div>
-            <div class="trow" data-reveal style="--d:.26s">
-              <div class="match">87%</div>
-              <div class="t-info">
-                <h5>Izvođenje radova na rekonstrukciji poslovne zgrade</h5>
-                <p class="t-meta">Ministarstvo finansija · Rok: 25 dana</p>
-              </div>
-              <div class="t-tags"><i>GRAĐEVINARSTVO</i><i>ADAPTACIJA</i></div>
-              <div class="t-money">1.250.000 €<small>procijenjena vrijednost</small></div>
-            </div>
-            <div class="trow" data-reveal style="--d:.34s">
-              <div class="match">82%</div>
-              <div class="t-info">
-                <h5>Dostava IT opreme za potrebe javne uprave</h5>
-                <p class="t-meta">Ministarstvo javne uprave · Rok: 8 dana</p>
-              </div>
-              <div class="t-tags"><i>IT</i><i>OPREMA</i></div>
-              <div class="t-money">150.000 €<small>procijenjena vrijednost</small></div>
-            </div>
-          </div>
+    <figure class="portal-demo" data-portal-demo data-reveal aria-label="Demonstracija klijentskog portala">
+      <div class="pd-topline">
+        <strong>Demo klijentskog portala</strong>
+        <div class="pd-clock" role="timer" aria-label="Vrijeme prijave">
+          <i aria-hidden="true"></i><span aria-hidden="true">Vrijeme prijave</span>
+          <time data-pd-clock datetime="PT0S">00:00</time>
         </div>
       </div>
-    </div>
+      <div class="pd-stage" aria-hidden="true">
+        <aside class="pd-sidebar">
+          <div class="pd-brand"><img src="logo.png" alt="" width="26" height="26">Klientela</div>
+          <div class="pd-nav">
+            <small>Radni prostor</small>
+            <span class="pd-nav-item is-active" data-pd-tender-nav>Tenderi</span>
+          </div>
+          <div class="pd-account">
+            <small>Firma</small>
+            <strong>Demo firma</strong>
+            <span class="pd-nav-item">Potvrde firme</span>
+            <span class="pd-nav-item" data-pd-action="submitted">Poslate ponude</span>
+          </div>
+        </aside>
+
+        <div class="pd-main">
+          <header class="pd-header">
+            <div><strong data-pd-page-title>Tenderi</strong><p>Prilike usklađene sa vašom firmom</p></div>
+            <span class="pd-mobile-offers pd-button" data-pd-action="submitted">Poslate ponude</span>
+          </header>
+
+          <div class="pd-split" data-pd-browse>
+            <div class="pd-list">
+              <div class="pd-list-top">
+                <div class="pd-list-heading"><strong>Vaši tenderi</strong><small>2 tendera</small></div>
+                <div class="pd-search"><i></i>Pretraži tendere…</div>
+                <div class="pd-filters"><span>Podudarnost ▾</span><span>Filteri</span></div>
+                <div class="pd-seen"><b>Svi</b><span>Nepogledani</span><span>Pogledani</span></div>
+              </div>
+              <div class="pd-row is-active" data-pd-tender="1">
+                <div><b>96%</b><small>Rok: 12 dana</small></div><strong>Tender 1</strong><span>Naručilac 1</span>
+              </div>
+              <div class="pd-row" data-pd-tender="2" data-pd-action="tender-2">
+                <div><b>92%</b><small>Rok: 8 dana</small></div><strong>Tender 2</strong><span>Naručilac 2</span>
+              </div>
+            </div>
+
+            <div class="pd-detail">
+              <div class="pd-kicker"><span data-pd-tender-number>Tender #1</span> · Javna nabavka</div>
+              <h3 data-pd-tender-title>Tender 1</h3>
+              <div class="pd-tags"><b data-pd-fit>96% podudarnost</b><span data-pd-deadline>Rok: 12 dana</span></div>
+              <dl class="pd-facts">
+                <div><dt>Naručilac</dt><dd data-pd-authority>Naručilac 1</dd></div>
+                <div><dt>Procijenjena vrijednost</dt><dd data-pd-amount>25.000 €</dd></div>
+                <div><dt>Rok za dostavljanje ponuda</dt><dd data-pd-time>12 dana</dd></div>
+              </dl>
+
+              <div class="pd-tabs">
+                <span class="is-active" data-pd-tab="overview" data-pd-action="overview">Pregled</span>
+                <span data-pd-tab="requirements" data-pd-action="requirements">Uslovi</span>
+                <span data-pd-tab="suppliers" data-pd-action="suppliers">Dobavljači</span>
+                <span data-pd-tab="documents" data-pd-action="documents">Dokumenti</span>
+              </div>
+
+              <div class="pd-panel" data-pd-panel="overview">
+                <h4>Sažetak</h4>
+                <p data-pd-summary>Dvije stavke odgovaraju profilu firme. Jedna stavka traži dopunu prije prijave.</p>
+                <div class="pd-note"><strong>Stavke za provjeru</strong><span>Provjerite specifikaciju, uslove i dokumentaciju.</span></div>
+                <div class="pd-next-step">
+                  <div><strong>Od procjene do prijave</strong><p>Potvrdite stavke i pregledajte priloge.</p></div>
+                  <span class="pd-button pd-primary" data-pd-action="prepare">Pripremi ponudu <b>→</b></span>
+                </div>
+              </div>
+              <div class="pd-panel" data-pd-panel="requirements" hidden>
+                <h4>Uslovi i tehnička specifikacija</h4>
+                <p>Pregled traženih stavki i usklađenosti.</p>
+                <div class="pd-detail-row"><strong>Stavka 1</strong><span class="pd-tag-success">Ispunjeno</span></div>
+                <div class="pd-detail-row" data-pd-action="specification"><strong>Stavka 2</strong><span>Specifikacija <b data-pd-spec-icon>▾</b></span></div>
+                <div class="pd-note" data-pd-specification hidden>Tehničke karakteristike i dokaz o usklađenosti.</div>
+              </div>
+              <div class="pd-panel" data-pd-panel="suppliers" hidden>
+                <h4>Dobavljači za nedostajuće stavke</h4>
+                <p>Provjerite dostupnost stavki koje nedostaju.</p>
+                <div class="pd-detail-row"><strong>Stavka 3</strong><span>Potrebna nabavka</span></div>
+                <div class="pd-detail-row"><strong>Dobavljač 1</strong><span>Dostupnost za provjeru</span></div>
+              </div>
+              <div class="pd-panel" data-pd-panel="documents" hidden>
+                <h4>Administrativni dokumenti</h4>
+                <p>Dokumenti potrebni za pripremu ponude.</p>
+                <div class="pd-detail-row"><strong>Dokument 1</strong><span>.docx</span></div>
+                <div class="pd-detail-row"><strong>Dokument 2</strong><span>.docx</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pd-submitted" data-pd-submitted hidden>
+            <h3>Evidentirane ponude</h3><p>1 ponuda u evidenciji vaše firme</p>
+            <div class="pd-submitted-card">
+              <span class="pd-demo-label">Probna prijava</span>
+              <h4>Tender 2</h4><p>Naručilac 2 · Potvrda DEMO-002</p>
+              <strong class="pd-tag-success">✓ Probna prijava evidentirana</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="pd-overlay" data-pd-wizard hidden>
+          <div class="pd-wizard">
+            <div class="pd-wizard-header">
+              <span class="pd-demo-label">Probna prijava</span>
+              <h3>Priprema ponude</h3><p>Tender 2</p>
+            </div>
+            <div class="pd-steps" data-pd-steps>
+              <span><i>1</i><b>Raspoložive stavke</b></span>
+              <span><i>2</i><b>Nabavka</b></span>
+              <span><i>3</i><b>Uslovi i sertifikati</b></span>
+              <span><i>4</i><b>Dokumenti</b></span>
+              <span><i>5</i><b>Prijava</b></span>
+            </div>
+            <div class="pd-wizard-body" data-pd-wizard-body></div>
+            <div class="pd-wizard-footer">
+              <span data-pd-save>Izmjene su sačuvane</span>
+              <span class="pd-button pd-primary" data-pd-action="next">Nastavi →</span>
+            </div>
+          </div>
+        </div>
+        <div class="pd-cursor" data-pd-cursor hidden><i></i></div>
+        <div class="pd-title-card pd-opening" data-pd-opening hidden>
+          <h3>Prijava na tender u <strong data-pd-runtime></strong></h3>
+        </div>
+        <div class="pd-title-card" data-pd-ending hidden>
+          <h3>Pronalaženje i prijavljivanje na tendere ne treba da bude kompleksno.</h3>
+        </div>
+      </div>
+      <figcaption class="pd-caption">
+        <p>Prikaz sa izmišljenim podacima</p>
+        <div class="pd-playback" data-pd-controls hidden>
+          <progress value="0" max="1" aria-label="Napredak animacije"></progress>
+          <button type="button" data-pd-play>Pauziraj</button>
+          <button type="button" data-pd-restart>Od početka</button>
+          <span class="pd-sr-only" data-pd-status role="status"></span>
+        </div>
+      </figcaption>
+    </figure>
   </div>
 </section>
 
@@ -1031,10 +1232,10 @@ body.hero-in .h-anim{opacity:1;transform:none}
     var morph = 0, fadeAll = 0, netCopyGone = false;
 
     var PAL = [
-      ["255,95,176", .36],
-      ["134,226,155", .28],
+      ["105,152,255", .36],
+      ["150,202,255", .28],
       ["255,255,255", .26],
-      ["150,170,255", .10]
+      ["65,113,245", .10]
     ];
     function pickColor(){
       var r = Math.random(), acc = 0;
@@ -1726,6 +1927,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
       if(!href || href === "#") return;
       e.preventDefault();
       e.stopPropagation();
+      if(mnav.contains(a)) setMenu(false);
       skipToEnd();
       var target = document.querySelector(href);
       if(target) target.scrollIntoView({behavior: "smooth"});
@@ -1735,6 +1937,326 @@ body.hero-in .h-anim{opacity:1;transform:none}
     window.addEventListener("resize", resize);
     raf = requestAnimationFrame(step);
   }
+})();
+</script>
+<script>
+(() => {
+  const demo = document.querySelector('[data-portal-demo]');
+  if (!demo) return;
+
+  const stage = demo.querySelector('.pd-stage');
+  const field = name => demo.querySelector(`[data-pd-${name}]`);
+  const actions = name => [...stage.querySelectorAll(`[data-pd-action="${name}"]`)];
+  const cursor = field('cursor');
+  const wizard = field('wizard');
+  const wizardBody = field('wizard-body');
+  const stepList = field('steps');
+  const next = actions('next')[0];
+  const opening = field('opening');
+  const ending = field('ending');
+  const clock = field('clock');
+  const controls = field('controls');
+  const play = field('play');
+  const progress = controls.querySelector('progress');
+  const motion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  const tenders = [
+    { fit: 96, deadline: 12, amount: '25.000 €', summary: 'Dvije stavke odgovaraju profilu firme. Jedna stavka traži dopunu prije prijave.' },
+    { fit: 92, deadline: 8, amount: '42.000 €', summary: 'Raspoložive stavke odgovaraju traženoj specifikaciji. Za jednu stavku je potrebna nabavka.' }
+  ];
+  const checklists = [
+    { heading: 'Potvrda raspoloživih stavki', intro: 'Potvrdite dostupnost i usklađenost stavki.', rows: ['Stavka 1', 'Stavka 2'], caption: 'Raspoloživo i usklađeno sa specifikacijom' },
+    { heading: 'Potvrda nabavke nedostajućih stavki', intro: 'Potvrdite da su nedostajuće stavke obezbijeđene.', rows: ['Stavka 3'], caption: 'Nabavljeno preko dobavljača' },
+    { heading: 'Provjera uslova i sertifikata', intro: 'Potvrdite ispunjenost uslova i potrebne dokaze.', rows: ['Obavezni uslov 1', 'Sertifikat 1'], caption: 'Potvrđeno važećom dokumentacijom' }
+  ];
+  const documents = [
+    { heading: 'Izjava o ispunjenosti uslova', copy: 'Potvrđuje se ispunjenost uslova navedenih u primjeru tenderske dokumentacije.' },
+    { heading: 'Obrazac ponude', copy: 'Obrazac sadrži pregled stavki i dokaza priloženih uz probnu ponudu.' }
+  ];
+  const reviewed = new Set();
+  let wizardStep = 0;
+  let activeDoc = 0;
+
+  function announce(message) {
+    field('status').textContent = message;
+  }
+
+  function showTab(name) {
+    stage.querySelectorAll('[data-pd-tab]').forEach(tab => tab.classList.toggle('is-active', tab.dataset.pdTab === name));
+    stage.querySelectorAll('[data-pd-panel]').forEach(panel => { panel.hidden = panel.dataset.pdPanel !== name; });
+  }
+
+  function selectTender(index) {
+    const { fit, deadline, amount, summary } = tenders[index];
+    const number = index + 1;
+    stage.querySelectorAll('[data-pd-tender]').forEach(row => row.classList.toggle('is-active', Number(row.dataset.pdTender) === number));
+    field('tender-number').textContent = `Tender #${number}`;
+    field('tender-title').textContent = `Tender ${number}`;
+    field('authority').textContent = `Naručilac ${number}`;
+    field('fit').textContent = `${fit}% podudarnost`;
+    field('deadline').textContent = `Rok: ${deadline} dana`;
+    field('time').textContent = `${deadline} dana`;
+    field('amount').textContent = amount;
+    field('summary').textContent = summary;
+    showTab('overview');
+  }
+
+  function checkRow(label, caption = '', action = '', checked = false) {
+    return `<div class="pd-check${checked ? ' is-checked' : ''}"${action ? ` data-pd-action="${action}"` : ''}><i></i><span><strong>${label}</strong>${caption ? `<small>${caption}</small>` : ''}</span></div>`;
+  }
+
+  function checklistBody({ heading, intro, rows, caption }) {
+    return `<div class="pd-wizard-heading"><h4>${heading}</h4><div class="pd-check-tools"><span data-pd-count>0 / ${rows.length} potvrđeno</span><span class="pd-button" data-pd-action="check-all">Označi sve</span></div></div>
+      <p>${intro}</p><div class="pd-checklist">${rows.map(label => checkRow(label, caption)).join('')}</div>`;
+  }
+
+  function documentBody() {
+    const doc = documents[activeDoc];
+    const tabs = documents.map((_, index) => `<span class="${index === activeDoc ? 'is-active' : ''}" data-pd-action="doc-${index}">${reviewed.has(index) ? '✓ ' : ''}Dokument ${index + 1}</span>`).join('');
+    return `<div class="pd-wizard-heading"><h4>Pregled dokumentacije</h4><span class="pd-check-tools">${reviewed.size} / ${documents.length} pregledano</span></div>
+      <p>Otvorite i potvrdite svaki Word dokument.</p><div class="pd-doc-tabs">${tabs}</div>
+      <div class="pd-document"><div class="pd-paper"><strong>${doc.heading}</strong><p>${doc.copy}</p></div></div>
+      ${checkRow('Potvrđujem da je dokument pregledan, tačan i potpun.', '', 'review-doc', reviewed.has(activeDoc))}`;
+  }
+
+  function summaryBody() {
+    return `<h4>Završni pregled ponude</h4><p>Potvrđene stavke i pregledana dokumentacija.</p>
+      <div class="pd-summary"><span>✓ Raspoložive stavke potvrđene</span><span>✓ Nedostajuća stavka obezbijeđena</span><span>✓ Uslovi i sertifikati potvrđeni</span><span>✓ Oba Word dokumenta pregledana</span></div>
+      <div class="pd-checklist">
+        ${checkRow('Potvrđujem tačnost podataka i sadržaja ponude.', '', 'accuracy')}
+        ${checkRow('Potvrđujem da je prijava probna.', '', 'simulation')}
+      </div>`;
+  }
+
+  function updateFooter() {
+    const labels = ['Nastavi →', 'Nastavi →', 'Nastavi →', 'Završni pregled →', 'Pošalji probnu prijavu', 'Završi'];
+    const unchecked = wizardBody.querySelector('.pd-check:not(.is-checked)');
+    const ready = wizardStep === 5 || (wizardStep === 3 ? reviewed.size === documents.length : !unchecked);
+    next.textContent = labels[wizardStep];
+    next.toggleAttribute('data-disabled', !ready);
+    field('save').textContent = wizardStep === 5 ? 'Probna prijava evidentirana' : 'Izmjene su sačuvane';
+  }
+
+  function renderWizard(step) {
+    wizardStep = step;
+    stepList.hidden = step === 5;
+    [...stepList.children].forEach((item, index) => {
+      item.classList.toggle('is-active', index === step);
+      item.classList.toggle('is-complete', index < step);
+      item.firstElementChild.textContent = index < step ? '✓' : index + 1;
+    });
+    if (step < 3) wizardBody.innerHTML = checklistBody(checklists[step]);
+    else if (step === 3) wizardBody.innerHTML = documentBody();
+    else if (step === 4) wizardBody.innerHTML = summaryBody();
+    else wizardBody.innerHTML = '<div class="pd-success"><div class="pd-success-mark">✓</div><h4>Probna prijava evidentirana</h4><p>Ponuda poslata u demonstraciji.</p><div class="pd-receipt"><small>Potvrda probne prijave</small><strong>DEMO-002</strong><span>Tender 2</span></div></div>';
+    updateFooter();
+    announce(wizardBody.querySelector('h4').textContent);
+  }
+
+  function confirmChecklist() {
+    const rows = [...wizardBody.querySelectorAll('.pd-check')];
+    rows.forEach(row => row.classList.add('is-checked'));
+    field('count').textContent = `${rows.length} / ${rows.length} potvrđeno`;
+    actions('check-all')[0].textContent = 'Poništi izbor';
+    updateFooter();
+  }
+
+  function showDocument(index) {
+    activeDoc = index;
+    wizardBody.innerHTML = documentBody();
+    updateFooter();
+  }
+
+  function confirmDocument() {
+    reviewed.add(activeDoc);
+    showDocument(activeDoc);
+  }
+
+  function confirmFinal(name) {
+    actions(name)[0].classList.add('is-checked');
+    updateFooter();
+  }
+
+  function showSubmitted(visible) {
+    field('browse').hidden = visible;
+    field('submitted').hidden = !visible;
+    field('page-title').textContent = visible ? 'Poslate ponude' : 'Tenderi';
+    field('tender-nav').classList.toggle('is-active', !visible);
+    actions('submitted').forEach(item => item.classList.toggle('is-active', visible));
+  }
+
+  function submitDemo() {
+    renderWizard(5);
+  }
+
+  const sequence = [
+    [null, null, 2300],
+    [null, () => { opening.hidden = true; announce('Pregled tendera.'); }, 1600],
+    ['tender-2', () => { selectTender(1); announce('Odabran je Tender 2.'); }, 1250],
+    ['requirements', () => showTab('requirements'), 950],
+    ['specification', () => { field('specification').hidden = false; field('spec-icon').textContent = '▴'; }, 1300],
+    ['suppliers', () => showTab('suppliers'), 1450],
+    ['documents', () => showTab('documents'), 1450],
+    ['overview', () => showTab('overview'), 650],
+    ['prepare', () => { wizard.hidden = false; renderWizard(0); }, 1050],
+    ['check-all', confirmChecklist, 750],
+    ['next', () => renderWizard(1), 1000],
+    ['check-all', confirmChecklist, 750],
+    ['next', () => renderWizard(2), 1000],
+    ['check-all', confirmChecklist, 750],
+    ['next', () => renderWizard(3), 1400],
+    ['review-doc', confirmDocument, 750],
+    ['doc-1', () => showDocument(1), 1250],
+    ['review-doc', confirmDocument, 750],
+    ['next', () => renderWizard(4), 1100],
+    ['accuracy', () => confirmFinal('accuracy'), 650],
+    ['simulation', () => confirmFinal('simulation'), 650],
+    ['next', submitDemo, 2850],
+    ['next', () => { wizard.hidden = true; }, 500],
+    ['submitted', () => { showSubmitted(true); announce('Tender 2 prikazan je u evidenciji probnih ponuda.'); }, 2300],
+    [null, () => { ending.hidden = false; announce(ending.textContent.trim()); }, 1900]
+  ];
+
+  const travel = 460;
+  const clickLength = 300;
+  const durationOf = ([target, , hold]) => hold + (target ? travel : 0);
+  const beforeSubmit = sequence.slice(0, sequence.findIndex(([, apply]) => apply === submitDemo));
+  const submitTime = beforeSubmit.reduce((total, step) => total + durationOf(step), travel);
+  const seconds = Math.round(submitTime / 1000);
+  const lastDigit = seconds % 10;
+  const isTeen = seconds % 100 >= 11 && seconds % 100 <= 14;
+  const unit = isTeen ? 'sekundi' : lastDigit === 1 ? 'sekundu' : lastDigit >= 2 && lastDigit <= 4 ? 'sekunde' : 'sekundi';
+  field('runtime').textContent = `${seconds} ${unit}`;
+  progress.max = sequence.reduce((total, step) => total + durationOf(step), 0);
+  let index = 0;
+  let elapsed = 0;
+  let completedTime = 0;
+  let frame = 0;
+  let lastTime = 0;
+  let clicked = false;
+  let visible = false;
+  let paused = motion.matches;
+  let done = false;
+  let position;
+  let origin;
+
+  function updateClock(played) {
+    const elapsedSeconds = played >= submitTime ? seconds : Math.floor(played / 1000);
+    const minutes = String(Math.floor(elapsedSeconds / 60)).padStart(2, '0');
+    const remainder = String(elapsedSeconds % 60).padStart(2, '0');
+    const reading = `${minutes}:${remainder}`;
+    if (clock.textContent !== reading) {
+      clock.textContent = reading;
+      clock.dateTime = `PT${elapsedSeconds}S`;
+    }
+  }
+
+  function moveCursor(x, y, ring = 0) {
+    position = { x, y };
+    cursor.style.transform = `translate3d(${x}px,${y}px,0)`;
+    cursor.style.setProperty('--pd-click', ring);
+    cursor.style.setProperty('--pd-ring', 1.65 - ring * .85);
+  }
+
+  function targetPosition(name) {
+    const target = actions(name).find(item => item.getClientRects().length);
+    if (!target) return position;
+    const rect = target.getBoundingClientRect();
+    const bounds = stage.getBoundingClientRect();
+    return { x: rect.left - bounds.left + rect.width * .5, y: rect.top - bounds.top + rect.height * .5 };
+  }
+
+  function syncPlayback() {
+    const label = done ? 'Pusti ponovo' : paused ? (completedTime + elapsed ? 'Nastavi' : 'Pokreni') : 'Pauziraj';
+    if (play.textContent !== label) play.textContent = label;
+    if (visible && !paused && !done && !document.hidden) {
+      if (!frame) frame = requestAnimationFrame(animate);
+    } else {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      lastTime = 0;
+    }
+  }
+
+  function animate(now) {
+    frame = 0;
+    elapsed += lastTime ? Math.min(now - lastTime, 50) : 0;
+    lastTime = now;
+    const [target, apply, hold] = sequence[index];
+    const movement = target ? travel : 0;
+    if (target && !clicked && !motion.matches) {
+      const destination = targetPosition(target);
+      origin ??= position;
+      const amount = Math.min(1, elapsed / movement);
+      const ease = amount * amount * (3 - 2 * amount);
+      moveCursor(origin.x + (destination.x - origin.x) * ease, origin.y + (destination.y - origin.y) * ease);
+    }
+    if (!clicked && elapsed >= movement) {
+      clicked = true;
+      apply?.();
+    }
+    if (target && clicked && !motion.matches) moveCursor(position.x, position.y, Math.max(0, 1 - (elapsed - movement) / clickLength));
+
+    const duration = movement + hold;
+    const played = completedTime + Math.min(elapsed, duration);
+    progress.value = played;
+    updateClock(played);
+    if (elapsed >= duration) {
+      completedTime += duration;
+      elapsed -= duration;
+      origin = undefined;
+      clicked = false;
+      index++;
+      done = index === sequence.length;
+      if (done) cursor.hidden = true;
+    }
+    syncPlayback();
+  }
+
+  function reset() {
+    index = 0;
+    elapsed = 0;
+    completedTime = 0;
+    lastTime = 0;
+    origin = undefined;
+    clicked = false;
+    done = false;
+    activeDoc = 0;
+    reviewed.clear();
+    opening.hidden = false;
+    ending.hidden = true;
+    wizard.hidden = true;
+    field('specification').hidden = true;
+    field('spec-icon').textContent = '▾';
+    showSubmitted(false);
+    selectTender(0);
+    cursor.hidden = motion.matches;
+    moveCursor(stage.clientWidth * .46, stage.clientHeight * .21);
+    progress.value = 0;
+    updateClock(0);
+    announce(opening.textContent.trim());
+  }
+
+  controls.hidden = false;
+  reset();
+  play.addEventListener('click', () => {
+    if (done) { reset(); paused = false; }
+    else paused = !paused;
+    syncPlayback();
+  });
+  field('restart').addEventListener('click', () => { reset(); paused = false; syncPlayback(); });
+  motion.addEventListener('change', () => {
+    cursor.hidden = motion.matches || done;
+    if (motion.matches) paused = true;
+    syncPlayback();
+  });
+  document.addEventListener('visibilitychange', syncPlayback);
+  const visiblePortion = .55;
+  new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting && entry.intersectionRatio >= visiblePortion;
+    syncPlayback();
+  }, { threshold: visiblePortion }).observe(stage);
+  syncPlayback();
 })();
 </script>
 </body>
