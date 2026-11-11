@@ -345,12 +345,17 @@ body.hero-in .h-anim{opacity:1;transform:none}
 .pd-cursor i,.pd-cursor i::after{position:absolute;inset:0;display:block;content:"";background:#13243a;clip-path:polygon(0 0,94% 66%,61% 69%,78% 92%,59% 100%,44% 75%,22% 96%)}
 .pd-cursor i::after{inset:2px 3px 4px 2px;background:#fff}
 .pd-cursor::after{content:"";position:absolute;top:-12px;left:-12px;width:24px;height:24px;border:2px solid #3f7af4;border-radius:50%;opacity:var(--pd-click,0);transform:scale(var(--pd-ring,.8))}
+.pd-subtitles{display:grid;place-items:center;min-height:2rem;padding:.2rem .75rem;border-top:1px solid var(--pd-line);
+  background:var(--pd-bg);color:var(--pd-muted);font-size:.78rem;line-height:1.4;text-align:center}
+.pd-subtitles p{max-width:66ch;margin:0;text-wrap:balance}
 .pd-caption{display:flex;align-items:center;justify-content:space-between;gap:.65rem 1rem;flex-wrap:wrap;border-top:1px solid var(--pd-line);background:var(--pd-bg);padding:.65rem clamp(.75rem,2vw,1.25rem)}
 .pd-caption p{color:var(--pd-muted);font-size:.75rem}
 .pd-playback{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
 .pd-playback progress{width:clamp(48px,7vw,110px);height:.4rem;accent-color:var(--pd-blue);margin-right:.2rem}
 .pd-playback button{font:inherit;font-weight:600;padding:.25rem .55rem;background:#fff;color:var(--pd-ink);border:1px solid #cfd5de;border-radius:6px;cursor:pointer}
 .pd-playback button:hover{background:var(--pd-blue-tint);border-color:#b8c9f2}
+.pd-playback button[aria-pressed="true"]{background:#edf2fa;border-color:#b8c9e4}
+.pd-playback button:disabled{cursor:default;color:var(--pd-muted)}
 .pd-playback button:focus-visible{outline:2px solid var(--pd-blue);outline-offset:2px}
 .pd-sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 
@@ -362,6 +367,7 @@ body.hero-in .h-anim{opacity:1;transform:none}
   .pd-split{grid-template-columns:minmax(76px,27%) minmax(0,1fr)}
 }
 @media(max-width:520px){
+  .pd-subtitles{font-size:.73rem;min-height:2.4rem;padding:.2rem .65rem}
   .pd-stage{height:548px}.pd-header p{font-size:.66rem}
   .pd-list-top,.pd-row{padding:.55rem .38rem}
   .pd-list-heading{display:block}.pd-list-heading small{display:block}
@@ -738,12 +744,18 @@ body.hero-in .h-anim{opacity:1;transform:none}
           <h3>Pronalaženje i prijavljivanje na tendere ne treba da bude kompleksno.</h3>
         </div>
       </div>
+      <audio data-pd-audio preload="metadata" src="klientela-naracija-srpski-v3.mp3"></audio>
+      <div class="pd-subtitles" data-pd-subtitles>
+        <p data-pd-subtitle-text></p>
+      </div>
       <figcaption class="pd-caption">
         <p>Prikaz sa izmišljenim podacima</p>
         <div class="pd-playback" data-pd-controls hidden>
           <progress value="0" max="1" aria-label="Napredak animacije"></progress>
           <button type="button" data-pd-play>Pauziraj</button>
           <button type="button" data-pd-restart>Od početka</button>
+          <button type="button" data-pd-sound aria-pressed="true">Isključi zvuk</button>
+          <button type="button" data-pd-captions aria-pressed="true">Titlovi</button>
           <span class="pd-sr-only" data-pd-status role="status"></span>
         </div>
       </figcaption>
@@ -1955,10 +1967,25 @@ body.hero-in .h-anim{opacity:1;transform:none}
   const opening = field('opening');
   const ending = field('ending');
   const clock = field('clock');
+  const narration = field('audio');
+  const soundButton = field('sound');
+  const captionsButton = field('captions');
+  const subtitleBox = field('subtitles');
+  const subtitleText = field('subtitle-text');
   const controls = field('controls');
   const play = field('play');
   const progress = controls.querySelector('progress');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  const subtitleCues = [
+    { start: .10, end: 2.78, text: 'Prijava na tender u trideset dvije sekunde.' },
+    { start: 3.56, end: 7.70, text: 'Odaberite tender i pregledajte uslove i tehničku specifikaciju.' },
+    { start: 8.52, end: 13.55, text: 'Provjerite dobavljače i potrebnu dokumentaciju, pa započnite pripremu ponude.' },
+    { start: 14.30, end: 17.85, text: 'Potvrdite raspoložive stavke i obezbijeđenu nabavku.' },
+    { start: 18.60, end: 23.20, text: 'Zatim provjerite ispunjenost uslova i označite potvrde koje su potrebne.' },
+    { start: 23.94, end: 28.10, text: 'Pregledajte oba dokumenta i potvrdite da su podaci tačni i potpuni.' },
+    { start: 28.58, end: 31.98, text: 'Provjerite ponudu i podatke, pa pošaljite prijavu.' }
+  ];
 
   const tenders = [
     { fit: 96, deadline: 12, amount: '25.000 €', summary: 'Dvije stavke odgovaraju profilu firme. Jedna stavka traži dopunu prije prijave.' },
@@ -2139,6 +2166,54 @@ body.hero-in .h-anim{opacity:1;transform:none}
   let done = false;
   let position;
   let origin;
+  let narrationEnabled = true;
+  let narrationPending = false;
+  let narrationAttempt = 0;
+  let autoplayBlocked = false;
+
+  function updateSubtitles(played) {
+    const time = played / 1000;
+    const cue = subtitleCues.find(item => time >= item.start && time < item.end);
+    const text = cue?.text || '';
+    if (subtitleText.textContent !== text) subtitleText.textContent = text;
+  }
+
+  function updateSoundButton() {
+    soundButton.textContent = narrationEnabled ? 'Isključi zvuk' : autoplayBlocked ? 'Pokreni sa zvukom' : 'Uključi zvuk';
+    soundButton.setAttribute('aria-pressed', String(narrationEnabled));
+  }
+
+  function isPlaying() {
+    return visible && !paused && !done && !document.hidden;
+  }
+
+  function syncNarration() {
+    if (!isPlaying() || !narrationEnabled || progress.value >= submitTime) {
+      if (!narration.paused) narration.pause();
+      return;
+    }
+    if (!narration.paused || narrationPending) return;
+    narration.currentTime = progress.value / 1000;
+    narrationPending = true;
+    const attempt = ++narrationAttempt;
+    narration.play().then(() => {
+      if (attempt !== narrationAttempt) return;
+      narrationPending = false;
+      if (!isPlaying() || !narrationEnabled) narration.pause();
+    }).catch(error => {
+      if (attempt !== narrationAttempt) return;
+      narrationPending = false;
+      if (error.name === 'AbortError') return;
+      narrationEnabled = false;
+      autoplayBlocked = error.name === 'NotAllowedError';
+      updateSoundButton();
+      if (!autoplayBlocked) {
+        soundButton.textContent = 'Zvuk nedostupan';
+        soundButton.disabled = true;
+      }
+      syncPlayback();
+    });
+  }
 
   function updateClock(played) {
     const elapsedSeconds = played >= submitTime ? seconds : Math.floor(played / 1000);
@@ -2169,7 +2244,8 @@ body.hero-in .h-anim{opacity:1;transform:none}
   function syncPlayback() {
     const label = done ? 'Pusti ponovo' : paused ? (completedTime + elapsed ? 'Nastavi' : 'Pokreni') : 'Pauziraj';
     if (play.textContent !== label) play.textContent = label;
-    if (visible && !paused && !done && !document.hidden) {
+    syncNarration();
+    if (isPlaying()) {
       if (!frame) frame = requestAnimationFrame(animate);
     } else {
       cancelAnimationFrame(frame);
@@ -2180,40 +2256,49 @@ body.hero-in .h-anim{opacity:1;transform:none}
 
   function animate(now) {
     frame = 0;
-    elapsed += lastTime ? Math.min(now - lastTime, 50) : 0;
+    const delta = lastTime ? Math.max(0, now - lastTime) : 0;
     lastTime = now;
-    const [target, apply, hold] = sequence[index];
-    const movement = target ? travel : 0;
-    if (target && !clicked && !motion.matches) {
-      const destination = targetPosition(target);
-      origin ??= position;
-      const amount = Math.min(1, elapsed / movement);
-      const ease = amount * amount * (3 - 2 * amount);
-      moveCursor(origin.x + (destination.x - origin.x) * ease, origin.y + (destination.y - origin.y) * ease);
-    }
-    if (!clicked && elapsed >= movement) {
-      clicked = true;
-      apply?.();
-    }
-    if (target && clicked && !motion.matches) moveCursor(position.x, position.y, Math.max(0, 1 - (elapsed - movement) / clickLength));
+    const current = completedTime + elapsed;
+    const followAudio = narrationEnabled && current < submitTime && !narration.ended;
+    const played = Math.min(progress.max, followAudio ? narration.currentTime * 1000 : current + delta);
 
-    const duration = movement + hold;
-    const played = completedTime + Math.min(elapsed, duration);
-    progress.value = played;
-    updateClock(played);
-    if (elapsed >= duration) {
+    while (index < sequence.length) {
+      const [target, apply, hold] = sequence[index];
+      const movement = target ? travel : 0;
+      const duration = movement + hold;
+      elapsed = Math.max(0, played - completedTime);
+      if (target && !clicked && !motion.matches) {
+        const destination = targetPosition(target);
+        origin ??= position;
+        const amount = Math.min(1, elapsed / movement);
+        const ease = amount * amount * (3 - 2 * amount);
+        moveCursor(origin.x + (destination.x - origin.x) * ease, origin.y + (destination.y - origin.y) * ease);
+      }
+      if (!clicked && elapsed >= movement) {
+        clicked = true;
+        apply?.();
+      }
+      if (target && clicked && !motion.matches) moveCursor(position.x, position.y, Math.max(0, 1 - (elapsed - movement) / clickLength));
+      if (elapsed < duration) break;
       completedTime += duration;
       elapsed -= duration;
       origin = undefined;
       clicked = false;
       index++;
-      done = index === sequence.length;
-      if (done) cursor.hidden = true;
     }
+    done = index === sequence.length;
+    if (done) cursor.hidden = true;
+    progress.value = played;
+    updateClock(played);
+    updateSubtitles(played);
     syncPlayback();
   }
 
   function reset() {
+    narrationAttempt++;
+    narrationPending = false;
+    narration.pause();
+    narration.currentTime = 0;
     index = 0;
     elapsed = 0;
     completedTime = 0;
@@ -2234,17 +2319,40 @@ body.hero-in .h-anim{opacity:1;transform:none}
     moveCursor(stage.clientWidth * .46, stage.clientHeight * .21);
     progress.value = 0;
     updateClock(0);
+    updateSubtitles(0);
     announce(opening.textContent.trim());
   }
 
   controls.hidden = false;
   reset();
+  updateSoundButton();
   play.addEventListener('click', () => {
     if (done) { reset(); paused = false; }
     else paused = !paused;
     syncPlayback();
   });
   field('restart').addEventListener('click', () => { reset(); paused = false; syncPlayback(); });
+  soundButton.addEventListener('click', () => {
+    narrationEnabled = !narrationEnabled;
+    if (narrationEnabled && (autoplayBlocked || done)) {
+      reset();
+      paused = false;
+    }
+    autoplayBlocked = false;
+    updateSoundButton();
+    syncPlayback();
+  });
+  captionsButton.addEventListener('click', () => {
+    subtitleBox.hidden = !subtitleBox.hidden;
+    captionsButton.setAttribute('aria-pressed', String(!subtitleBox.hidden));
+  });
+  narration.addEventListener('error', () => {
+    narrationEnabled = false;
+    updateSoundButton();
+    soundButton.textContent = 'Zvuk nedostupan';
+    soundButton.disabled = true;
+    syncPlayback();
+  });
   motion.addEventListener('change', () => {
     cursor.hidden = motion.matches || done;
     if (motion.matches) paused = true;
