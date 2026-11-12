@@ -331,10 +331,10 @@
     var ctx = canvas.getContext("2d"), w, h, nodes = [], raf = null;
     var PH = {HERO:0, TRANSFORM:1, NET:2, DONE:3};
     var phase = PH.HERO;
-    var t0 = null, ft0 = 0, netAt = 0;
-    var WARP_MS = 900;
+    var t0 = null, ft0 = 0, netAt = 0, lastFrame = null;
+    var WARP_MS = 1100;
     var warpQueued = false, heroTyped = false, unlocked = false;
-    var net = null, touchUsed = false, tInNet = false;
+    var net = null, touchUsed = false;
     var morph = 0, fadeAll = 0, netCopyGone = false;
 
     var PAL = [
@@ -407,12 +407,11 @@
           nd.vp = {x: logoBox.ox + logoVerts[i].x * LW, y: logoBox.oy + logoVerts[i].y * LH};
         } else nd.vp = null;
       });
-      console.log("KLIENTELA logo:", V, "tačaka /", logoEdges.length, "linija — mreža:", net.nodes.length, "čvorova");
     }
 
     /* ================= INTERAKCIJA ================= */
     var mx = -99999, my = -99999, mActive = false;
-    var REPEL_R = 120, DISP_N = 64, DISP_S = 90;
+    var REPEL_R = 120, DISP_N = 64, DISP_S = 24;
 
     function trackPointer(cx, cy){
       var r = canvas.getBoundingClientRect();
@@ -426,7 +425,6 @@
     window.addEventListener("touchstart", function(e){
       if(e.touches && e.touches.length){
         trackPointer(e.touches[0].clientX, e.touches[0].clientY);
-        tInNet = net ? inNetArea(e.touches[0].clientX, e.touches[0].clientY) : false;
       }
     }, {passive:true});
     window.addEventListener("touchmove", function(e){
@@ -437,7 +435,7 @@
     window.addEventListener("pointerout", function(e){ if(!e.relatedTarget) mActive = false; });
     window.addEventListener("blur", function(){ mActive = false; });
 
-    function updateStarForce(){
+    function updateStarForce(dt){
       for(var i = 0; i < nodes.length; i++){
         var s = nodes[i], tx = 0, ty = 0;
         if(mActive){
@@ -448,12 +446,12 @@
             tx = (dx / d) * f; ty = (dy / d) * f;
           }
         }
-        var sp = (tx !== 0 || ty !== 0) ? .18 : .06;
+        var sp = 1 - Math.pow(1 - ((tx !== 0 || ty !== 0) ? .08 : .04), dt * 60);
         s.ox += (tx - s.ox) * sp;
         s.oy += (ty - s.oy) * sp;
       }
     }
-    function updateNetForce(){
+    function updateNetForce(dt){
       if(!net) return;
       for(var i = 0; i < net.nodes.length; i++){
         var nd = net.nodes[i], tx = 0, ty = 0;
@@ -465,7 +463,7 @@
             tx = (dx / d) * f; ty = (dy / d) * f;
           }
         }
-        var sp = (tx !== 0 || ty !== 0) ? .16 : .05;
+        var sp = 1 - Math.pow(1 - ((tx !== 0 || ty !== 0) ? .16 : .05), dt * 60);
         nd.ox += (tx - nd.ox) * sp;
         nd.oy += (ty - nd.oy) * sp;
       }
@@ -477,7 +475,8 @@
       for(var i = 0; i < count; i++){
         nodes.push({
           x: Math.random() * w, y: Math.random() * h,
-          vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35,
+          // Pixels per second, independent of 60/120/144 Hz displays.
+          vx: (Math.random() - .5) * 7, vy: (Math.random() - .5) * 5,
           r: Math.random() * 1.6 + .8,
           z: .5 + Math.random() * .9,
           ox: 0, oy: 0
@@ -498,10 +497,18 @@
 
     function resize(){
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = canvas.offsetWidth; h = canvas.offsetHeight;
+      var nextW = canvas.offsetWidth, nextH = canvas.offsetHeight;
+      if(w === nextW && h === nextH && canvas.width === Math.round(nextW * dpr)) return;
+      var oldW = w, oldH = h;
+      w = nextW; h = nextH;
       canvas.width = w * dpr; canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      makeNodes();
+      if(!oldW || !oldH) makeNodes();
+      else nodes.forEach(function(star){
+        // Mobile browser bars resize the viewport while scrolling: keep the sky.
+        star.x *= w / oldW;
+        star.y *= h / oldH;
+      });
       if(net && phase !== PH.HERO){ layoutGeo(); placeNetCopy(); }
       buildLogoDots();
     }
@@ -626,11 +633,11 @@
       return Math.sin(p * Math.PI);
     }
 
-    function ambient(lineA, dotA){
+    function ambient(lineA, dotA, dt){
       var i, j, a, b, dx2, dy2, d;
       for(i = 0; i < nodes.length; i++){
         a = nodes[i];
-        a.x += a.vx; a.y += a.vy;
+        a.x += a.vx * dt; a.y += a.vy * dt;
         if(a.x < -10) a.x = w + 10; else if(a.x > w + 10) a.x = -10;
         if(a.y < -10) a.y = h + 10; else if(a.y > h + 10) a.y = -10;
       }
@@ -890,12 +897,19 @@
     }
 
     function step(now){
+      raf = null;
+      if(document.hidden){ lastFrame = null; return; }
+      // Bound long frames so returning to the tab never teleports particles.
+      var dt = lastFrame === null ? 1 / 60 : Math.min(Math.max((now - lastFrame) / 1000, 0), .032);
+      lastFrame = now;
       if(t0 === null) t0 = now;
       ctx.clearRect(0, 0, w, h);
 
       var scrollYv = window.scrollY || window.pageYOffset || 0;
       var vh = window.innerHeight || 800;
-      morph = unlocked ? Math.min(scrollYv / (vh * .25), 1) : 0;
+      var targetMorph = unlocked ? Math.max(0, Math.min(scrollYv / Math.max(180, Math.min(vh * .32, 320)), 1)) : 0;
+      morph += (targetMorph - morph) * (1 - Math.exp(-dt / .09));
+      if(Math.abs(targetMorph - morph) < .001) morph = targetMorph;
       var fd = unlocked ? Math.max(0, Math.min((scrollYv - vh * 1.5) / (vh * .6), 1)) : 0;
       if(fd !== fadeAll){
         fadeAll = fd;
@@ -913,8 +927,8 @@
 
       if(fadeAll >= 1){ raf = requestAnimationFrame(step); return; }
 
-      updateStarForce();
-      if(net) updateNetForce();
+      updateStarForce(dt);
+      if(net) updateNetForce(dt);
 
       var i, a, t;
 
@@ -922,12 +936,12 @@
         t = now - t0;
         if(t < WARP_MS){
           var p = Math.min(t / WARP_MS, 1);
-          var ws = 86 * Math.pow(1 - p, 1.8);
-          var trail = Math.min(160, ws * 5), m = trail + 14;
+          var ws = 110 * Math.pow(1 - p, 1.8);
+          var trail = Math.min(24, ws * .18), m = trail + 14;
           for(i = 0; i < nodes.length; i++){
             a = nodes[i];
-            a.y += ws * a.z + a.vy;
-            a.x += a.vx;
+            a.y += (ws * a.z + a.vy) * dt;
+            a.x += a.vx * dt;
             if(a.y > h + m){ a.y = -m - Math.random() * 80; a.x = Math.random() * w; }
             else if(a.y < -m - 80){ a.y = h + m; }
             if(a.x < -m) a.x = w + m - 1; else if(a.x > w + m) a.x = -m + 1;
@@ -962,23 +976,25 @@
               }
             }
           }
-          if(phase === PH.HERO) ambient(.26, .8);
+          if(phase === PH.HERO) ambient(.26, .8, dt);
         }
       }
       else if(phase === PH.TRANSFORM){
         var tt = now - ft0;
-        ambient(.26 * (1 - Math.min(tt / 500, 1)), .8 * (1 - Math.min(tt / 700, 1) * .5));
+        ambient(.26 * (1 - Math.min(tt / 500, 1)), .8 * (1 - Math.min(tt / 700, 1) * .5), dt);
         if(net) drawNet(now, 1, 0);
         if(net && tt >= net.ready){
           phase = PH.NET; netAt = now;
           net.nextWave = now + 450;
           net.nextPart = now + 750;
+          // Once the network is visible, the next native scroll morphs it.
+          unlockNow();
         }
       }
       else {
         /* NET i DONE — mreža živi; skrol je pretvara u logo */
         var mAl = 1 - morph;
-        ambient(.06 * mAl, .38 * mAl);
+        ambient(.06 * mAl, .38 * mAl, dt);
         if(net) drawNet(now, mAl, 0);
       }
 
@@ -994,26 +1010,16 @@
       userNext();
     }, {passive:true});
 
-    function inNetArea(x, y){
-      if(!net) return false;
-      var r = canvas.getBoundingClientRect();
-      var px = x - r.left, py = y - r.top;
-      return px > net.cx - net.bw/2 - 34 && px < net.cx + net.bw/2 + 34 &&
-             py > net.cy - net.bh/2 - 46 && py < net.cy + net.bh/2 + 46;
-    }
     window.addEventListener("touchmove", function(e){
       if(document.body.classList.contains("menu-open")) return;
-      if(unlocked){
-        if(tInNet && net) e.preventDefault();
-        return;
-      }
+      if(unlocked) return;
       e.preventDefault();
       if(phase === PH.HERO || phase === PH.NET){
         if(!touchUsed){ touchUsed = true; userNext(); }
       }
     }, {passive:false});
-    window.addEventListener("touchend", function(){ touchUsed = false; tInNet = false; }, {passive:true});
-    window.addEventListener("touchcancel", function(){ touchUsed = false; tInNet = false; }, {passive:true});
+    window.addEventListener("touchend", function(){ touchUsed = false; }, {passive:true});
+    window.addEventListener("touchcancel", function(){ touchUsed = false; }, {passive:true});
 
     window.addEventListener("keydown", function(e){
       if(unlocked) return;
@@ -1041,6 +1047,11 @@
 
     resize();
     window.addEventListener("resize", resize);
+    document.addEventListener("visibilitychange", function(){
+      if(raf !== null) cancelAnimationFrame(raf);
+      lastFrame = null;
+      raf = document.hidden ? null : requestAnimationFrame(step);
+    });
     raf = requestAnimationFrame(step);
   }
 })();
