@@ -1,0 +1,13 @@
+# Local development files and private configuration
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+__pycache__/
+node_modules/
+*.psd
+*.tmp
+*.log
